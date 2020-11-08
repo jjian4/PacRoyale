@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Andrew DeOrio <awdeorio@umich.edu>
+
+# Stop on errors
+set -Eeuo pipefail
+
+# Print commands
+set -x
+
+# run frontend server
+cd frontend
+yarn start
+
