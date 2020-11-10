@@ -10,5 +10,8 @@ set -x
 
 # run frontend server
 cd frontend
-yarn start
+yarn start &
+cd ..
 
+cd backend
+npx nodemon server.js

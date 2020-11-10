@@ -1,0 +1,32 @@
+.Login {
+  height: 100vh;
+  width: 100vw;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .centeredForm {
+    margin-bottom: 20vh;
+    .title {
+      font-size: 50px;
+      font-weight: bold;
+      padding: 10px 0;
+    }
+    .formInput {
+      display: block;
+      font-size: 20px;
+      padding: 10px 0;
+      input {
+        padding: 4px 8px;
+        width: 300px;
+      }
+    }
+  }
+  .registerRow {
+    padding: 10px 0;
+  }
+  .registerLink {
+    cursor: pointer;
+    color: darkcyan;
+  }
+}
