@@ -69,8 +69,6 @@ function MainMenu() {
 
         {showDropdown && (
           <div className="profileDropdown">
-            {/* TODO: Make Profile modal */}
-            <div>Profile</div>
             <div onClick={() => setShowProfileModal(true)}>Profile</div>
             <div onClick={() => setShowStoreModal(true)}>Store</div>
             <div onClick={() => setShowAboutModal(true)}>About this Game</div>

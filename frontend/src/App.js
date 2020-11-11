@@ -12,16 +12,27 @@ import AppContext from "./contexts/AppContext";
 import io from "socket.io-client";
 
 function App() {
-  // detecting if the user is signed in as async process
+  // detecting if the user is signed in is async
   // since we don't want the user to sit at the sign in while Firebase checks if they're
   // signed in or not, we show a splash/loading screen
-  const [currentPage, setCurrentPage] = useState(PAGES.SPLASH_SCREEN);
+  const [currentPage, setCurrentPage] = useState(PAGES.MAIN_MENU);
 
   // If user is signed in, we redirect to main menu
   // If not, we go to the login page
   firebase.auth().onAuthStateChanged((user) => {
     if (user) {
-      setCurrentPage(PAGES.MAIN_MENU);
+      // TODO: If user is in lobby
+      if (false) {
+        setCurrentPage(PAGES.LOBBY);
+      }
+      // TODO: If user is still in a game
+      else if (false) {
+        setCurrentPage(PAGES.ARENA);
+      }
+      else {
+        setCurrentPage(PAGES.MAIN_MENU);
+      }
+
     } else {
       setCurrentPage(PAGES.LOGIN);
     }
@@ -48,6 +59,7 @@ function App() {
     default:
       break;
   }
+
   return (
     <div>
       <AppContext.Provider
