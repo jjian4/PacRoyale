@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useContext } from "react";
-import "./Login.scss";
 import PageTransitionContext from "./../../contexts/PageTransitionContext";
+import "./Login.scss";
 
 function Login() {
   const [showRegisterForm, setShowRegisterForm] = useState(false);

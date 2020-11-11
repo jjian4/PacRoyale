@@ -6,4 +6,5 @@ export const PAGES = {
   LOBBY: "lobby",
   ARENA: "arena",
   MINIGAME: "minigame",
+  ABOUT: "about",
 };

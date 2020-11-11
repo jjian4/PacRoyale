@@ -7,6 +7,7 @@ import Lobby from "./pages/Lobby/Lobby";
 import Arena from "./pages/Arena/Arena";
 import Store from "./pages/Store/Store";
 import Minigame from "./pages/Minigame/Minigame";
+import About from "./pages/About/About";
 import "./App.scss";
 import { PAGES } from "./utils/constants";
 import io from "socket.io-client";
@@ -45,6 +46,9 @@ function App() {
     case PAGES.MINIGAME:
       page = <Minigame />;
       break;
+    case PAGES.ABOUT:
+      page = <About />;
+      break;
     default:
       break;
   }
@@ -52,6 +56,9 @@ function App() {
     <div>
       <PageTransitionContext.Provider
         value={{
+          goToAbout: () => {
+            setCurrentPage(PAGES.ABOUT);
+          },
           goToArena: () => {
             setCurrentPage(PAGES.ARENA);
           },
