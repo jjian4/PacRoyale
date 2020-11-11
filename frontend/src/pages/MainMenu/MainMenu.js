@@ -5,7 +5,7 @@ import "./MainMenu.scss";
 
 function MainMenu() {
   const [showDropdown, setShowDropdown] = useState(false);
-  let dropdownRef;
+  let topRightRef;
 
   const { goToStore } = useContext(PageTransitionContext);
   const { goToAbout } = useContext(PageTransitionContext);
@@ -24,7 +24,7 @@ function MainMenu() {
 
   // Detect outside click to close dropdown
   const handleClickOutside = event => {
-    if (dropdownRef && !dropdownRef.contains(event.target)) {
+    if (topRightRef && !topRightRef.contains(event.target)) {
       setShowDropdown(false);
     }
   }
@@ -32,12 +32,12 @@ function MainMenu() {
   return (
     <div className='MainMenu'>
 
-      <div className='menuTopRight' onClick={() => setShowDropdown(true)}>
+      <div className='menuTopRight' onClick={() => setShowDropdown(!showDropdown)} ref={(node) => topRightRef = node}>
         <div className='profileButton'></div>
         <div className='profileButtonLabel'>jjian</div>
 
         {showDropdown && (
-          <div className='profileDropdown' ref={(node) => dropdownRef = node}>
+          <div className='profileDropdown'>
             {/* TODO: Make Profile modal */}
             <div>Profile</div>
             <div onClick={goToStore}>Store</div>
