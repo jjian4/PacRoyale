@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import PageTransitionContext from "./../../contexts/PageTransitionContext";
+import firebase from "./../../utils/firebase";
 import "./MainMenu.scss";
 
 function MainMenu() {
@@ -22,6 +23,18 @@ function MainMenu() {
 
   });
 
+const logOut = () => {
+  
+  firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+    goToLogin();
+  }).catch(function(error) {
+    // An error happened.
+    console.log(error);
+  });
+
+};
+
   // Detect outside click to close dropdown
   const handleClickOutside = event => {
     if (dropdownRef && !dropdownRef.contains(event.target)) {
@@ -42,8 +55,7 @@ function MainMenu() {
             <div>Profile</div>
             <div onClick={goToStore}>Store</div>
             <div onClick={goToAbout}>About this Game</div>
-            {/* TODO: Log out user, don't just go to login page */}
-            <div onClick={goToLogin}>Logout</div>
+            <div onClick={logOut}>Logout</div>
           </div>
         )}
       </div>
