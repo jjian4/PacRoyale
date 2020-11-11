@@ -1,2 +1,8 @@
 
 .DS_Store
+
+# ignore node package related files
+node_modules/*
+package-lock.json
+*.lock
+.vscode/settings.json
