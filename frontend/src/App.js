@@ -12,9 +12,26 @@ import "./App.scss";
 import { PAGES } from "./utils/constants";
 import io from "socket.io-client";
 import PageTransitionContext from "./contexts/PageTransitionContext";
+import firebase from './utils/firebase';
+import SplashScreen from "./pages/SplashScreen/SplashScreen";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(PAGES.LOGIN);
+
+  // detecting if the user is signed in as async process
+  // since we don't want the user to sit at the sign in while Firebase checks if they're
+  // signed in or not, we show a splash/loading screen 
+  const [currentPage, setCurrentPage] = useState(PAGES.SPLASH_SCREEN);
+
+  // If user is signed in, we redirect to main menu
+  // If not, we go to the login page
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      setCurrentPage(PAGES.MAIN_MENU)
+    } else {
+      setCurrentPage(PAGES.LOGIN)
+    }
+  })
+
   useEffect(() => {
     const socket = io("http://localhost:3001", {
       transports: ["websocket", "polling", "flashsocket"],
@@ -45,6 +62,9 @@ function App() {
       break;
     case PAGES.MINIGAME:
       page = <Minigame />;
+      break;
+    case PAGES.SPLASH_SCREEN:
+      page = <SplashScreen />;
       break;
     case PAGES.ABOUT:
       page = <About />;
