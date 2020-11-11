@@ -6,11 +6,27 @@ import Lobby from "./pages/Lobby/Lobby";
 import Arena from "./pages/Arena/Arena";
 import "./App.scss";
 import { PAGES } from "./utils/constants";
+import firebase from "./utils/firebase";
+import SplashScreen from "./pages/SplashScreen/SplashScreen";
 import AppContext from "./contexts/AppContext";
 import io from "socket.io-client";
 
 function App() {
-  const [currentPage, setCurrentPage] = useState(PAGES.LOGIN);
+  // detecting if the user is signed in as async process
+  // since we don't want the user to sit at the sign in while Firebase checks if they're
+  // signed in or not, we show a splash/loading screen
+  const [currentPage, setCurrentPage] = useState(PAGES.SPLASH_SCREEN);
+
+  // If user is signed in, we redirect to main menu
+  // If not, we go to the login page
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      setCurrentPage(PAGES.MAIN_MENU);
+    } else {
+      setCurrentPage(PAGES.LOGIN);
+    }
+  });
+
   const [isHost, setStateIsHost] = useState(false);
   let page = null;
   switch (currentPage) {
@@ -25,6 +41,9 @@ function App() {
       break;
     case PAGES.ARENA:
       page = <Arena />;
+      break;
+    case PAGES.SPLASH_SCREEN:
+      page = <SplashScreen />;
       break;
     default:
       break;
