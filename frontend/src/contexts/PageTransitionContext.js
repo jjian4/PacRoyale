@@ -5,8 +5,6 @@ const PageTransitionContext = createContext({
   goToLobby: () => { },
   goToLogin: () => { },
   goToMainMenu: () => { },
-  goToMinigame: () => { },
-  goToStore: () => { },
 });
 
 export default PageTransitionContext;
