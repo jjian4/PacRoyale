@@ -14,7 +14,7 @@ function MainMenu() {
 
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
 
-  const { goToLogin, isHost } = useContext(AppContext);
+  const { goToLogin, goToLobby } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -48,7 +48,7 @@ function MainMenu() {
         onClick={() => setShowDropdown(!showDropdown)}
         ref={(node) => topRightRef = node}
       >
-        <div className='profileButton'></div>
+        <div className='profileButton avatar avatar-blue'></div>
         <div className='profileButtonLabel'>jjian</div>
 
         {showDropdown && (
@@ -69,6 +69,9 @@ function MainMenu() {
           <button className='button' onClick={() => setShowGameSettingsModal(true)}>Create Game</button>
           <button className='button'>Join Game</button>
           <button className='button'>Store</button>
+
+          {/* REMOVE */}
+          <button className='button' onClick={goToLobby}>Lobby (for testing, will remove)</button>
         </div>
       </div>
 
