@@ -53,14 +53,8 @@ function App() {
     case PAGES.ARENA:
       page = <Arena />;
       break;
-    case PAGES.MINIGAME:
-      page = <Minigame />;
-      break;
     case PAGES.SPLASH_SCREEN:
       page = <SplashScreen />;
-      break;
-    case PAGES.ABOUT:
-      page = <About />;
       break;
     default:
       break;
