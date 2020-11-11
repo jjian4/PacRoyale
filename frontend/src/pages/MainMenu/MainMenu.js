@@ -32,7 +32,11 @@ function MainMenu() {
   return (
     <div className='MainMenu'>
 
-      <div className='menuTopRight' onClick={() => setShowDropdown(!showDropdown)} ref={(node) => topRightRef = node}>
+      <div
+        className='menuTopRight'
+        onClick={() => setShowDropdown(!showDropdown)}
+        ref={(node) => topRightRef = node}
+      >
         <div className='profileButton'></div>
         <div className='profileButtonLabel'>jjian</div>
 

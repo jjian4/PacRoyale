@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
 import MainMenu from "./pages/MainMenu/MainMenu";
 import Lobby from "./pages/Lobby/Lobby";
 import Arena from "./pages/Arena/Arena";
@@ -27,9 +26,6 @@ function App() {
   switch (currentPage) {
     case PAGES.LOGIN:
       page = <Login />;
-      break;
-    case PAGES.REGISTER:
-      page = <Register />;
       break;
     case PAGES.MAIN_MENU:
       page = <MainMenu />;
@@ -73,9 +69,6 @@ function App() {
           },
           goToMinigame: () => {
             setCurrentPage(PAGES.MINIGAME);
-          },
-          goToRegister: () => {
-            setCurrentPage(PAGES.REGISTER);
           },
           goToStore: () => {
             setCurrentPage(PAGES.STORE);
