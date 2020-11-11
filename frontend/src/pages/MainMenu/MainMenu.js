@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
+import firebase from "./../../utils/firebase";
 import Modal from "../../components/Modal/Modal";
 import AppContext from "./../../contexts/AppContext";
 import "./MainMenu.scss";
@@ -26,6 +27,18 @@ function MainMenu() {
     }
 
   });
+
+const logOut = () => {
+  
+  firebase.auth().signOut().then(function() {
+    // Sign-out successful.
+    goToLogin();
+  }).catch(function(error) {
+    // An error happened.
+    console.log(error);
+  });
+
+};
 
   // Detect outside click to close dropdown
   const handleClickOutside = event => {
@@ -54,11 +67,11 @@ function MainMenu() {
         {showDropdown && (
           <div className='profileDropdown'>
             {/* TODO: Make Profile modal */}
+            <div>Profile</div>
             <div onClick={() => setShowProfileModal(true)}>Profile</div>
             <div onClick={() => setShowStoreModal(true)}>Store</div>
             <div onClick={() => setShowAboutModal(true)}>About this Game</div>
-            {/* TODO: Log out user, don't just go to login page */}
-            <div onClick={goToLogin}>Logout</div>
+            <div onClick={logOut}>Logout</div>
           </div>
         )}
       </div>

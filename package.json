@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.32",
+    "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@fortawesome/react-fontawesome": "^0.1.12",
+    "react-modal": "^3.11.2",
+    "sass": "^1.29.0",
+    "socket.io": "^3.0.1",
+    "socket.io-client": "^3.0.1"
+  },
+  "devDependencies": {
+    "firebase": "^8.0.1"
+  }
+}
