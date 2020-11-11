@@ -1,0 +1,17 @@
+.ModalContent {
+    .modalTitle {
+        font-size: 25px;
+        font-weight: bold;
+        text-align: center;
+    }
+    .closeButton {
+        display: inline-block;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        cursor: pointer;
+        svg {
+            font-size: 30px;
+        }
+    }
+}

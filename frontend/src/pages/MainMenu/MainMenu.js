@@ -1,5 +1,6 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
+import Modal from "../../components/Modal/Modal";
 import PageTransitionContext from "./../../contexts/PageTransitionContext";
 import "./MainMenu.scss";
 
@@ -7,8 +8,10 @@ function MainMenu() {
   const [showDropdown, setShowDropdown] = useState(false);
   let topRightRef;
 
-  const { goToStore } = useContext(PageTransitionContext);
-  const { goToAbout } = useContext(PageTransitionContext);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showStoreModal, setShowStoreModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+
   const { goToLogin } = useContext(PageTransitionContext);
 
   useEffect(() => {
@@ -29,9 +32,14 @@ function MainMenu() {
     }
   }
 
+  const closeModal = () => {
+    setShowProfileModal(false);
+    setShowStoreModal(false);
+    setShowAboutModal(false);
+  }
+
   return (
     <div className='MainMenu'>
-
       <div
         className='menuTopRight'
         onClick={() => setShowDropdown(!showDropdown)}
@@ -43,9 +51,9 @@ function MainMenu() {
         {showDropdown && (
           <div className='profileDropdown'>
             {/* TODO: Make Profile modal */}
-            <div>Profile</div>
-            <div onClick={goToStore}>Store</div>
-            <div onClick={goToAbout}>About this Game</div>
+            <div onClick={() => setShowProfileModal(true)}>Profile</div>
+            <div onClick={() => setShowStoreModal(true)}>Store</div>
+            <div onClick={() => setShowAboutModal(true)}>About this Game</div>
             {/* TODO: Log out user, don't just go to login page */}
             <div onClick={goToLogin}>Logout</div>
           </div>
@@ -60,6 +68,31 @@ function MainMenu() {
           <button className='button'>Store</button>
         </div>
       </div>
+
+
+      <Modal
+        isOpen={showProfileModal}
+        onClose={closeModal}
+        title='jjian'
+      >
+        hellooooo
+        </Modal>
+
+      <Modal
+        isOpen={showStoreModal}
+        onClose={closeModal}
+        title='Store'
+      >
+        heloo
+        </Modal>
+
+      <Modal
+        isOpen={showAboutModal}
+        onClose={closeModal}
+        title='About'
+      >
+        hellooo
+        </Modal>
     </div>
   );
 }
