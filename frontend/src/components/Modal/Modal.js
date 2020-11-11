@@ -12,7 +12,8 @@ const customStyles = {
         bottom: 'auto',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
-        width: '50vw',
+        width: '70vw',
+        maxWidth: '700px',
         height: '80vh',
         backgroundColor: 'white',
     },
@@ -25,7 +26,6 @@ function Modal(props) {
     return (
         <ReactModal
             isOpen={props.isOpen}
-            // onAfterOpen={afterOpenModal}
             onRequestClose={props.onClose}
             style={customStyles}
             contentLabel='Modal'

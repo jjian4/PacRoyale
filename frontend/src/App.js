@@ -7,10 +7,12 @@ import Arena from "./pages/Arena/Arena";
 import "./App.scss";
 import { PAGES } from "./utils/constants";
 import io from "socket.io-client";
-import PageTransitionContext from "./contexts/PageTransitionContext";
+import AppContext from "./contexts/AppContext";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(PAGES.LOGIN);
+  const [isHost, setStateIsHost] = useState(false);
+
   useEffect(() => {
     const socket = io("http://localhost:3001", {
       transports: ["websocket", "polling", "flashsocket"],
@@ -38,7 +40,7 @@ function App() {
   }
   return (
     <div>
-      <PageTransitionContext.Provider
+      <AppContext.Provider
         value={{
           goToArena: () => {
             setCurrentPage(PAGES.ARENA);
@@ -52,10 +54,14 @@ function App() {
           goToMainMenu: () => {
             setCurrentPage(PAGES.MAIN_MENU);
           },
+          setIsHost: (isHost) => {
+            setStateIsHost(isHost);
+          },
+          isHost: isHost,
         }}
       >
         {page}
-      </PageTransitionContext.Provider>
+      </AppContext.Provider>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState, useContext } from "react";
-import PageTransitionContext from "./../../contexts/PageTransitionContext";
+import AppContext from "./../../contexts/AppContext";
 import "./Login.scss";
 
 function Login() {
@@ -9,7 +9,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const { goToMainMenu } = useContext(PageTransitionContext);
+  const { goToMainMenu } = useContext(AppContext);
 
   const changeForm = shouldShowRegister => {
     setUsername('');

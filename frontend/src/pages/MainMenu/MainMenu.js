@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import Modal from "../../components/Modal/Modal";
-import PageTransitionContext from "./../../contexts/PageTransitionContext";
+import AppContext from "./../../contexts/AppContext";
 import "./MainMenu.scss";
 
 function MainMenu() {
@@ -12,7 +12,9 @@ function MainMenu() {
   const [showStoreModal, setShowStoreModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false);
 
-  const { goToLogin } = useContext(PageTransitionContext);
+  const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
+
+  const { goToLogin, isHost } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -36,6 +38,7 @@ function MainMenu() {
     setShowProfileModal(false);
     setShowStoreModal(false);
     setShowAboutModal(false);
+    setShowGameSettingsModal(false);
   }
 
   return (
@@ -63,7 +66,7 @@ function MainMenu() {
       <div className="centeredMenu">
         <div className="title">493 Battle Royale</div>
         <div className='menuButtons'>
-          <button className='button'>Create Game</button>
+          <button className='button' onClick={() => setShowGameSettingsModal(true)}>Create Game</button>
           <button className='button'>Join Game</button>
           <button className='button'>Store</button>
         </div>
@@ -76,7 +79,7 @@ function MainMenu() {
         title='jjian'
       >
         hellooooo
-        </Modal>
+      </Modal>
 
       <Modal
         isOpen={showStoreModal}
@@ -84,7 +87,7 @@ function MainMenu() {
         title='Store'
       >
         heloo
-        </Modal>
+      </Modal>
 
       <Modal
         isOpen={showAboutModal}
@@ -92,7 +95,16 @@ function MainMenu() {
         title='About'
       >
         hellooo
-        </Modal>
+      </Modal>
+
+      <Modal
+        isOpen={showGameSettingsModal}
+        onClose={closeModal}
+        title='Game Settings'
+      >
+        game
+      </Modal>
+
     </div>
   );
 }

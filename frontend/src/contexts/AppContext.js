@@ -1,10 +1,12 @@
 import { createContext } from "react";
 
-const PageTransitionContext = createContext({
+const AppContext = createContext({
   goToArena: () => { },
   goToLobby: () => { },
   goToLogin: () => { },
   goToMainMenu: () => { },
+  setIsHost: () => { },
+  isHost: false,
 });
 
-export default PageTransitionContext;
+export default AppContext;
