@@ -16,6 +16,10 @@ io.on("connection", (client) => {
   client.on("newGame", handleNewGame);
   client.on("joinGame", handleJoinGame);
   client.on("startGame", handleStartGame);
+  client.on("getRooms", function () {
+    console.log("getRooms");
+    client.emit("rooms", JSON.stringify(state));
+  });
 
   function handleNewGame(username) {
     let roomName = makeId(5);
@@ -26,6 +30,8 @@ io.on("connection", (client) => {
 
     client.join(roomName);
     client.username = username;
+    client.broadcast.emit("rooms", JSON.stringify(state));
+    console.log("created game");
   }
 
   function handleJoinGame(roomName, username) {

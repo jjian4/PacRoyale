@@ -25,7 +25,7 @@ function addPlayerToGame(state, username) {
 }
 
 function gameLoop(state) {
-  for (username in Object.keys(state.players)) {
+  for (const username of Object.keys(state.players)) {
     state.players[username].pos.x += state.players[username].vel.x;
     state.players[username].pos.y += state.players[username].vel.y;
   }

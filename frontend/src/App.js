@@ -1,26 +1,17 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Login from "./pages/Login/Login";
 import MainMenu from "./pages/MainMenu/MainMenu";
 import Lobby from "./pages/Lobby/Lobby";
 import Arena from "./pages/Arena/Arena";
 import "./App.scss";
 import { PAGES } from "./utils/constants";
-import io from "socket.io-client";
 import AppContext from "./contexts/AppContext";
+import io from "socket.io-client";
 
 function App() {
   const [currentPage, setCurrentPage] = useState(PAGES.LOGIN);
   const [isHost, setStateIsHost] = useState(false);
-
-  useEffect(() => {
-    const socket = io("http://localhost:3001", {
-      transports: ["websocket", "polling", "flashsocket"],
-    });
-    socket.on("init", (data) => {
-      console.log(data);
-    });
-  }, []);
   let page = null;
   switch (currentPage) {
     case PAGES.LOGIN:
@@ -58,6 +49,9 @@ function App() {
             setStateIsHost(isHost);
           },
           isHost: isHost,
+          socket: io("http://localhost:3001", {
+            transports: ["websocket", "polling", "flashsocket"],
+          }),
         }}
       >
         {page}
