@@ -1,19 +1,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
 import MainMenu from "./pages/MainMenu/MainMenu";
 import Lobby from "./pages/Lobby/Lobby";
 import Arena from "./pages/Arena/Arena";
-import Store from "./pages/Store/Store";
-import Minigame from "./pages/Minigame/Minigame";
-import About from "./pages/About/About";
 import "./App.scss";
 import { PAGES } from "./utils/constants";
 import io from "socket.io-client";
-import PageTransitionContext from "./contexts/PageTransitionContext";
 import firebase from './utils/firebase';
 import SplashScreen from "./pages/SplashScreen/SplashScreen";
+import AppContext from "./contexts/AppContext";
+
 
 function App() {
 
@@ -32,6 +29,8 @@ function App() {
     }
   })
 
+  const [isHost, setStateIsHost] = useState(false);
+
   useEffect(() => {
     const socket = io("http://localhost:3001", {
       transports: ["websocket", "polling", "flashsocket"],
@@ -45,14 +44,8 @@ function App() {
     case PAGES.LOGIN:
       page = <Login />;
       break;
-    case PAGES.REGISTER:
-      page = <Register />;
-      break;
     case PAGES.MAIN_MENU:
       page = <MainMenu />;
-      break;
-    case PAGES.STORE:
-      page = <Store />;
       break;
     case PAGES.LOBBY:
       page = <Lobby />;
@@ -74,11 +67,8 @@ function App() {
   }
   return (
     <div>
-      <PageTransitionContext.Provider
+      <AppContext.Provider
         value={{
-          goToAbout: () => {
-            setCurrentPage(PAGES.ABOUT);
-          },
           goToArena: () => {
             setCurrentPage(PAGES.ARENA);
           },
@@ -91,19 +81,14 @@ function App() {
           goToMainMenu: () => {
             setCurrentPage(PAGES.MAIN_MENU);
           },
-          goToMinigame: () => {
-            setCurrentPage(PAGES.MINIGAME);
+          setIsHost: (isHost) => {
+            setStateIsHost(isHost);
           },
-          goToRegister: () => {
-            setCurrentPage(PAGES.REGISTER);
-          },
-          goToStore: () => {
-            setCurrentPage(PAGES.STORE);
-          },
+          isHost: isHost,
         }}
       >
         {page}
-      </PageTransitionContext.Provider>
+      </AppContext.Provider>
     </div>
   );
 }

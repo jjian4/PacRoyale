@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useContext } from "react";
-import PageTransitionContext from "./../../contexts/PageTransitionContext";
 import firebase from "./../../utils/firebase";
+import AppContext from "./../../contexts/AppContext";
 import "./Login.scss";
 
 function Login() {
@@ -12,7 +12,7 @@ function Login() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMessage, setErrorMessage]  = useState('');
   const [doPasswordsMatch, setDoPasswordsMatch]  = useState(true);
-  const { goToMainMenu } = useContext(PageTransitionContext);
+  const { goToMainMenu } = useContext(AppContext);
 
   const changeForm = shouldShowRegister => {
     setUsername('');

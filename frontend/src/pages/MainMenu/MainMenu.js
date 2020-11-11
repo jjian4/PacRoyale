@@ -1,16 +1,21 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
-import PageTransitionContext from "./../../contexts/PageTransitionContext";
 import firebase from "./../../utils/firebase";
+import Modal from "../../components/Modal/Modal";
+import AppContext from "./../../contexts/AppContext";
 import "./MainMenu.scss";
 
 function MainMenu() {
   const [showDropdown, setShowDropdown] = useState(false);
-  let dropdownRef;
+  let topRightRef;
 
-  const { goToStore } = useContext(PageTransitionContext);
-  const { goToAbout } = useContext(PageTransitionContext);
-  const { goToLogin } = useContext(PageTransitionContext);
+  const [showProfileModal, setShowProfileModal] = useState(false);
+  const [showStoreModal, setShowStoreModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = useState(false);
+
+  const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
+
+  const { goToLogin, isHost } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -37,25 +42,38 @@ const logOut = () => {
 
   // Detect outside click to close dropdown
   const handleClickOutside = event => {
-    if (dropdownRef && !dropdownRef.contains(event.target)) {
+    if (topRightRef && !topRightRef.contains(event.target)) {
       setShowDropdown(false);
     }
   }
 
+  const closeModal = () => {
+    setShowProfileModal(false);
+    setShowStoreModal(false);
+    setShowAboutModal(false);
+    setShowGameSettingsModal(false);
+  }
+
   return (
     <div className='MainMenu'>
-
-      <div className='menuTopRight' onClick={() => setShowDropdown(true)}>
+      <div
+        className='menuTopRight'
+        onClick={() => setShowDropdown(!showDropdown)}
+        ref={(node) => topRightRef = node}
+      >
         <div className='profileButton'></div>
         <div className='profileButtonLabel'>jjian</div>
 
         {showDropdown && (
-          <div className='profileDropdown' ref={(node) => dropdownRef = node}>
+          <div className='profileDropdown'>
             {/* TODO: Make Profile modal */}
             <div>Profile</div>
             <div onClick={goToStore}>Store</div>
             <div onClick={goToAbout}>About this Game</div>
             <div onClick={logOut}>Logout</div>
+            <div onClick={() => setShowProfileModal(true)}>Profile</div>
+            <div onClick={() => setShowStoreModal(true)}>Store</div>
+            <div onClick={() => setShowAboutModal(true)}>About this Game</div>
           </div>
         )}
       </div>
@@ -63,11 +81,45 @@ const logOut = () => {
       <div className="centeredMenu">
         <div className="title">493 Battle Royale</div>
         <div className='menuButtons'>
-          <button className='button'>Create Game</button>
+          <button className='button' onClick={() => setShowGameSettingsModal(true)}>Create Game</button>
           <button className='button'>Join Game</button>
           <button className='button'>Store</button>
         </div>
       </div>
+
+
+      <Modal
+        isOpen={showProfileModal}
+        onClose={closeModal}
+        title='jjian'
+      >
+        hellooooo
+      </Modal>
+
+      <Modal
+        isOpen={showStoreModal}
+        onClose={closeModal}
+        title='Store'
+      >
+        heloo
+      </Modal>
+
+      <Modal
+        isOpen={showAboutModal}
+        onClose={closeModal}
+        title='About'
+      >
+        hellooo
+      </Modal>
+
+      <Modal
+        isOpen={showGameSettingsModal}
+        onClose={closeModal}
+        title='Game Settings'
+      >
+        game
+      </Modal>
+
     </div>
   );
 }
