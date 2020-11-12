@@ -13,6 +13,23 @@
     color: darkcyan;
 }
 
+/* Avatars (skins) */
+.avatar {
+    display: inline-block;
+    border: 1px solid gray;
+    border-radius: 50%;
+}
+
+.avatar-blue {
+    background-color: lightblue;
+}
+.avatar-red {
+    background-color: red;
+}
+.avatar-gold {
+    background-color: gold;
+}
+
 /* Box sizing rules */
 *,
 *::before,

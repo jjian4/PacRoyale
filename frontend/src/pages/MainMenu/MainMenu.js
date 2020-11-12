@@ -18,7 +18,7 @@ function MainMenu() {
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
 
-  const { goToLogin, username } = useContext(AppContext);
+  const { goToLogin, goToLobby, username } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -66,12 +66,11 @@ function MainMenu() {
         onClick={() => setShowDropdown(!showDropdown)}
         ref={(node) => (topRightRef = node)}
       >
-        <div className="profileButton"></div>
+        <div className="profileButton avatar avatar-blue"></div>
         <div className="profileButtonLabel">{username}</div>
+
         {showDropdown && (
           <div className="profileDropdown">
-            {/* TODO: Make Profile modal */}
-            <div>Profile</div>
             <div onClick={() => setShowProfileModal(true)}>Profile</div>
             <div onClick={() => setShowStoreModal(true)}>Store</div>
             <div onClick={() => setShowAboutModal(true)}>About this Game</div>
@@ -79,6 +78,7 @@ function MainMenu() {
           </div>
         )}
       </div>
+
       <div className="centeredMenu">
         <div className="title">493 Battle Royale</div>
         <div className="menuButtons">
@@ -92,8 +92,14 @@ function MainMenu() {
             Join Game
           </button>
           <button className="button">Store</button>
+
+          {/* REMOVE */}
+          <button className="button" onClick={goToLobby}>
+            Lobby (for testing, will remove)
+          </button>
         </div>
       </div>
+
       <Modal isOpen={showProfileModal} onClose={closeModal} title="jjian">
         Profile
       </Modal>

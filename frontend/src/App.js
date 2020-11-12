@@ -16,7 +16,7 @@ const socket = io("http://localhost:3001", {
 });
 
 function App() {
-  // detecting if the user is signed in as async process
+  // detecting if the user is signed in is async
   // since we don't want the user to sit at the sign in while Firebase checks if they're
   // signed in or not, we show a splash/loading screen
   const [currentPage, setCurrentPage] = useState(PAGES.SPLASH_SCREEN);
@@ -57,6 +57,7 @@ function App() {
     default:
       break;
   }
+
   return (
     <div>
       <AppContext.Provider
