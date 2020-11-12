@@ -3,9 +3,11 @@ import { useState, useEffect, useContext } from "react";
 import firebase from "./../../utils/firebase";
 import Modal from "../../components/Modal/Modal";
 import AppContext from "./../../contexts/AppContext";
-import "./MainMenu.scss";
 import JoinGame from "./../../modals/JoinGame/JoinGame";
 import GameSettings from "./../../modals/GameSettings/GameSettings";
+import Store from "./../../modals/Store/Store";
+import "./MainMenu.scss";
+import { AVATARS } from "../../utils/constants";
 
 function MainMenu() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -64,7 +66,8 @@ function MainMenu() {
         onClick={() => setShowDropdown(!showDropdown)}
         ref={(node) => (topRightRef = node)}
       >
-        <div className='profileButton avatar avatar-blue'></div>
+        {/* TODO: get the user's equiped skin from database */}
+        <div className='profileButton avatar' style={AVATARS.Blue.style} />
         <div className='profileButtonLabel'>jjian</div>
 
         {showDropdown && (
@@ -89,7 +92,7 @@ function MainMenu() {
           <button className="button" onClick={() => setJoinGameModal(true)}>
             Join Game
           </button>
-          <button className="button">Store</button>
+          <button className="button" onClick={() => setShowAboutModal(true)}>How to Play</button>
 
           {/* REMOVE */}
           <button className='button' onClick={goToLobby}>Lobby (for testing, will remove)</button>
@@ -100,7 +103,7 @@ function MainMenu() {
         Profile
       </Modal>
       <Modal isOpen={showStoreModal} onClose={closeModal} title="Store">
-        Store
+        <Store />
       </Modal>
       <Modal isOpen={showAboutModal} onClose={closeModal} title="About">
         About

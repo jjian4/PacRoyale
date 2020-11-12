@@ -1,22 +1,15 @@
 import React from "react";
 import { useState, useContext } from "react";
 import AppContext from "./../../contexts/AppContext";
+import { AVATARS } from "./../../utils/constants";
 import "./Lobby.scss";
-
-// TODO: move this to a constant file
-const AVATARS = {
-  BLUE: 'blue',
-  RED: 'red',
-  GOLD: 'gold',
-  FAZE: 'faze',
-};
 
 function Lobby() {
   const [players, setPlayers] = useState([
     // TODO: Hard-coded, will remove
-    { username: 'jjian', avatar: AVATARS.BLUE, isHost: true },
-    { username: 'hawattoo', avatar: AVATARS.RED },
-    { username: 'jamesxu', avatar: AVATARS.GOLD },
+    { username: 'jjian', avatar: 'blue', isHost: true },
+    { username: 'hawattoo', avatar: 'target' },
+    { username: 'jamesxu', avatar: 'navy-stripes' },
   ]);
   const [gameCode, setGameCode] = useState(12345);
 
@@ -46,7 +39,10 @@ function Lobby() {
           {players.map((player, index) => (
             <div className='col-md-6' key={index}>
               <div className='playerRow'>
-                <div className={`avatar avatar-${player.avatar}`}></div>
+                <div
+                  className='avatar'
+                  style={Object.values(AVATARS).find(avatar => avatar.name === player.avatar).style}
+                />
                 {player.username} {player.isHost && '(host)'}
               </div>
             </div>

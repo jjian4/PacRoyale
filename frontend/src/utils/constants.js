@@ -8,6 +8,79 @@ export const PAGES = {
   SPLASH_SCREEN: "splash_screen",
 };
 
+export const AVATARS = {
+  Blue: {
+    name: 'blue',
+    price: 0,
+    style: {
+      backgroundColor: 'blue'
+    }
+  },
+  Red: {
+    name: 'red',
+    price: 0,
+    style: {
+      backgroundColor: 'red'
+    }
+  },
+  Green: {
+    name: 'green',
+    price: 0,
+    style: {
+      backgroundColor: 'green'
+    }
+  },
+  Purple: {
+    name: 'purple',
+    price: 600,
+    style: {
+      backgroundColor: 'purple'
+    }
+  },
+  Gold: {
+    name: 'gold',
+    price: 600,
+    style: {
+      backgroundColor: 'gold'
+    }
+  },
+  "Navy Sripes": {
+    name: 'navy-stripes',
+    price: 1200,
+    style: {
+      background: 'repeating-linear-gradient(45deg, darkslateblue, darkslateblue, 10px, navy 10px, navy 20px)'
+    }
+  },
+  "Gray Sripes": {
+    name: 'gray-stripes',
+    price: 1200,
+    style: {
+      background: 'repeating-linear-gradient(45deg, lightgray, lightgray, 10px, gray 10px, gray 20px)'
+    }
+  },
+  Target: {
+    name: 'target',
+    price: 2000,
+    style: {
+      background: 'repeating-radial-gradient(circle, red, red 15%, whitesmoke 15%, whitesmoke 30%)'
+    }
+  },
+  "Target 2": {
+    name: 'target2',
+    price: 2000,
+    style: {
+      background: 'repeating-radial-gradient(circle, blue, red 20%, yellow 20%, yellow 30%)'
+    }
+  },
+  Black: {
+    name: 'black',
+    price: 9000,
+    style: {
+      backgroundColor: 'black'
+    }
+  },
+}
+
 export const firebaseConfig = {
   apiKey: "AIzaSyAIPYSCzBarY45ObEhm8BQu9jAhnIsUcNE",
   authDomain: "final-project-f528e.firebaseapp.com",
