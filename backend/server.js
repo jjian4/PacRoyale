@@ -88,7 +88,7 @@ io.on("connection", (client) => {
     const roomName = clientRooms[client.id];
     console.log(clientRooms);
     console.log(client.id);
-    if (!roomName && !state[roomName]) {
+    if (!roomName || !state[roomName]) {
       io.sockets.in(roomName).emit("hostDisconnect");
       return;
     }
