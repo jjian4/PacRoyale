@@ -20,7 +20,7 @@ function MainMenu() {
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
 
-  const { goToLogin, goToLobby } = useContext(AppContext);
+  const { goToLogin, goToLobby, username } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -33,15 +33,17 @@ function MainMenu() {
   });
 
   const logOut = () => {
-
-    firebase.auth().signOut().then(function () {
-      // Sign-out successful.
-      goToLogin();
-    }).catch(function (error) {
-      // An error happened.
-      console.log(error);
-    });
-
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        // Sign-out successful.
+        goToLogin();
+      })
+      .catch(function (error) {
+        // An error happened.
+        console.log(error);
+      });
   };
 
   // Detect outside click to close dropdown
@@ -95,7 +97,9 @@ function MainMenu() {
           <button className="button" onClick={() => setShowAboutModal(true)}>How to Play</button>
 
           {/* REMOVE */}
-          <button className='button' onClick={goToLobby}>Lobby (for testing, will remove)</button>
+          <button className="button" onClick={goToLobby}>
+            Lobby (for testing, will remove)
+          </button>
         </div>
       </div>
 

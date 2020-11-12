@@ -98,7 +98,7 @@ function Login() {
                 {errorMessage}
                 <button
                   type="button"
-                  class="close"
+                  className="close"
                   data-dismiss="alert"
                   aria-label="Close"
                 >
@@ -148,7 +148,7 @@ function Login() {
                 {errorMessage}
                 <button
                   type="button"
-                  class="close"
+                  className="close"
                   data-dismiss="alert"
                   aria-label="Close"
                 >
@@ -197,7 +197,9 @@ function Login() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                 />
-                <div class={doPasswordsMatch ? "invalid-feedback" : "feedback"}>
+                <div
+                  className={doPasswordsMatch ? "invalid-feedback" : "feedback"}
+                >
                   Passwords are do not match.
                 </div>
               </label>

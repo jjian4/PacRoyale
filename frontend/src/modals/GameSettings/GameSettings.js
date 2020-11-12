@@ -4,13 +4,14 @@ import "./GameSettings.scss";
 import AppContext from "./../../contexts/AppContext";
 
 function GameSettings() {
-  const { socket } = useContext(AppContext);
+  const { socket, goToLobby, setIsHost, username } = useContext(AppContext);
   const handleCreateLobby = () => {
-    socket.emit("newGame");
+    socket.emit("newGame", username); //TODO: Update username
   };
   useEffect(() => {
-    socket.on("gameCode", (data) => {
-      console.log(data);
+    socket.on("lobbyCreated", (data) => {
+      goToLobby();
+      setIsHost(true);
     });
   }, []);
   return (
