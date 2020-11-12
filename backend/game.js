@@ -1,17 +1,19 @@
 module.exports = {
-  initGame,
-  addPlayerToGame,
+  initLobby,
+  addPlayerToLobby,
   gameLoop,
   updatePlayerVelocity,
 };
 
-function initGame() {
+function initLobby(username) {
   return {
+    host: username,
     players: {},
+    started: false,
   };
 }
 
-function addPlayerToGame(state, username) {
+function addPlayerToLobby(state, username, isHost) {
   state.players[username] = {
     pos: {
       x: 0,
@@ -21,6 +23,7 @@ function addPlayerToGame(state, username) {
       x: 5,
       y: 0,
     },
+    isHost,
   };
 }
 

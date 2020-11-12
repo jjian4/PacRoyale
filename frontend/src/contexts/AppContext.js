@@ -8,6 +8,7 @@ const AppContext = createContext({
   setIsHost: () => {},
   isHost: false,
   socket: null,
+  username: "",
 });
 
 export default AppContext;

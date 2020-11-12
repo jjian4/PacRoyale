@@ -2,10 +2,10 @@ import React from "react";
 import "./SplashScreen.scss";
 
 function SplashScreen() {
-    return (
+  return (
     // Adapted from https://codepen.io/nxworld/pen/zwGpXr
     <div className="splashScreen">
-        <div class="loading loading08">
+      <div className="loading loading08">
         <span data-text="L">L</span>
         <span data-text="O">O</span>
         <span data-text="A">A</span>
@@ -13,9 +13,9 @@ function SplashScreen() {
         <span data-text="I">I</span>
         <span data-text="N">N</span>
         <span data-text="G">G</span>
-        </div>
+      </div>
     </div>
-    )
+  );
 }
 
 export default SplashScreen;

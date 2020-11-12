@@ -18,7 +18,7 @@ function MainMenu() {
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
 
-  const { goToLogin, isHost } = useContext(AppContext);
+  const { goToLogin, username } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -30,17 +30,19 @@ function MainMenu() {
     };
   });
 
-const logOut = () => {
-  
-  firebase.auth().signOut().then(function() {
-    // Sign-out successful.
-    goToLogin();
-  }).catch(function(error) {
-    // An error happened.
-    console.log(error);
-  });
-
-};
+  const logOut = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(function () {
+        // Sign-out successful.
+        goToLogin();
+      })
+      .catch(function (error) {
+        // An error happened.
+        console.log(error);
+      });
+  };
 
   // Detect outside click to close dropdown
   const handleClickOutside = (event) => {
@@ -65,7 +67,7 @@ const logOut = () => {
         ref={(node) => (topRightRef = node)}
       >
         <div className="profileButton"></div>
-        <div className="profileButtonLabel">jjian</div>
+        <div className="profileButtonLabel">{username}</div>
         {showDropdown && (
           <div className="profileDropdown">
             {/* TODO: Make Profile modal */}

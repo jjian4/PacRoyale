@@ -2,8 +2,8 @@ const io = require("socket.io")();
 const { makeId } = require("./utils");
 const { MAX_PLAYERS, FRAME_RATE } = require("./constants");
 const {
-  initGame,
-  addPlayerToGame,
+  initLobby,
+  addPlayerToLobby,
   gameLoop,
   updatePlayerVelocity,
 } = require("./game");
@@ -16,22 +16,23 @@ io.on("connection", (client) => {
   client.on("newGame", handleNewGame);
   client.on("joinGame", handleJoinGame);
   client.on("startGame", handleStartGame);
-  client.on("getRooms", function () {
-    console.log("getRooms");
-    client.emit("rooms", JSON.stringify(state));
-  });
+  client.on("getRooms", emitAllRoomInfo);
+  client.on("playerDisconnect", handleDisconnect);
+  client.on("disconnect", handleDisconnect);
 
   function handleNewGame(username) {
     let roomName = makeId(5);
     clientRooms[client.id] = roomName;
     client.emit("gameCode", roomName);
 
-    state[roomName] = initGame();
+    state[roomName] = initLobby(username);
+    addPlayerToLobby(state[roomName], username, true);
 
     client.join(roomName);
     client.username = username;
-    client.broadcast.emit("rooms", JSON.stringify(state));
-    console.log("created game");
+    client.isHost = true;
+    client.emit("lobbyCreated");
+    broadcastAllRoomInfo();
   }
 
   function handleJoinGame(roomName, username) {
@@ -56,11 +57,11 @@ io.on("connection", (client) => {
     clientRooms[client.id] = roomName;
     client.join(roomName);
     client.username = username;
+    client.isHost = false;
 
-    addPlayerToGame(state[roomName], username);
-    io.sockets
-      .in(roomName)
-      .emit("players", JSON.stringify(state[roomName].players));
+    addPlayerToLobby(state[roomName], username, false);
+    emitRoomInfo(roomName);
+    broadcastAllRoomInfo();
   }
 
   function handleStartGame(roomName) {
@@ -80,6 +81,59 @@ io.on("connection", (client) => {
       return;
     }
     updatePlayerVelocity(state[roomName], client.username, keyCode);
+  }
+
+  function handleDisconnect() {
+    console.log("disconnect");
+    const roomName = clientRooms[client.id];
+    console.log(clientRooms);
+    console.log(client.id);
+    if (!roomName && !state[roomName]) {
+      io.sockets.in(roomName).emit("hostDisconnect");
+      return;
+    }
+    if (client.isHost && !state[roomName].started) {
+      io.sockets.in(roomName).emit("hostDisconnect");
+      delete state[roomName];
+    } else {
+      delete state[roomName].players[client.username];
+      emitRoomInfo(roomName);
+    }
+    broadcastAllRoomInfo();
+  }
+
+  function broadcastAllRoomInfo() {
+    const rooms = [];
+    for (let [_, room] of Object.entries(state)) {
+      rooms.push({
+        host: room.host,
+        numPlayers: Object.keys(room.players).length,
+      });
+    }
+    console.log(rooms);
+    io.sockets.emit("rooms", JSON.stringify(rooms));
+  }
+
+  function emitAllRoomInfo() {
+    const rooms = [];
+    for (let [_, room] of Object.entries(state)) {
+      rooms.push({
+        host: room.host,
+        numPlayers: Object.keys(room.players).length,
+      });
+    }
+    console.log(rooms);
+    client.emit("rooms", JSON.stringify(rooms));
+  }
+
+  function emitRoomInfo(roomName) {
+    io.sockets.in(roomName).emit(
+      "players",
+      JSON.stringify({
+        gameCode: roomName,
+        players: Object.keys(state[roomName].players),
+      })
+    );
   }
 });
 
@@ -102,6 +156,7 @@ function emitGameState(room, gameState) {
 
 function emitGameOver(room, winner) {
   io.sockets.in(room).emit("gameOver", JSON.stringify({ winner }));
+  delete state[room];
 }
 
 io.listen(3001);
