@@ -22,6 +22,7 @@ function Lobby() {
     });
     socket.on("players", (data) => {
       const lobbyInfo = JSON.parse(data);
+      console.log(lobbyInfo);
       setGameCode(lobbyInfo.gameCode);
       setHost(lobbyInfo.host);
       setPlayers(lobbyInfo.players);

@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useContext } from "react";
 import firebase from "./../../utils/firebase";
+import User from "./../../utils/user";
 import AppContext from "./../../contexts/AppContext";
 import "./Login.scss";
 
@@ -12,7 +13,7 @@ function Login() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [doPasswordsMatch, setDoPasswordsMatch] = useState(true);
-  const { goToMainMenu } = useContext(AppContext);
+  const { goToMainMenu, goToLogin, user, setUser } = useContext(AppContext);
 
   const changeForm = (shouldShowRegister) => {
     setUsername("");
@@ -61,10 +62,15 @@ function Login() {
 
         // on successful registration, update username and log them in
         // redirect to main menu
-        var user = firebase.auth().currentUser;
-        user
+        var firebaseUser = firebase.auth().currentUser;
+        firebaseUser
           .updateProfile({
             displayName: username,
+          })
+          .then(function () {
+            let newUser = new User(firebaseUser);
+            newUser.addUserToFirebaseStore();
+            setUser(newUser);
           })
           .then(function () {
             goToMainMenu();
@@ -80,6 +86,12 @@ function Login() {
         console.log(errorMessage, errorCode);
         setErrorMessage(error.message);
       });
+  };
+
+
+  const createUserInFirebaseDB = () => {
+    // this function is called when a user first registers
+    // it sets the default values for their profile 
   };
 
   return (
@@ -200,7 +212,7 @@ function Login() {
                 <div
                   className={doPasswordsMatch ? "invalid-feedback" : "feedback"}
                 >
-                  Passwords are do not match.
+                  Passwords do not match.
                 </div>
               </label>
 

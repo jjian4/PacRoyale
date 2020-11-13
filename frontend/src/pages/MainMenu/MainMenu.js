@@ -19,8 +19,7 @@ function MainMenu() {
 
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
-
-  const { goToLogin, goToLobby, username } = useContext(AppContext);
+  const { goToLogin, goToLobby, user } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -72,7 +71,7 @@ function MainMenu() {
         <div className="profileButton avatar" style={AVATARS.Blue.style}>
           <div className="avatarMouth" />
         </div>
-        <div className="profileButtonLabel">{username}</div>
+        <div className="profileButtonLabel">{user.username}</div>
 
         {showDropdown && (
           <div className="profileDropdown">

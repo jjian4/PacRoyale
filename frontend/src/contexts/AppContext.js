@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import User from "../utils/user";
 
 const AppContext = createContext({
   goToArena: () => {},
@@ -6,9 +7,10 @@ const AppContext = createContext({
   goToLogin: () => {},
   goToMainMenu: () => {},
   setIsHost: () => {},
+  setUser: () => {},
   isHost: false,
   socket: null,
-  username: "",
+  user: new User({ username: '', uid: {} }),
 });
 
 export default AppContext;

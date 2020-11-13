@@ -7,6 +7,7 @@ import Arena from "./pages/Arena/Arena";
 import "./App.scss";
 import { PAGES } from "./utils/constants";
 import firebase from "./utils/firebase";
+import User from "./utils/user";
 import SplashScreen from "./pages/SplashScreen/SplashScreen";
 import AppContext from "./contexts/AppContext";
 import io from "socket.io-client";
@@ -21,16 +22,19 @@ function App() {
   // signed in or not, we show a splash/loading screen
   const [currentPage, setCurrentPage] = useState(PAGES.SPLASH_SCREEN);
   const [isHost, setStateIsHost] = useState(false);
-  const [username, setUsername] = useState(true);
+  const [user, setUser] = useState(true);
 
   // If user is signed in, we redirect to main menu
   // If not, we go to the login page
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
-      if (user) {
+    firebase.auth().onAuthStateChanged((firebaseUser) => {
+      if (firebaseUser) {
+        // if the user is logged in, retrieve his info
         setCurrentPage(PAGES.MAIN_MENU);
-        setUsername(user.displayName);
+        let newUser = new User(firebaseUser);
+        newUser.getCoins();
+        newUser.getWins();
+        setUser(newUser);
       } else {
         setCurrentPage(PAGES.LOGIN);
       }
@@ -77,9 +81,12 @@ function App() {
           setIsHost: (isHost) => {
             setStateIsHost(isHost);
           },
+          setUser: (user) => {
+            setUser(user);
+          },
           isHost: isHost,
           socket,
-          username,
+          user,
         }}
       >
         {page}

@@ -5,7 +5,7 @@ import { AVATARS } from "../../utils/constants";
 import "./JoinGame.scss";
 
 function JoinGame() {
-  const { socket, username, goToLobby, setIsHost } = useContext(AppContext);
+  const { socket, user, goToLobby, setIsHost } = useContext(AppContext);
   const [activeGames, setActiveGames] = useState([]);
   const [filterInput, setFilterInput] = useState("");
   useEffect(() => {
@@ -27,7 +27,7 @@ function JoinGame() {
   }, []);
 
   const onClickJoinGame = (gameCode) => {
-    socket.emit("joinGame", gameCode, username);
+    socket.emit("joinGame", gameCode, user.username);
   };
 
   return (
