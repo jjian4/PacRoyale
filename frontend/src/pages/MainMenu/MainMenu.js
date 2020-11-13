@@ -19,8 +19,8 @@ function MainMenu() {
 
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
-
-  const { goToLogin, goToLobby, username } = useContext(AppContext);
+  const { goToMainMenu, user, setUser } = useContext(AppContext);
+  const { goToLogin, goToLobby} = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -70,7 +70,7 @@ function MainMenu() {
       >
         {/* TODO: get the user's equiped skin from database */}
         <div className='profileButton avatar' style={AVATARS.Blue.style} />
-        <div className='profileButtonLabel'>jjian</div>
+        <div className='profileButtonLabel'>{user.username}</div>
 
         {showDropdown && (
           <div className="profileDropdown">

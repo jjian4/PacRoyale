@@ -1,11 +1,13 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { AVATARS } from "./../../utils/constants";
 import "./Store.scss";
+import AppContext from "./../../contexts/AppContext";
+
 
 function GameSettings() {
     // TODO; get numCoins from database
-    const [numCoins, setNumCoins] = useState(5000);
+    const { goToMainMenu, goToLogin, user, setUser } = useContext(AppContext);
 
     const buyItem = () => {
         // TODO: subtract coins, update database, set skin as selected
@@ -19,7 +21,7 @@ function GameSettings() {
         <div className='Store'>
             <div className='coins'>
                 <div>
-                    My coins: {numCoins}
+                    My coins: {user.coins}
                 </div>
             </div>
             <div className='storeItems'>
