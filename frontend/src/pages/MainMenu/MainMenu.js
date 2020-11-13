@@ -69,8 +69,8 @@ function MainMenu() {
         ref={(node) => (topRightRef = node)}
       >
         {/* TODO: get the user's equiped skin from database */}
-        <div className='profileButton avatar' style={AVATARS.Blue.style} />
-        <div className='profileButtonLabel'>jjian</div>
+        <div className="profileButton avatar" style={AVATARS.Blue.style} />
+        <div className="profileButtonLabel">{username}</div>
 
         {showDropdown && (
           <div className="profileDropdown">
@@ -94,7 +94,9 @@ function MainMenu() {
           <button className="button" onClick={() => setJoinGameModal(true)}>
             Join Game
           </button>
-          <button className="button" onClick={() => setShowAboutModal(true)}>How to Play</button>
+          <button className="button" onClick={() => setShowAboutModal(true)}>
+            How to Play
+          </button>
 
           {/* REMOVE */}
           <button className="button" onClick={goToLobby}>
