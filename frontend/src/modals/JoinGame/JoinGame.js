@@ -56,7 +56,9 @@ function JoinGame() {
             {/* TODO: include game code */}
             <span className="gameRowLeft">
               {/* TODO: get avatar name from database */}
-              <div className="avatar" style={AVATARS.Blue.style} />
+              <div className="avatar" style={AVATARS.Blue.style}>
+                <div className="avatarMouth" />
+              </div>
               <div>
                 <b>{game.host}'s Arena</b> ({game.gameCode})
               </div>

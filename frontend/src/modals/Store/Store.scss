@@ -1,48 +1,51 @@
 .Store {
+  text-align: center;
+  .coins {
+    margin: 20px 0 5px 0;
     text-align: center;
-    .coins {
-        margin: 20px 0 5px 0;
-        text-align: center;
+    div {
+      display: inline-block;
+      border: 1px solid black;
+      border-radius: 2px;
+      padding: 4px 10px;
+    }
+  }
+  .storeItems {
+    padding: 0 10px;
+    margin: 10px 0;
+    .storeItem {
+      padding: 15px 0;
+      .itemBox {
+        display: inline-block;
+        padding: 8px 14px;
+        border: 1px solid gray;
+        border-radius: 5px;
+        background-color: whitesmoke;
+        .avatar {
+          width: 70px;
+          height: 70px;
+          .avatarMouth {
+            background-color: whitesmoke;
+          }
+        }
+      }
+      .itemName {
+        font-size: 20px;
+        padding: 2px 0;
+      }
+      .itemButton {
+        margin-top: 10px;
         div {
-            display: inline-block;
-            border: 1px solid black;
-            border-radius: 2px;
-            padding: 4px 10px;
+          display: inline-block;
+          border: 1px solid gray;
+          border-radius: 5px;
+          padding: 1px 10px;
+          cursor: pointer;
+          &:hover {
+            background-color: whitesmoke;
+          }
         }
+      }
     }
-    .storeItems {
-        padding: 0 10px;
-        margin: 10px 0;
-        .storeItem {
-            padding: 15px 0;
-            .itemBox {
-                display: inline-block;
-                padding: 8px 14px;
-                border: 1px solid gray;
-                border-radius: 5px;
-                background-color: whitesmoke;
-                .avatar {
-                    width: 70px;
-                    height: 70px;
-                }    
-            }
-            .itemName {
-                font-size: 20px;
-                padding: 2px 0;
-            }
-            .itemButton {
-                margin-top: 10px;
-                div {
-                    display: inline-block;
-                    border: 1px solid gray;
-                    border-radius: 5px;
-                    padding: 1px 10px;        
-                    cursor: pointer;
-                    &:hover {
-                        background-color: whitesmoke;
-                    }    
-                }
-            }
-        }
-    }
+  }
 }

@@ -66,10 +66,12 @@ io.on("connection", (client) => {
   }
 
   function handleKeydown(keyCode) {
+    console.log("handle keycode");
     const roomName = clientRooms[client.id];
     if (!roomName) {
       return;
     }
+    console.log("handle keycode2");
     try {
       keyCode = parseInt(keyCode);
     } catch (e) {
@@ -157,6 +159,7 @@ io.on("connection", (client) => {
 });
 
 function startGameInterval(roomName) {
+  state[roomName].started = true;
   const intervalId = setInterval(() => {
     const winner = gameLoop(state[roomName]);
     if (!winner) {

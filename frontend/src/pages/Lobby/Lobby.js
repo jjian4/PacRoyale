@@ -2,23 +2,18 @@ import React from "react";
 import { useState, useContext, useEffect } from "react";
 import AppContext from "./../../contexts/AppContext";
 import "./Lobby.scss";
-
-// TODO: move this to a constant file
-const AVATARS = {
-  BLUE: "blue",
-  RED: "red",
-  GOLD: "gold",
-  FAZE: "faze",
-};
+import { AVATARS } from "./../../utils/constants";
 
 function Lobby() {
-  const { socket, goToMainMenu } = useContext(AppContext);
-  const { isHost, goToArena } = useContext(AppContext);
+  const { isHost, socket, goToMainMenu, goToArena } = useContext(AppContext);
   const [players, setPlayers] = useState([]);
   const [gameCode, setGameCode] = useState("");
   const [host, setHost] = useState("");
   useEffect(() => {
     socket.emit("getPlayers");
+    socket.on("init", () => {
+      goToArena();
+    });
     socket.on("hostDisconnect", () => {
       goToMainMenu();
     });
@@ -29,17 +24,13 @@ function Lobby() {
       const lobbyInfo = JSON.parse(data);
       setGameCode(lobbyInfo.gameCode);
       setHost(lobbyInfo.host);
-      setPlayers(
-        lobbyInfo.players.map((player) => {
-          return { ...player, avatar: AVATARS.BLUE };
-        })
-      );
+      setPlayers(lobbyInfo.players);
     });
   }, []);
 
   const startGame = () => {
     // TODO: Start the game in socketio
-
+    socket.emit("startGame", gameCode);
     goToArena();
   };
 
@@ -62,7 +53,9 @@ function Lobby() {
           {players.map((player, index) => (
             <div className="col-md-6" key={index}>
               <div className="playerRow">
-                <div className={`avatar avatar-${player.avatar}`}></div>
+                <div className="avatar" style={AVATARS.Blue.style}>
+                  <div className="avatarMouth" />
+                </div>
                 {player.username} {player.isHost && "(host)"}
               </div>
             </div>

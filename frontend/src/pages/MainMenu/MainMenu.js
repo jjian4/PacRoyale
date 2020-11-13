@@ -69,7 +69,9 @@ function MainMenu() {
         ref={(node) => (topRightRef = node)}
       >
         {/* TODO: get the user's equiped skin from database */}
-        <div className="profileButton avatar" style={AVATARS.Blue.style} />
+        <div className="profileButton avatar" style={AVATARS.Blue.style}>
+          <div className="avatarMouth" />
+        </div>
         <div className="profileButtonLabel">{username}</div>
 
         {showDropdown && (
