@@ -1,25 +1,41 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
 import AppContext from "./../../contexts/AppContext";
-import { AVATARS } from "./../../utils/constants";
 import "./Lobby.scss";
+
+// TODO: move this to a constant file
+const AVATARS = {
+  BLUE: "blue",
+  RED: "red",
+  GOLD: "gold",
+  FAZE: "faze",
+};
 
 function Lobby() {
   const { socket, goToMainMenu } = useContext(AppContext);
+  const { isHost, goToArena } = useContext(AppContext);
+  const [players, setPlayers] = useState([]);
+  const [gameCode, setGameCode] = useState("");
+  const [host, setHost] = useState("");
   useEffect(() => {
-    socket.on("hostDisconnect", (data) => {
+    socket.emit("getPlayers");
+    socket.on("hostDisconnect", () => {
       goToMainMenu();
     });
+    socket.on("playerDisconnect", () => {
+      goToMainMenu();
+    });
+    socket.on("players", (data) => {
+      const lobbyInfo = JSON.parse(data);
+      setGameCode(lobbyInfo.gameCode);
+      setHost(lobbyInfo.host);
+      setPlayers(
+        lobbyInfo.players.map((player) => {
+          return { ...player, avatar: AVATARS.BLUE };
+        })
+      );
+    });
   }, []);
-  const [players, setPlayers] = useState([
-    // TODO: Hard-coded, will remove
-    { username: 'jjian', avatar: 'blue', isHost: true },
-    { username: 'hawattoo', avatar: 'target' },
-    { username: 'jamesxu', avatar: 'navy-stripes' },
-  ]);
-  const [gameCode, setGameCode] = useState(12345);
-
-  const { isHost, goToArena } = useContext(AppContext);
 
   const startGame = () => {
     // TODO: Start the game in socketio
@@ -29,7 +45,7 @@ function Lobby() {
 
   return (
     <div className="Lobby">
-      <div className="title">jjian's Lobby</div>
+      <div className="title">{host}'s Lobby</div>
 
       <div className="lobbyInfoRow">
         <span>
@@ -44,20 +60,17 @@ function Lobby() {
       <div className="playerList">
         <div className="row">
           {players.map((player, index) => (
-            <div className='col-md-6' key={index}>
-              <div className='playerRow'>
-                <div
-                  className='avatar'
-                  style={Object.values(AVATARS).find(avatar => avatar.name === player.avatar).style}
-                />
-                {player.username} {player.isHost && '(host)'}
+            <div className="col-md-6" key={index}>
+              <div className="playerRow">
+                <div className={`avatar avatar-${player.avatar}`}></div>
+                {player.username} {player.isHost && "(host)"}
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      { isHost && (
+      {isHost && (
         <div className="hostButtons">
           {/* TODO: Cancel game */}
           <button
@@ -76,9 +89,19 @@ function Lobby() {
         </div>
       )}
       {!isHost && (
-        <div className="nonHostMessage">
-          Waiting for the host to start the game...
-        </div>
+        <>
+          <button
+            className="button"
+            onClick={() => {
+              socket.emit("playerDisconnect");
+            }}
+          >
+            Leave Game
+          </button>
+          <div className="nonHostMessage">
+            Waiting for the host to start the game...
+          </div>
+        </>
       )}
     </div>
   );

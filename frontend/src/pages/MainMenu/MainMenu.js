@@ -94,7 +94,9 @@ function MainMenu() {
           <button className="button" onClick={() => setJoinGameModal(true)}>
             Join Game
           </button>
-          <button className="button" onClick={() => setShowAboutModal(true)}>How to Play</button>
+          <button className="button" onClick={() => setShowAboutModal(true)}>
+            How to Play
+          </button>
 
           {/* REMOVE */}
           <button className="button" onClick={goToLobby}>
@@ -119,7 +121,7 @@ function MainMenu() {
       >
         <GameSettings />
       </Modal>
-      <Modal isOpen={showJoinGameModal} onClose={closeModal} title="About">
+      <Modal isOpen={showJoinGameModal} onClose={closeModal} title="Join Game">
         <JoinGame />
       </Modal>
     </div>

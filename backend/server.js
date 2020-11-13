@@ -16,9 +16,10 @@ io.on("connection", (client) => {
   client.on("newGame", handleNewGame);
   client.on("joinGame", handleJoinGame);
   client.on("startGame", handleStartGame);
-  client.on("getRooms", emitAllRoomInfo);
   client.on("playerDisconnect", handleDisconnect);
   client.on("disconnect", handleDisconnect);
+  client.on("getRooms", emitAllRoomInfo);
+  client.on("getPlayers", emitRoomInfo);
 
   function handleNewGame(username) {
     let roomName = makeId(5);
@@ -36,16 +37,12 @@ io.on("connection", (client) => {
   }
 
   function handleJoinGame(roomName, username) {
-    const room = io.sockets.adapter.rooms[roomName];
-    let allUsers;
-    if (room) {
-      allUsers = room.sockets;
-    }
-
+    const room = io.sockets.adapter.rooms.get(roomName);
     let numClients = 0;
-    if (allUsers) {
-      numClients = Object.keys(allUsers).length;
+    if (room) {
+      numClients = room.size;
     }
+    console.log(room);
     if (numClients === 0) {
       client.emit("unknownCode");
       return;
@@ -53,15 +50,14 @@ io.on("connection", (client) => {
       client.emit("tooManyPlayers");
       return;
     }
-
     clientRooms[client.id] = roomName;
     client.join(roomName);
     client.username = username;
     client.isHost = false;
-
     addPlayerToLobby(state[roomName], username, false);
-    emitRoomInfo(roomName);
+    broadcastRoomInfo(roomName);
     broadcastAllRoomInfo();
+    client.emit("joinedLobby");
   }
 
   function handleStartGame(roomName) {
@@ -84,10 +80,7 @@ io.on("connection", (client) => {
   }
 
   function handleDisconnect() {
-    console.log("disconnect");
     const roomName = clientRooms[client.id];
-    console.log(clientRooms);
-    console.log(client.id);
     if (!roomName || !state[roomName]) {
       io.sockets.in(roomName).emit("hostDisconnect");
       return;
@@ -96,42 +89,68 @@ io.on("connection", (client) => {
       io.sockets.in(roomName).emit("hostDisconnect");
       delete state[roomName];
     } else {
+      client.emit("playerDisconnect");
       delete state[roomName].players[client.username];
-      emitRoomInfo(roomName);
+      broadcastRoomInfo(roomName);
     }
     broadcastAllRoomInfo();
   }
 
   function broadcastAllRoomInfo() {
     const rooms = [];
-    for (let [_, room] of Object.entries(state)) {
+    for (let [gameCode, room] of Object.entries(state)) {
       rooms.push({
         host: room.host,
+        gameCode,
         numPlayers: Object.keys(room.players).length,
       });
     }
-    console.log(rooms);
     io.sockets.emit("rooms", JSON.stringify(rooms));
   }
 
   function emitAllRoomInfo() {
     const rooms = [];
-    for (let [_, room] of Object.entries(state)) {
+    for (let [gameCode, room] of Object.entries(state)) {
       rooms.push({
         host: room.host,
+        gameCode,
         numPlayers: Object.keys(room.players).length,
       });
     }
-    console.log(rooms);
     client.emit("rooms", JSON.stringify(rooms));
   }
 
-  function emitRoomInfo(roomName) {
+  function broadcastRoomInfo(roomName) {
+    const players = [];
+    for (const [username, value] of Object.entries(state[roomName].players)) {
+      players.push({ username, isHost: value.isHost });
+    }
     io.sockets.in(roomName).emit(
       "players",
       JSON.stringify({
         gameCode: roomName,
-        players: Object.keys(state[roomName].players),
+        players,
+        host: state[roomName].host,
+      })
+    );
+  }
+
+  function emitRoomInfo() {
+    const roomName = clientRooms[client.id];
+    if (!roomName || !state[roomName]) {
+      client.emit("hostDisconnect");
+      return;
+    }
+    const players = [];
+    for (const [username, value] of Object.entries(state[roomName].players)) {
+      players.push({ username, isHost: value.isHost });
+    }
+    client.emit(
+      "players",
+      JSON.stringify({
+        gameCode: roomName,
+        players,
+        host: state[roomName].host,
       })
     );
   }

@@ -1,17 +1,22 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
-import "./JoinGame.scss";
 import AppContext from "./../../contexts/AppContext";
+import { AVATARS } from "../../utils/constants";
+import "./JoinGame.scss";
 
 function JoinGame() {
-  const { socket, username } = useContext(AppContext);
-  const [gameCode, setGameCode] = useState("");
+  const { socket, username, goToLobby, setIsHost } = useContext(AppContext);
   const [activeGames, setActiveGames] = useState([]);
+  const [filterInput, setFilterInput] = useState("");
   useEffect(() => {
     socket.emit("getRooms");
     socket.on("rooms", (data) => {
       console.log(data);
       setActiveGames(JSON.parse(data));
+    });
+    socket.on("joinedLobby", () => {
+      goToLobby();
+      setIsHost(false);
     });
     socket.on("unknownCode", () => {
       alert("Unknown game code");
@@ -20,18 +25,45 @@ function JoinGame() {
       alert("Too many players");
     });
   }, []);
-  const handleJoinGame = () => {
-    setGameCode("");
-    socket.emit("joinGame", username);
+
+  const onClickJoinGame = (gameCode) => {
+    socket.emit("joinGame", gameCode, username);
   };
+
   return (
     <div className="JoinGame">
-      <input onChange={setGameCode} placeholder="Enter a game code" />
-      <button onClick={handleJoinGame}>Join Game</button>
-      <h4>Active Games:</h4>
-      {activeGames.map((game, idx) => (
-        <p key={game.host + idx}>{game.host}</p>
-      ))}
+      <div className="topRow">
+        <div className="activeGamesHeading">Active Games:</div>
+        <input
+          className="filterInput"
+          onChange={(e) => setFilterInput(e.target.value)}
+          placeholder="Filter by username or game code"
+        />
+      </div>
+
+      {activeGames
+        .filter(
+          (game) =>
+            game.host.toLowerCase().includes(filterInput.toLowerCase()) ||
+            game.gameCode.toLowerCase().includes(filterInput.toLowerCase())
+        )
+        .map((game, idx) => (
+          <div
+            className="gameRow"
+            key={game.host + idx}
+            onClick={() => onClickJoinGame(game.gameCode)}
+          >
+            {/* TODO: include game code */}
+            <span className="gameRowLeft">
+              {/* TODO: get avatar name from database */}
+              <div className="avatar" style={AVATARS.Blue.style} />
+              <div>
+                <b>{game.host}'s Arena</b> ({game.gameCode})
+              </div>
+            </span>
+            <span>{game.numPlayers}/20 players</span>
+          </div>
+        ))}
     </div>
   );
 }

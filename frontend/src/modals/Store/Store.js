@@ -5,7 +5,7 @@ import "./Store.scss";
 import AppContext from "./../../contexts/AppContext";
 
 
-function GameSettings() {
+function Store() {
     // TODO; get numCoins from database
     const { goToMainMenu, goToLogin, user, setUser } = useContext(AppContext);
 
@@ -54,4 +54,4 @@ function GameSettings() {
     );
 }
 
-export default GameSettings;
+export default Store;
