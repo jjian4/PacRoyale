@@ -119,7 +119,7 @@ function MainMenu() {
       >
         <GameSettings />
       </Modal>
-      <Modal isOpen={showJoinGameModal} onClose={closeModal} title="About">
+      <Modal isOpen={showJoinGameModal} onClose={closeModal} title="Join Game">
         <JoinGame />
       </Modal>
     </div>

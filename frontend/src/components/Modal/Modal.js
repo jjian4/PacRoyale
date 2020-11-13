@@ -13,12 +13,12 @@ const customStyles = {
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
         width: '70vw',
-        maxWidth: '700px',
-        height: '80vh',
+        maxWidth: '750px',
+        height: '90vh',
         backgroundColor: 'white',
     },
     overlay: {
-        background: "rgba(0, 0, 0, 0.3)"
+        background: "rgba(0, 0, 0, 0.4)"
     }
 };
 
