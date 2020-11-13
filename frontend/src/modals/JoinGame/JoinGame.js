@@ -6,7 +6,6 @@ import "./JoinGame.scss";
 
 function JoinGame() {
   const { socket, username, goToLobby, setIsHost } = useContext(AppContext);
-  const [gameCode, setGameCode] = useState("");
   const [activeGames, setActiveGames] = useState([]);
   const [filterInput, setFilterInput] = useState("");
   useEffect(() => {
@@ -26,26 +25,13 @@ function JoinGame() {
       alert("Too many players");
     });
   }, []);
-  const handleJoinGame = () => {
-    socket.emit("joinGame", gameCode, username);
-    setGameCode("");
-  };
 
-  const onClickJoinGame = () => {
-    // TODO
+  const onClickJoinGame = (gameCode) => {
+    socket.emit("joinGame", gameCode, username);
   };
 
   return (
     <div className="JoinGame">
-      <input onChange={setGameCode} placeholder="Enter a game code" />
-      <button onClick={handleJoinGame}>Join Game</button>
-
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-      <hr />
-
       <div className="topRow">
         <div className="activeGamesHeading">Active Games:</div>
         <input
@@ -56,14 +42,16 @@ function JoinGame() {
       </div>
 
       {activeGames
-        .filter((game) =>
-          game.host.toLowerCase().includes(filterInput.toLowerCase())
+        .filter(
+          (game) =>
+            game.host.toLowerCase().includes(filterInput.toLowerCase()) ||
+            game.gameCode.toLowerCase().includes(filterInput.toLowerCase())
         )
         .map((game, idx) => (
           <div
             className="gameRow"
             key={game.host + idx}
-            onClick={onClickJoinGame}
+            onClick={() => onClickJoinGame(game.gameCode)}
           >
             {/* TODO: include game code */}
             <span className="gameRowLeft">
