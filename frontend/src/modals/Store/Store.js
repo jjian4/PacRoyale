@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AVATARS } from "./../../utils/constants";
 import "./Store.scss";
 
-function GameSettings() {
+function Store() {
     // TODO; get numCoins from database
     const [numCoins, setNumCoins] = useState(5000);
 
@@ -52,4 +52,4 @@ function GameSettings() {
     );
 }
 
-export default GameSettings;
+export default Store;
