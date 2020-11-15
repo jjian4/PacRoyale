@@ -26,6 +26,7 @@
         font-size: 20px;
         height: 60vh;
         border: 1px solid lightgray;
+        margin-bottom: 30px;
         // Make the div scrollable
         overflow-y:auto;
         .playerRow {
@@ -48,16 +49,16 @@
             }
         }
     }
-    .hostButtons {
-        display: flex;
-        justify-content: space-around;
-        padding-top: 30px;
-        .button {
-            font-size: 20px;
-        }
-    }
-    .nonHostMessage {
-        padding-top: 30px;
+
+    .lobbyBottom {
         font-size: 20px;
+        .hostButtons {
+            display: flex;
+            justify-content: space-around;
+        }
+        .nonHostMessage {
+            padding-top: 25px;
+        }    
     }
+
 }

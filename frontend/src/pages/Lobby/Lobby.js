@@ -64,39 +64,42 @@ function Lobby() {
         </div>
       </div>
 
-      {isHost && (
-        <div className="hostButtons">
-          {/* TODO: Cancel game */}
-          <button
-            className="button"
-            onClick={() => {
-              socket.emit("playerDisconnect");
-            }}
-          >
-            Cancel Game
+      <div className='lobbyBottom'>
+        {isHost && (
+          <div className="hostButtons">
+            {/* TODO: Cancel game */}
+            <button
+              className="button"
+              onClick={() => {
+                socket.emit("playerDisconnect");
+              }}
+            >
+              Cancel Game
           </button>
-          {/* TODO: Open Game settings modal */}
-          <button className="button">Edit Game</button>
-          <button className="button" onClick={startGame}>
-            Start Game
+            {/* TODO: Open Game settings modal */}
+            <button className="button">Edit Game</button>
+            <button className="button" onClick={startGame}>
+              Start Game
           </button>
-        </div>
-      )}
-      {!isHost && (
-        <>
-          <button
-            className="button"
-            onClick={() => {
-              socket.emit("playerDisconnect");
-            }}
-          >
-            Leave Game
-          </button>
-          <div className="nonHostMessage">
-            Waiting for the host to start the game...
           </div>
-        </>
-      )}
+        )}
+        {!isHost && (
+          <>
+            <button
+              className="button"
+              onClick={() => {
+                socket.emit("playerDisconnect");
+              }}
+            >
+              Leave Game
+            </button>
+            <div className="nonHostMessage">
+              Waiting for the host to start the game...
+          </div>
+          </>
+        )}
+      </div>
+
     </div>
   );
 }
