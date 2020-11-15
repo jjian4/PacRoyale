@@ -1,3 +1,6 @@
+import { faAppleAlt, faFastForward, faLeaf, faPencilAlt, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 export const PAGES = {
   LOGIN: "login",
   MAIN_MENU: "main_menu",
@@ -79,6 +82,48 @@ export const AVATARS = {
       backgroundColor: 'black'
     }
   },
+}
+
+export const ARENA_COLORS = {
+  WHITE: {
+    name: 'white',
+    style: { backgroundColor: 'white' }
+  },
+  GRAY: {
+    name: 'gray',
+    style: { backgroundColor: 'lightgray' }
+  },
+  YELLOW: {
+    name: 'yellow',
+    style: { backgroundColor: 'lightyellow' }
+  },
+  PINK: {
+    name: 'pink',
+    style: { backgroundColor: 'lightpink' }
+  },
+  BLUE: {
+    name: 'blue',
+    style: { backgroundColor: 'lightblue' }
+  },
+}
+
+export const POWERUPS = {
+  QUIZ: {
+    name: 'Quiz',
+    icon: faPencilAlt,
+  },
+  SPEED: {
+    name: 'Speed',
+    icon: faFastForward,
+  },
+  SOMETHING: {
+    name: 'Something else',
+    icon: faLeaf,
+  },
+  IDK: {
+    name: 'idk',
+    icon: faRocket,
+  }
 }
 
 export const firebaseConfig = {

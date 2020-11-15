@@ -1,0 +1,66 @@
+.GameSettings {
+    text-align: center;
+    .form {
+        min-height: 70vh;
+        .subtitle {
+            font-size: 25px;
+            padding: 30px 0 10px 0;
+        }
+        .arenaChoices {
+            display: flex;
+            justify-content: space-around;
+            .arenaChoice {
+                cursor: pointer;
+                display: inline-block;
+                height: 50px;
+                width: 50px;
+                border: 2px solid gray;
+                border-radius: 50%;
+                display: flex; 
+                align-items: center; 
+                justify-content: center;
+            }
+            .selectedArenaChoice {
+                border: 2px solid black;
+                .checkMark {
+                    font-size: 20px;
+                    color: black;
+                }
+            }
+        }
+        .powerupChoices {
+            display: flex;
+            justify-content: space-around;
+            .powerupChoice {
+                cursor: pointer;
+                display: inline-block;
+                height: 50px;
+                width: 50px;
+                border: 3px solid lightgray;
+                border-radius: 5px;
+                display: flex; 
+                align-items: center; 
+                justify-content: center;
+                .powerupIcon {
+                    color: lightgray;
+                    font-size: 20px;
+                }
+                margin: 0 auto;
+            }
+            .selectedPowerupChoice {
+                border: 3px solid black;
+                .powerupIcon {
+                    color: black;
+                }
+            }
+            .powerupDescription {
+                padding-top: 2px;
+                font-size: 14px;
+            }
+        }
+    }
+
+    .lobbyButton {
+        font-size: 20px;
+    }
+}
