@@ -19,7 +19,7 @@ function MainMenu() {
 
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
-  const { goToLogin, goToLobby, user } = useContext(AppContext);
+  const { goToLogin, user } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -97,11 +97,6 @@ function MainMenu() {
           </button>
           <button className="button" onClick={() => setShowAboutModal(true)}>
             How to Play
-          </button>
-
-          {/* REMOVE */}
-          <button className="button" onClick={goToLobby}>
-            Lobby (for testing, will remove)
           </button>
         </div>
       </div>

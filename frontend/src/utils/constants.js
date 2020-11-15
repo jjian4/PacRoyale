@@ -1,5 +1,4 @@
-import { faAppleAlt, faFastForward, faLeaf, faPencilAlt, faRocket } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFastForward, faLeaf, faPencilAlt, faRocket } from "@fortawesome/free-solid-svg-icons";
 
 export const PAGES = {
   LOGIN: "login",
