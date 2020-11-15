@@ -1,4 +1,4 @@
-import { faFastForward, faLeaf, faPencilAlt, faRocket } from "@fortawesome/free-solid-svg-icons";
+import { faFastForward, faGhost, faHandScissors, faLeaf, faPencilAlt, faRocket, faUtensils } from "@fortawesome/free-solid-svg-icons";
 
 export const PAGES = {
   LOGIN: "login",
@@ -107,6 +107,10 @@ export const ARENA_COLORS = {
 }
 
 export const POWERUPS = {
+  EAT: {
+    name: 'Eat',
+    icon: faUtensils,
+  },
   QUIZ: {
     name: 'Quiz',
     icon: faPencilAlt,
@@ -115,13 +119,13 @@ export const POWERUPS = {
     name: 'Speed',
     icon: faFastForward,
   },
-  SOMETHING: {
-    name: 'Something else',
-    icon: faLeaf,
+  ROCK_PAPER_SCISSORS: {
+    name: 'RPS',
+    icon: faHandScissors,
   },
-  IDK: {
-    name: 'idk',
-    icon: faRocket,
+  GHOST: {
+    name: 'Ghost',
+    icon: faGhost,
   }
 }
 

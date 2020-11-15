@@ -100,7 +100,7 @@ function gameLoop(state) {
       if (isColliding(playerX, playerY, playerSize, food.x, food.y, foodSize)) {
         arr.splice(idx, 1);
         player.score += 1;
-        if (player.score >= 10) {
+        if (player.score >= 100) {
           winner = true;
         }
       }

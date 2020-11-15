@@ -8,10 +8,18 @@ import "./GameSettings.scss";
 
 function GameSettings(props) {
   const [selectedArenaColor, setSelectedArenaColor] = useState(ARENA_COLORS.WHITE.name);
-  const [selectedPowerups, setSSelectedPowerups] = useState([POWERUPS.QUIZ.name]);
+  const [selectedPowerups, setSSelectedPowerups] = useState([POWERUPS.EAT.name, POWERUPS.QUIZ.name]);
+  const [quizDuration, setQuizDuration] = useState("10");
 
   const { socket, goToLobby, setIsHost, user } = useContext(AppContext);
   const handleCreateLobby = () => {
+    // First check that input is valid
+    const parsedQuizDuration = parseInt(quizDuration);
+    if (isNaN(parsedQuizDuration) || parsedQuizDuration < 8 || parsedQuizDuration > 20) {
+      alert('Quiz duration must be a number between 8 and 20.')
+      return;
+    }
+
     console.log(user.username);
     socket.emit("newGame", user.username); //TODO: Update username
   };
@@ -50,9 +58,8 @@ function GameSettings(props) {
 
         <div className='powerupChoices'>
           {Object.keys(POWERUPS).map((powerup, index) => (
-            <div>
+            <div key={index}>
               <div
-                key={index}
                 className={`powerupChoice ${selectedPowerups.includes(POWERUPS[powerup].name) && 'selectedPowerupChoice'}`}
                 onClick={() => {
                   if (selectedPowerups.includes(POWERUPS[powerup].name)) {
@@ -70,11 +77,17 @@ function GameSettings(props) {
         </div>
 
         <div className='subtitle'>
-          Minigame Categories
+          Quiz Duration
+          <div className='quizDurationDescription'>(Between 8 and 20 seconds)</div>
         </div>
 
-        <div>
-          todo...
+        <div className='quizDurationRow'>
+          <input
+            className='quizDurationInput'
+            type='number'
+            value={quizDuration}
+            onChange={e => setQuizDuration(e.target.value)}
+          /> sec
         </div>
 
       </div>

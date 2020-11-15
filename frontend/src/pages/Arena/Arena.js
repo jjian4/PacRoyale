@@ -14,6 +14,8 @@ const KEYS = {
 function Arena() {
   const { socket, goToMainMenu } = useContext(AppContext);
   const [gameState, setGameState] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     socket.on("gameState", (data) => {
       setGameState(JSON.parse(data));
@@ -23,29 +25,54 @@ function Arena() {
       alert(gameOver.winner + " has won the game!!!");
       goToMainMenu();
     });
-    window.addEventListener("keydown", function (e) {
-      switch (e.which) {
-        case KEYS.left:
-          e.preventDefault();
-          socket.emit("keydown", KEYS.left);
-          break;
-        case KEYS.right:
-          e.preventDefault();
-          socket.emit("keydown", KEYS.right);
-          break;
-        case KEYS.up:
-          e.preventDefault();
-          socket.emit("keydown", KEYS.up);
-          break;
-        case KEYS.down:
-          e.preventDefault();
-          socket.emit("keydown", KEYS.down);
-          break;
-        default:
-          break;
-      }
-    });
+
+    // Keep arena window a square even on mobile views
+    window.addEventListener("resize", resizeArena);
+    resizeArena();
+
+    // Arrow key listener
+    window.addEventListener("keydown", handleArrowKey);
+
+    return () => {
+      window.removeEventListener("resize", resizeArena);
+      window.removeEventListener("resize", handleArrowKey);
+    };
   }, []);
+
+  const resizeArena = () => {
+    if (window.innerWidth <= window.innerHeight) {
+      setIsMobile(true);
+    } else {
+      setIsMobile(false);
+    }
+  };
+
+  const handleArrowKey = (e) => {
+    console.log(e.which);
+    switch (e.which) {
+      case KEYS.left:
+        e.preventDefault();
+        socket.emit("keydown", KEYS.left);
+        break;
+      case KEYS.right:
+        e.preventDefault();
+        socket.emit("keydown", KEYS.right);
+        break;
+      case KEYS.up:
+        e.preventDefault();
+        socket.emit("keydown", KEYS.up);
+        break;
+      case KEYS.down:
+        e.preventDefault();
+        socket.emit("keydown", KEYS.down);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // Game state
+  console.log(gameState);
   const players = [];
   const foods = [];
   const powerUps = [];
@@ -99,7 +126,7 @@ function Arena() {
   }
 
   return (
-    <div className="Arena">
+    <div className={`Arena ${isMobile && "Arena-mobile"}`}>
       <div className="arenaBox">
         {players}
         {foods}

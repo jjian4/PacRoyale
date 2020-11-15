@@ -4,7 +4,7 @@
         min-height: 70vh;
         .subtitle {
             font-size: 25px;
-            padding: 30px 0 10px 0;
+            padding: 50px 0 10px 0;
         }
         .arenaChoices {
             display: flex;
@@ -57,6 +57,17 @@
                 padding-top: 2px;
                 font-size: 14px;
             }
+        }
+        .quizDurationDescription {
+            font-size: 14px;
+        }
+        .quizDurationRow {
+            font-size: 20px;
+            .quizDurationInput {
+                padding: 4px 10px;
+                width: 70px;
+                margin-right: 5px;
+            }    
         }
     }
 
