@@ -11,30 +11,19 @@ const KEYS = {
   down: 40,
 };
 
-const testLeaderboard = {
-  jjian: {
-    numWins: 3,
-    health: 40,
-  },
-  hawatto: {
-    numWins: 2,
-    health: 50,
-  },
-  jamesxu: {
-    numWins: 1,
-    health: 60,
-  },
-};
-
 function Arena() {
-  const { socket } = useContext(AppContext);
+  const { socket, goToMainMenu } = useContext(AppContext);
   const [gameState, setGameState] = useState(null);
   useEffect(() => {
     socket.on("gameState", (data) => {
       setGameState(JSON.parse(data));
     });
+    socket.on("gameOver", (data) => {
+      const gameOver = JSON.parse(data);
+      alert(gameOver.winner + " has won the game!!!");
+      goToMainMenu();
+    });
     window.addEventListener("keydown", function (e) {
-      console.log(e.which);
       switch (e.which) {
         case KEYS.left:
           e.preventDefault();
@@ -57,11 +46,11 @@ function Arena() {
       }
     });
   }, []);
-  console.log(gameState);
   const players = [];
+  const foods = [];
+  const powerUps = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
-      console.log(value);
       let rotateDeg;
       if (value.vel.x > 0) {
         rotateDeg = 0;
@@ -74,6 +63,7 @@ function Arena() {
       }
       players.push(
         <div
+          key={username}
           className="player avatar"
           style={{
             ...AVATARS.Blue.style,
@@ -86,28 +76,55 @@ function Arena() {
         </div>
       );
     }
+    gameState.foods.forEach((food, idx) => {
+      foods.push(
+        <div
+          className="food"
+          key={"food" + idx}
+          style={{ top: food.y + "%", left: food.x + "%" }}
+        ></div>
+      );
+    });
+    gameState.powerUps.forEach((powerUp, idx) => {
+      powerUps.push(
+        <div
+          className="powerUp"
+          key={"powerUp" + idx}
+          style={{ top: powerUp.y + "%", left: powerUp.x + "%" }}
+        >
+          {powerUp.type}
+        </div>
+      );
+    });
   }
+
   return (
     <div className="Arena">
-      <div className="arenaBox">{players}</div>
+      <div className="arenaBox">
+        {players}
+        {foods}
+        {powerUps}
+      </div>
       <div className="leaderboard">
         <div className="leaderboardTitle">Leaderboard (? alive)</div>
-        {Object.keys(testLeaderboard).map((username) => (
-          <div className="playerInfo">
-            <div>
-              {username} ({testLeaderboard[username].numWins} win
-              {testLeaderboard[username].numWins !== 1 && "s"})
+        {gameState &&
+          Object.keys(gameState.players).map((username) => (
+            <div className="playerInfo">
+              <div>
+                {username} ({gameState.players[username].score}coins)
+              </div>
+              <div className="healthBar">
+                <div
+                  className="innerHealthBar"
+                  style={{
+                    width: `calc(100% * ${
+                      gameState.players[username].score * 0.01
+                    })`,
+                  }}
+                />
+              </div>
             </div>
-            <div className="healthBar">
-              <div
-                className="innerHealthBar"
-                style={{
-                  width: `calc(100% * 0.${testLeaderboard[username].health})`,
-                }}
-              />
-            </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

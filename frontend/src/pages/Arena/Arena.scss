@@ -23,6 +23,22 @@
       // Otherwise, avatar mouth overlaps with arena border
       overflow: hidden;
     }
+    .food {
+      position: absolute;
+      height: 2%;
+      width: 2%;
+      border: 1px solid rgb(177, 177, 177);
+      border-radius: 50%;
+      background-color: whitesmoke;
+    }
+    .powerUp {
+      position: absolute;
+      height: 3%;
+      width: 3%;
+      border: 1px solid rgb(177, 177, 177);
+      border-radius: 50%;
+      background-color: green;
+    }
   }
   .leaderboard {
     text-align: center;

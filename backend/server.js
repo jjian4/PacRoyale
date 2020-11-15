@@ -6,6 +6,8 @@ const {
   addPlayerToLobby,
   gameLoop,
   updatePlayerVelocity,
+  spawnFoods,
+  spawnPowerUps,
 } = require("./game");
 
 const state = {};
@@ -160,14 +162,22 @@ io.on("connection", (client) => {
 
 function startGameInterval(roomName) {
   state[roomName].started = true;
-  const intervalId = setInterval(() => {
+  const spawnFoodIntervalId = setInterval(() => {
+    spawnFoods(state[roomName]);
+  }, 500);
+  const spawnPowerUpsIntervalId = setInterval(() => {
+    spawnPowerUps(state[roomName]);
+  }, 1000);
+  const movementIntervalId = setInterval(() => {
     const winner = gameLoop(state[roomName]);
     if (!winner) {
       emitGameState(roomName, state[roomName]);
     } else {
       emitGameOver(roomName, winner);
       state[roomName] = null;
-      clearInterval(intervalId);
+      clearInterval(movementIntervalId);
+      clearInterval(spawnFoodIntervalId);
+      clearInterval(spawnPowerUpsIntervalId);
     }
   }, 1000 / FRAME_RATE);
 }

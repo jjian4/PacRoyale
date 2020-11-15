@@ -1,5 +1,5 @@
 const MAX_PLAYERS = 20;
-const FRAME_RATE = 10;
+const FRAME_RATE = 20;
 const GRID_SIZE = 20;
 
 module.exports = {
