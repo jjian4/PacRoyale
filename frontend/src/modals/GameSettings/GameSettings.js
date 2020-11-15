@@ -58,9 +58,8 @@ function GameSettings(props) {
 
         <div className='powerupChoices'>
           {Object.keys(POWERUPS).map((powerup, index) => (
-            <div>
+            <div key={index}>
               <div
-                key={index}
                 className={`powerupChoice ${selectedPowerups.includes(POWERUPS[powerup].name) && 'selectedPowerupChoice'}`}
                 onClick={() => {
                   if (selectedPowerups.includes(POWERUPS[powerup].name)) {
