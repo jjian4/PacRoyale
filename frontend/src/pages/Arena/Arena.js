@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { POWERUPS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
-import musicMp3 from '../../sounds/arena-music.mp3';
-import powerupMp3 from '../../sounds/arena-music.mp3';
+import musicMp3 from "../../sounds/arena-music.mp3";
+import powerupMp3 from "../../sounds/powerup.mp3";
 import "./Arena.scss";
 
 const KEYS = {
@@ -33,6 +33,9 @@ function Arena() {
       const gameOver = JSON.parse(data);
       alert(gameOver.winner + " has won the game!!!");
       goToMainMenu();
+    });
+    socket.on("playPowerupSound", () => {
+      powerupSound.play();
     });
 
     // Keep arena window a square even on mobile views
@@ -161,8 +164,9 @@ function Arena() {
                 <div
                   className="innerHealthBar"
                   style={{
-                    width: `calc(100% * ${gameState.players[username].score * 0.01
-                      })`,
+                    width: `calc(100% * ${
+                      gameState.players[username].score * 0.01
+                    })`,
                   }}
                 />
               </div>

@@ -65,7 +65,7 @@ io.on("connection", (client) => {
 
   function handleStartGame(roomName) {
     io.sockets.in(roomName).emit("init");
-    startGameInterval(roomName);
+    startGameInterval(roomName, client);
     broadcastAllRoomInfo();
   }
 
@@ -175,7 +175,7 @@ io.on("connection", (client) => {
   }
 });
 
-function startGameInterval(roomName) {
+function startGameInterval(roomName, client) {
   state[roomName].started = true;
   const spawnFoodIntervalId = setInterval(() => {
     spawnFoods(state[roomName]);
@@ -184,7 +184,7 @@ function startGameInterval(roomName) {
     spawnPowerups(state[roomName]);
   }, 1000);
   const movementIntervalId = setInterval(() => {
-    const winner = gameLoop(state[roomName]);
+    const winner = gameLoop(state[roomName], client);
     if (!winner) {
       emitGameState(roomName, state[roomName]);
     } else {

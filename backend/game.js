@@ -78,7 +78,7 @@ function isColliding(item1x, item1y, item1Size, item2x, item2y, item2Size) {
   );
 }
 
-function gameLoop(state) {
+function gameLoop(state, client) {
   for (const username of Object.keys(state.players)) {
     const player = state.players[username];
     player.pos.x += player.vel.x;
@@ -126,6 +126,7 @@ function gameLoop(state) {
             powerupSize
           )
         ) {
+          client.emit("playPowerupSound");
           arr.splice(idx, 1);
           player.powerup = powerup.type;
           updateForSpeed(player, 2);
