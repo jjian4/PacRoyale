@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { POWERUPS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
+import musicMp3 from '../../sounds/arena-music.mp3';
+import powerupMp3 from '../../sounds/arena-music.mp3';
 import "./Arena.scss";
 
 const KEYS = {
@@ -17,6 +19,10 @@ function Arena() {
   const { socket, goToMainMenu } = useContext(AppContext);
   const [gameState, setGameState] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+
+  let music = new Audio(musicMp3);
+  music.loop = true;
+  let powerupSound = new Audio(powerupMp3);
 
   useEffect(() => {
     socket.on("gameState", (data) => {
@@ -36,9 +42,13 @@ function Arena() {
     // Arrow key listener
     window.addEventListener("keydown", handleArrowKey);
 
+    music.play();
+
     return () => {
       window.removeEventListener("resize", resizeArena);
       window.removeEventListener("resize", handleArrowKey);
+      music.pause();
+      music.currentTime = 0;
     };
   }, []);
 
@@ -151,9 +161,8 @@ function Arena() {
                 <div
                   className="innerHealthBar"
                   style={{
-                    width: `calc(100% * ${
-                      gameState.players[username].score * 0.01
-                    })`,
+                    width: `calc(100% * ${gameState.players[username].score * 0.01
+                      })`,
                   }}
                 />
               </div>

@@ -32,8 +32,7 @@ function App() {
         // if the user is logged in, retrieve his info
         setCurrentPage(PAGES.MAIN_MENU);
         let newUser = new User(firebaseUser);
-        newUser.getCoins();
-        newUser.getWins();
+        newUser.getFirebaseData();
         setUser(newUser);
       } else {
         setCurrentPage(PAGES.LOGIN);

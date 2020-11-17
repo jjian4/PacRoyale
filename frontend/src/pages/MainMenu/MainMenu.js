@@ -7,8 +7,8 @@ import JoinGame from "./../../modals/JoinGame/JoinGame";
 import GameSettings from "./../../modals/GameSettings/GameSettings";
 import Store from "./../../modals/Store/Store";
 import About from "../../modals/About/About";
-import "./MainMenu.scss";
 import { AVATARS, SITE_NAME } from "../../utils/constants";
+import "./MainMenu.scss";
 
 function MainMenu() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -121,6 +121,10 @@ function MainMenu() {
       <Modal isOpen={showJoinGameModal} onClose={closeModal} title="Join Game">
         <JoinGame />
       </Modal>
+
+      {/* <audio loop className='menuMusic'>
+        <source src="../../../sounds/menu-music.mp3" type="audio/mpeg" />
+      </audio> */}
     </div>
   );
 }

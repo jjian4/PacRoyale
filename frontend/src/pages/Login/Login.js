@@ -34,6 +34,10 @@ function Login() {
       .then(function (credentials) {
         // on success, clear any existing errors and send user to main menu
         setErrorMessage("");
+        // if the user is logged in, retrieve his info
+        let newUser = new User(firebase.auth().currentUser);
+        newUser.getFirebaseData();
+        setUser(newUser);
         goToMainMenu();
       })
       .catch(function (error) {
@@ -90,10 +94,6 @@ function Login() {
   };
 
 
-  const createUserInFirebaseDB = () => {
-    // this function is called when a user first registers
-    // it sets the default values for their profile 
-  };
 
   return (
     <div className="Login">

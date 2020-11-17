@@ -1,11 +1,12 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { AVATARS } from "./../../utils/constants";
+import AppContext from "./../../contexts/AppContext";
 import "./Store.scss";
 
 function Store() {
     // TODO; get numCoins from database
-    const [numCoins, setNumCoins] = useState(5000);
+    const { user } = useContext(AppContext);
 
     const buyItem = () => {
         // TODO: subtract coins, update database, set skin as selected
@@ -19,32 +20,34 @@ function Store() {
         <div className='Store'>
             <div className='coins'>
                 <div>
-                    My coins: {numCoins}
+                    My coins: {user.coins}
                 </div>
             </div>
             <div className='storeItems'>
                 <div className='row'>
-                    {Object.keys(AVATARS).map((avatar, index) => (
+                    {Object.keys(user.purchasedSkins).map((avatar, index) => (
                         <div className='col-md-4' key={index}>
                             <div className='storeItem'>
                                 <div className='itemName'>
                                     {avatar}
                                 </div>
                                 <div className='itemBox'>
-                                    <div className='avatar' style={AVATARS[avatar].style}>
+                                    <div className='avatar' style={user.purchasedSkins[avatar].style}>
                                       <div className='avatarMouth'/>
                                     </div>
                                 </div>
                                 {/* TODO: If already owned and already selected */}
-                                {false && (
+                                {(user.purchasedSkins[avatar].owned) && (user.purchasedSkins[avatar].selected) && (
                                     <div>(Selected)</div>
                                 )}
                                 {/* TODO: If already owned but not selected */}
-                                {false && (
+                                {user.purchasedSkins[avatar].owned && (!user.purchasedSkins[avatar].selected) && (
                                     <div className='itemButton'><div onClick={equipItem}>SELECT</div></div>
                                 )}
                                 {/* If not owned yet */}
-                                <div className='itemButton'><div onClick={buyItem}>{AVATARS[avatar].price} coins</div></div>
+                                {!user.purchasedSkins[avatar].owned && (
+                                <div className='itemButton'><div onClick={buyItem}>{user.purchasedSkins[avatar].price} coins</div></div>
+                                )}
                             </div>
                         </div>
                     ))}
