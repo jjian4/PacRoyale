@@ -113,7 +113,7 @@ io.on("connection", (client) => {
   function broadcastAllRoomInfo() {
     const rooms = [];
     for (let [gameCode, room] of Object.entries(state)) {
-      if (room) {
+      if (room && !room.started) {
         rooms.push({
           host: room.host,
           gameCode,

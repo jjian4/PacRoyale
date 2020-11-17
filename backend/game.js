@@ -8,9 +8,9 @@ module.exports = {
 };
 
 const POWERUPS = ["EAT", "QUIZ", "SPEED", "RPS", "GHOST"];
+const WIN_AMOUNT = 100;
 
 const playerSize = 4;
-const velocity = 1;
 const powerupSize = 3;
 const foodSize = 2;
 
@@ -106,7 +106,7 @@ function gameLoop(state, client) {
       if (isColliding(playerX, playerY, playerSize, food.x, food.y, foodSize)) {
         arr.splice(idx, 1);
         player.score += 1;
-        if (player.score >= 100) {
+        if (player.score >= WIN_AMOUNT) {
           winner = true;
         }
       }

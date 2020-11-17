@@ -21,19 +21,6 @@ function Arena() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    socket.on("gameState", (data) => {
-      console.log(JSON.parse(data));
-      setGameState(JSON.parse(data));
-    });
-    socket.on("gameOver", (data) => {
-      const gameOver = JSON.parse(data);
-      alert(gameOver.winner + " has won the game!!!");
-      goToMainMenu();
-    });
-    socket.on("playPowerupSound", () => {
-      powerupSound.play();
-    });
-
     // Keep arena window a square even on mobile views
     window.addEventListener("resize", resizeArena);
     resizeArena();
@@ -45,10 +32,25 @@ function Arena() {
     music.loop = true;
     let powerupSound = new Audio(powerupMp3);
     // For some reaosn, audio can't play on safari
-    var isSafari = window.safari !== undefined;
+    const isSafari = window.safari !== undefined;
     if (!isSafari) {
       music.play();
     }
+
+    socket.on("gameState", (data) => {
+      console.log(JSON.parse(data));
+      setGameState(JSON.parse(data));
+    });
+    socket.on("gameOver", (data) => {
+      const gameOver = JSON.parse(data);
+      alert(gameOver.winner + " has won the game!!!");
+      goToMainMenu();
+    });
+    socket.on("playPowerupSound", () => {
+      if (!isSafari) {
+        powerupSound.play();
+      }
+    });
 
     return () => {
       window.removeEventListener("resize", resizeArena);

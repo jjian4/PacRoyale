@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
 import AppContext from "./../../contexts/AppContext";
-import musicMp3 from '../../sounds/menu-music.mp3';
+import musicMp3 from "../../sounds/menu-music.mp3";
 import { AVATARS } from "./../../utils/constants";
 import "./Lobby.scss";
 
@@ -30,7 +30,7 @@ function Lobby() {
     let music = new Audio(musicMp3);
     music.loop = true;
     // For some reaosn, audio can't play on safari
-    var isSafari = window.safari !== undefined;
+    const isSafari = window.safari !== undefined;
     if (!isSafari) {
       music.play();
     }
@@ -38,7 +38,7 @@ function Lobby() {
     return () => {
       music.pause();
       music.currentTime = 0;
-    }
+    };
   }, []);
 
   const startGame = () => {
