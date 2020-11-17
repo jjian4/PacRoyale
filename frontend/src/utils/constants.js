@@ -1,5 +1,7 @@
 import { faFastForward, faGhost, faHandScissors, faLeaf, faPencilAlt, faRocket, faUtensils } from "@fortawesome/free-solid-svg-icons";
 
+export const SITE_NAME = '493 Battle Royale';
+
 export const PAGES = {
   LOGIN: "login",
   MAIN_MENU: "main_menu",
@@ -109,24 +111,53 @@ export const ARENA_COLORS = {
 export const POWERUPS = {
   EAT: {
     name: 'Eat',
+    description: '(10 sec): Collide with other players to stun them and steal a coin.',
     icon: faUtensils,
   },
   QUIZ: {
     name: 'Quiz',
+    description: '(on collision): Collide with another player to start a trivia quiz on a topic of your choice. Winner steals 10 coins.',
     icon: faPencilAlt,
   },
   SPEED: {
     name: 'Speed',
+    description: '(10 sec): Movement speed increases.',
     icon: faFastForward,
   },
   ROCK_PAPER_SCISSORS: {
     name: 'RPS',
+    description: '(on collision): Collide with another player to start a rock-paper-scissors game. Winner steals 5 coins.',
     icon: faHandScissors,
   },
   GHOST: {
     name: 'Ghost',
+    description: '(instant): A ghost moves across to arena, stunning and stealing a coin from each opponent it collides with.',
     icon: faGhost,
-  }
+  },
+}
+
+export const TECH_STACK = {
+  SOCKETIO: {
+    name: 'Socket.io',
+    description: 'Instant communication between server and player clients'
+  },
+  FIREBASE: {
+    name: 'Firebase',
+    description: 'User authentication and database'
+  },
+  REACT: {
+    name: 'React.js',
+    description: 'UI library for reusing components and managing state'
+  },
+  SASS: {
+    name: 'Sass',
+    description: 'CSS preprocessor for neater styling code'
+  },
+  BOOTSTRAP: {
+    name: 'Bootstrap',
+    description: 'UI responsiveness and easier styling'
+  },
+
 }
 
 export const firebaseConfig = {

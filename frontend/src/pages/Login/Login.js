@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import firebase from "./../../utils/firebase";
 import User from "./../../utils/user";
 import AppContext from "./../../contexts/AppContext";
+import { SITE_NAME } from "../../utils/constants";
 import "./Login.scss";
 
 function Login() {
@@ -97,7 +98,7 @@ function Login() {
   return (
     <div className="Login">
       <div className="centeredForm">
-        <div className="title">493 Battle Royale</div>
+        <div className="title">{SITE_NAME}</div>
 
         {/* LOGIN */}
         {!showRegisterForm && (

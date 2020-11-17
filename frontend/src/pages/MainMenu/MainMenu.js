@@ -6,8 +6,9 @@ import AppContext from "./../../contexts/AppContext";
 import JoinGame from "./../../modals/JoinGame/JoinGame";
 import GameSettings from "./../../modals/GameSettings/GameSettings";
 import Store from "./../../modals/Store/Store";
+import About from "../../modals/About/About";
 import "./MainMenu.scss";
-import { AVATARS } from "../../utils/constants";
+import { AVATARS, SITE_NAME } from "../../utils/constants";
 
 function MainMenu() {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -84,7 +85,7 @@ function MainMenu() {
       </div>
 
       <div className="centeredMenu">
-        <div className="title">493 Battle Royale</div>
+        <div className="title">{SITE_NAME}</div>
         <div className="menuButtons">
           <button
             className="button"
@@ -102,13 +103,13 @@ function MainMenu() {
       </div>
 
       <Modal isOpen={showProfileModal} onClose={closeModal} title="jjian">
-        Profile
+        My Profile
       </Modal>
       <Modal isOpen={showStoreModal} onClose={closeModal} title="Store">
         <Store />
       </Modal>
-      <Modal isOpen={showAboutModal} onClose={closeModal} title="About">
-        About
+      <Modal isOpen={showAboutModal} onClose={closeModal} title={SITE_NAME}>
+        <About />
       </Modal>
       <Modal
         isOpen={showGameSettingsModal}
