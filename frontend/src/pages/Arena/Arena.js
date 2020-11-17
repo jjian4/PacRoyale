@@ -2,7 +2,8 @@ import React from "react";
 import { useEffect, useContext, useState } from "react";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
-import musicMp3 from '../../sounds/menu-music.mp3';
+import musicMp3 from '../../sounds/arena-music.mp3';
+import powerupMp3 from '../../sounds/arena-music.mp3';
 import "./Arena.scss";
 
 const KEYS = {
@@ -19,6 +20,7 @@ function Arena() {
 
   let music = new Audio(musicMp3);
   music.loop = true;
+  let powerupSound = new Audio(powerupMp3);
 
   useEffect(() => {
     socket.on("gameState", (data) => {
