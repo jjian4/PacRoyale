@@ -20,10 +20,6 @@ function Arena() {
   const [gameState, setGameState] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
 
-  let music = new Audio(musicMp3);
-  music.loop = true;
-  let powerupSound = new Audio(powerupMp3);
-
   useEffect(() => {
     socket.on("gameState", (data) => {
       console.log(JSON.parse(data));
@@ -45,7 +41,14 @@ function Arena() {
     // Arrow key listener
     window.addEventListener("keydown", handleArrowKey);
 
-    music.play();
+    let music = new Audio(musicMp3);
+    music.loop = true;
+    let powerupSound = new Audio(powerupMp3);
+    // For some reaosn, audio can't play on safari
+    var isSafari = window.safari !== undefined;
+    if (!isSafari) {
+      music.play();
+    }
 
     return () => {
       window.removeEventListener("resize", resizeArena);
