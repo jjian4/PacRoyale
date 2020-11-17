@@ -1,14 +1,19 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
 import AppContext from "./../../contexts/AppContext";
-import "./Lobby.scss";
+import musicMp3 from '../../sounds/menu-music.mp3';
 import { AVATARS } from "./../../utils/constants";
+import "./Lobby.scss";
 
 function Lobby() {
   const { isHost, socket, goToMainMenu, goToArena } = useContext(AppContext);
   const [players, setPlayers] = useState([]);
   const [gameCode, setGameCode] = useState("");
   const [host, setHost] = useState("");
+
+  let music = new Audio(musicMp3);
+  music.loop = true;
+
   useEffect(() => {
     socket.emit("getPlayers");
     socket.on("init", () => {
@@ -27,6 +32,13 @@ function Lobby() {
       setHost(lobbyInfo.host);
       setPlayers(lobbyInfo.players);
     });
+
+    music.play();
+
+    return () => {
+      music.pause();
+      music.currentTime = 0;
+    }
   }, []);
 
   const startGame = () => {
