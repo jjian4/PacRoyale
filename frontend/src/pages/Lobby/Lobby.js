@@ -11,9 +11,6 @@ function Lobby() {
   const [gameCode, setGameCode] = useState("");
   const [host, setHost] = useState("");
 
-  let music = new Audio(musicMp3);
-  music.loop = true;
-
   useEffect(() => {
     socket.emit("getPlayers");
     socket.on("init", () => {
@@ -30,7 +27,13 @@ function Lobby() {
       setPlayers(lobbyInfo.players);
     });
 
-    music.play();
+    let music = new Audio(musicMp3);
+    music.loop = true;
+    // For some reaosn, audio can't play on safari
+    var isSafari = window.safari !== undefined;
+    if (!isSafari) {
+      music.play();
+    }
 
     return () => {
       music.pause();
