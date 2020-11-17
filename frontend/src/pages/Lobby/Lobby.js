@@ -14,10 +14,7 @@ function Lobby() {
     socket.on("init", () => {
       goToArena();
     });
-    socket.on("hostDisconnect", () => {
-      goToMainMenu();
-    });
-    socket.on("playerDisconnect", () => {
+    socket.on("lobbyDisconnect", () => {
       goToMainMenu();
     });
     socket.on("players", (data) => {
@@ -64,7 +61,7 @@ function Lobby() {
         </div>
       </div>
 
-      <div className='lobbyBottom'>
+      <div className="lobbyBottom">
         {isHost && (
           <div className="hostButtons">
             {/* TODO: Cancel game */}
@@ -75,12 +72,12 @@ function Lobby() {
               }}
             >
               Cancel Game
-          </button>
+            </button>
             {/* TODO: Open Game settings modal */}
             <button className="button">Edit Game</button>
             <button className="button" onClick={startGame}>
               Start Game
-          </button>
+            </button>
           </div>
         )}
         {!isHost && (
@@ -95,11 +92,10 @@ function Lobby() {
             </button>
             <div className="nonHostMessage">
               Waiting for the host to start the game...
-          </div>
+            </div>
           </>
         )}
       </div>
-
     </div>
   );
 }

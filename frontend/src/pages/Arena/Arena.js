@@ -1,5 +1,7 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { POWERUPS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
 import "./Arena.scss";
@@ -18,6 +20,7 @@ function Arena() {
 
   useEffect(() => {
     socket.on("gameState", (data) => {
+      console.log(JSON.parse(data));
       setGameState(JSON.parse(data));
     });
     socket.on("gameOver", (data) => {
@@ -75,7 +78,7 @@ function Arena() {
   console.log(gameState);
   const players = [];
   const foods = [];
-  const powerUps = [];
+  const powerups = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -88,10 +91,11 @@ function Arena() {
       } else if (value.vel.y < 0) {
         rotateDeg = 270;
       }
+      console.log(value.powerup);
       players.push(
         <div
           key={username}
-          className="player avatar"
+          className={`player avatar ${value.powerup}`}
           style={{
             ...AVATARS.Blue.style,
             top: value.pos.y + "%",
@@ -112,14 +116,17 @@ function Arena() {
         ></div>
       );
     });
-    gameState.powerUps.forEach((powerUp, idx) => {
-      powerUps.push(
+    gameState.powerups.forEach((powerup, idx) => {
+      powerups.push(
         <div
-          className="powerUp"
-          key={"powerUp" + idx}
-          style={{ top: powerUp.y + "%", left: powerUp.x + "%" }}
+          className="powerup"
+          key={"powerup" + idx}
+          style={{ top: powerup.y + "%", left: powerup.x + "%" }}
         >
-          {powerUp.type}
+          <FontAwesomeIcon
+            icon={POWERUPS[powerup.type].icon}
+            className="powerupIcon"
+          />
         </div>
       );
     });
@@ -130,7 +137,7 @@ function Arena() {
       <div className="arenaBox">
         {players}
         {foods}
-        {powerUps}
+        {powerups}
       </div>
       <div className="leaderboard">
         <div className="leaderboardTitle">Leaderboard (? alive)</div>

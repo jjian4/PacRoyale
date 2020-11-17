@@ -7,7 +7,7 @@ const {
   gameLoop,
   updatePlayerVelocity,
   spawnFoods,
-  spawnPowerUps,
+  spawnPowerups,
 } = require("./game");
 
 const state = {};
@@ -29,6 +29,8 @@ io.on("connection", (client) => {
     client.emit("gameCode", roomName);
 
     state[roomName] = initLobby(username);
+    console.log("newgame", state[roomName]);
+    console.log(state);
     addPlayerToLobby(state[roomName], username, true);
 
     client.join(roomName);
@@ -44,7 +46,6 @@ io.on("connection", (client) => {
     if (room) {
       numClients = room.size;
     }
-    console.log(room);
     if (numClients === 0) {
       client.emit("unknownCode");
       return;
@@ -65,15 +66,14 @@ io.on("connection", (client) => {
   function handleStartGame(roomName) {
     io.sockets.in(roomName).emit("init");
     startGameInterval(roomName);
+    broadcastAllRoomInfo();
   }
 
   function handleKeydown(keyCode) {
-    console.log("handle keycode");
     const roomName = clientRooms[client.id];
     if (!roomName) {
       return;
     }
-    console.log("handle keycode2");
     try {
       keyCode = parseInt(keyCode);
     } catch (e) {
@@ -89,25 +89,37 @@ io.on("connection", (client) => {
       io.sockets.in(roomName).emit("hostDisconnect");
       return;
     }
-    if (client.isHost && !state[roomName].started) {
-      io.sockets.in(roomName).emit("hostDisconnect");
-      delete state[roomName];
+    if (!state[roomName].started) {
+      if (client.isHost) {
+        io.sockets.in(roomName).emit("lobbyDisconnect");
+        delete state[roomName];
+      } else {
+        delete state[roomName].players[client.username];
+        state[roomName].playerCount--;
+        client.emit("lobbyDisconnect");
+        broadcastRoomInfo(roomName);
+      }
+      broadcastAllRoomInfo();
     } else {
-      client.emit("playerDisconnect");
       delete state[roomName].players[client.username];
-      broadcastRoomInfo(roomName);
+      state[roomName].playerCount--;
+      if (state[roomName].playerCount === 0) {
+        state[roomName].clearIntervals();
+        delete state[roomName];
+      }
     }
-    broadcastAllRoomInfo();
   }
 
   function broadcastAllRoomInfo() {
     const rooms = [];
     for (let [gameCode, room] of Object.entries(state)) {
-      rooms.push({
-        host: room.host,
-        gameCode,
-        numPlayers: Object.keys(room.players).length,
-      });
+      if (room) {
+        rooms.push({
+          host: room.host,
+          gameCode,
+          numPlayers: room.playerCount,
+        });
+      }
     }
     io.sockets.emit("rooms", JSON.stringify(rooms));
   }
@@ -115,11 +127,14 @@ io.on("connection", (client) => {
   function emitAllRoomInfo() {
     const rooms = [];
     for (let [gameCode, room] of Object.entries(state)) {
-      rooms.push({
-        host: room.host,
-        gameCode,
-        numPlayers: Object.keys(room.players).length,
-      });
+      if (room) {
+        console.log(gameCode, room);
+        rooms.push({
+          host: room.host,
+          gameCode,
+          numPlayers: room.playerCount,
+        });
+      }
     }
     client.emit("rooms", JSON.stringify(rooms));
   }
@@ -165,8 +180,8 @@ function startGameInterval(roomName) {
   const spawnFoodIntervalId = setInterval(() => {
     spawnFoods(state[roomName]);
   }, 500);
-  const spawnPowerUpsIntervalId = setInterval(() => {
-    spawnPowerUps(state[roomName]);
+  const spawnPowerupsIntervalId = setInterval(() => {
+    spawnPowerups(state[roomName]);
   }, 1000);
   const movementIntervalId = setInterval(() => {
     const winner = gameLoop(state[roomName]);
@@ -177,9 +192,14 @@ function startGameInterval(roomName) {
       state[roomName] = null;
       clearInterval(movementIntervalId);
       clearInterval(spawnFoodIntervalId);
-      clearInterval(spawnPowerUpsIntervalId);
+      clearInterval(spawnPowerupsIntervalId);
     }
   }, 1000 / FRAME_RATE);
+  state[roomName].clearIntervals = () => {
+    clearInterval(movementIntervalId);
+    clearInterval(spawnFoodIntervalId);
+    clearInterval(spawnPowerupsIntervalId);
+  };
 }
 
 function emitGameState(room, gameState) {

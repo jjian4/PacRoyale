@@ -4,25 +4,29 @@ module.exports = {
   gameLoop,
   updatePlayerVelocity,
   spawnFoods,
-  spawnPowerUps,
+  spawnPowerups: spawnPowerups,
 };
+
+const POWERUPS = ["EAT", "QUIZ", "SPEED", "RPS", "GHOST"];
 
 const playerSize = 4;
 const velocity = 1;
-const powerUpSize = 3;
+const powerupSize = 3;
 const foodSize = 2;
 
 function initLobby(username) {
   return {
     host: username,
     players: {},
+    playerCount: 0,
     foods: [],
-    powerUps: [],
+    powerups: [],
     started: false,
   };
 }
 
 function addPlayerToLobby(state, username, isHost) {
+  state.playerCount++;
   state.players[username] = {
     pos: {
       x: Math.floor(Math.random() * (100 - playerSize)),
@@ -32,8 +36,10 @@ function addPlayerToLobby(state, username, isHost) {
       x: 0,
       y: 0,
     },
+    velocity: 1,
     score: 0,
     isHost,
+    powerup: "",
   };
 }
 
@@ -106,57 +112,78 @@ function gameLoop(state) {
       }
     });
     if (winner) {
-      console.log(username);
       return username;
     }
-    state.powerUps.forEach((powerUp, idx, arr) => {
-      if (
-        isColliding(
-          playerX,
-          playerY,
-          playerSize,
-          powerUp.x,
-          powerUp.y,
-          powerUpSize
-        )
-      ) {
-        arr.splice(idx, 1);
-      }
-    });
+    if (player.powerup == "") {
+      state.powerups.forEach((powerup, idx, arr) => {
+        if (
+          isColliding(
+            playerX,
+            playerY,
+            playerSize,
+            powerup.x,
+            powerup.y,
+            powerupSize
+          )
+        ) {
+          arr.splice(idx, 1);
+          player.powerup = powerup.type;
+          updateForSpeed(player, 2);
+          setTimeout(() => {
+            player.powerup = "";
+            player.velocity = 1;
+            updateForSpeed(player, 1);
+          }, 3000);
+        }
+      });
+    }
   }
   return null;
+}
+
+function updateForSpeed(player, newVelocity) {
+  player.velocity = newVelocity;
+  if (player.vel.x < 0) {
+    player.vel.x = -newVelocity;
+  } else if (player.vel.x > 0) {
+    player.vel.x = newVelocity;
+  }
+  if (player.vel.y < 0) {
+    player.vel.y = -newVelocity;
+  } else if (player.vel.y > 0) {
+    player.vel.y = newVelocity;
+  }
 }
 
 function updatePlayerVelocity(state, username, keyCode) {
   switch (keyCode) {
     case 37: {
       // left
-      state.players[username].vel.x = -velocity;
+      state.players[username].vel.x = -state.players[username].velocity;
       state.players[username].vel.y = 0;
       break;
     }
     case 38: {
       // down
-      state.players[username].vel.y = -velocity;
+      state.players[username].vel.y = -state.players[username].velocity;
       state.players[username].vel.x = 0;
       break;
     }
     case 39: {
       // right
-      state.players[username].vel.x = velocity;
+      state.players[username].vel.x = state.players[username].velocity;
       state.players[username].vel.y = 0;
       break;
     }
     case 40: {
       // up
-      state.players[username].vel.y = velocity;
+      state.players[username].vel.y = state.players[username].velocity;
       state.players[username].vel.x = 0;
       break;
     }
     default:
       break;
   }
-  console.log(state.players[username]);
 }
 
 function spawnFoods(state) {
@@ -166,10 +193,10 @@ function spawnFoods(state) {
   });
 }
 
-function spawnPowerUps(state) {
-  state.powerUps.push({
+function spawnPowerups(state) {
+  state.powerups.push({
     x: Math.floor(Math.random() * (100 - foodSize)),
     y: Math.floor(Math.random() * (100 - foodSize)),
-    type: Math.floor(Math.random() * 4),
+    type: "SPEED",
   });
 }

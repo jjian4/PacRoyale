@@ -1,6 +1,14 @@
-import { faFastForward, faGhost, faHandScissors, faLeaf, faPencilAlt, faRocket, faUtensils } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFastForward,
+  faGhost,
+  faHandScissors,
+  faLeaf,
+  faPencilAlt,
+  faRocket,
+  faUtensils,
+} from "@fortawesome/free-solid-svg-icons";
 
-export const SITE_NAME = '493 Battle Royale';
+export const SITE_NAME = "493 Battle Royale";
 
 export const PAGES = {
   LOGIN: "login",
@@ -14,151 +22,158 @@ export const PAGES = {
 
 export const AVATARS = {
   Blue: {
-    name: 'blue',
+    name: "blue",
     price: 0,
     style: {
-      backgroundColor: 'blue'
-    }
+      backgroundColor: "blue",
+    },
   },
   Red: {
-    name: 'red',
+    name: "red",
     price: 0,
     style: {
-      backgroundColor: 'red'
-    }
+      backgroundColor: "red",
+    },
   },
   Green: {
-    name: 'green',
+    name: "green",
     price: 0,
     style: {
-      backgroundColor: 'green'
-    }
+      backgroundColor: "green",
+    },
   },
   Purple: {
-    name: 'purple',
+    name: "purple",
     price: 600,
     style: {
-      backgroundColor: 'purple'
-    }
+      backgroundColor: "purple",
+    },
   },
   Gold: {
-    name: 'gold',
+    name: "gold",
     price: 600,
     style: {
-      backgroundColor: 'gold'
-    }
+      backgroundColor: "gold",
+    },
   },
   "Navy Sripes": {
-    name: 'navy-stripes',
+    name: "navy-stripes",
     price: 1200,
     style: {
-      background: 'repeating-linear-gradient(45deg, darkslateblue, darkslateblue, 10px, navy 10px, navy 20px)'
-    }
+      background:
+        "repeating-linear-gradient(45deg, darkslateblue, darkslateblue, 10px, navy 10px, navy 20px)",
+    },
   },
   "Gray Sripes": {
-    name: 'gray-stripes',
+    name: "gray-stripes",
     price: 1200,
     style: {
-      background: 'repeating-linear-gradient(45deg, lightgray, lightgray, 10px, gray 10px, gray 20px)'
-    }
+      background:
+        "repeating-linear-gradient(45deg, lightgray, lightgray, 10px, gray 10px, gray 20px)",
+    },
   },
   Target: {
-    name: 'target',
+    name: "target",
     price: 2000,
     style: {
-      background: 'repeating-radial-gradient(circle, red, red 15%, whitesmoke 15%, whitesmoke 30%)'
-    }
+      background:
+        "repeating-radial-gradient(circle, red, red 15%, whitesmoke 15%, whitesmoke 30%)",
+    },
   },
   "Target 2": {
-    name: 'target2',
+    name: "target2",
     price: 2000,
     style: {
-      background: 'repeating-radial-gradient(circle, blue, red 20%, yellow 20%, yellow 30%)'
-    }
+      background:
+        "repeating-radial-gradient(circle, blue, red 20%, yellow 20%, yellow 30%)",
+    },
   },
   Black: {
-    name: 'black',
+    name: "black",
     price: 9000,
     style: {
-      backgroundColor: 'black'
-    }
+      backgroundColor: "black",
+    },
   },
-}
+};
 
 export const ARENA_COLORS = {
   WHITE: {
-    name: 'white',
-    style: { backgroundColor: 'white' }
+    name: "white",
+    style: { backgroundColor: "white" },
   },
   GRAY: {
-    name: 'gray',
-    style: { backgroundColor: 'lightgray' }
+    name: "gray",
+    style: { backgroundColor: "lightgray" },
   },
   YELLOW: {
-    name: 'yellow',
-    style: { backgroundColor: 'lightyellow' }
+    name: "yellow",
+    style: { backgroundColor: "lightyellow" },
   },
   PINK: {
-    name: 'pink',
-    style: { backgroundColor: 'lightpink' }
+    name: "pink",
+    style: { backgroundColor: "lightpink" },
   },
   BLUE: {
-    name: 'blue',
-    style: { backgroundColor: 'lightblue' }
+    name: "blue",
+    style: { backgroundColor: "lightblue" },
   },
-}
+};
 
 export const POWERUPS = {
   EAT: {
-    name: 'Eat',
-    description: '(10 sec): Collide with other players to stun them and steal a coin.',
+    name: "Eat",
+    description:
+      "(10 sec): Collide with other players to stun them and steal a coin.",
     icon: faUtensils,
   },
   QUIZ: {
-    name: 'Quiz',
-    description: '(on collision): Collide with another player to start a trivia quiz on a topic of your choice. Winner steals 10 coins.',
+    name: "Quiz",
+    description:
+      "(on collision): Collide with another player to start a trivia quiz on a topic of your choice. Winner steals 10 coins.",
     icon: faPencilAlt,
   },
   SPEED: {
-    name: 'Speed',
-    description: '(10 sec): Movement speed increases.',
+    name: "Speed",
+    description: "(10 sec): Movement speed increases.",
     icon: faFastForward,
   },
-  ROCK_PAPER_SCISSORS: {
-    name: 'RPS',
-    description: '(on collision): Collide with another player to start a rock-paper-scissors game. Winner steals 5 coins.',
+  RPS: {
+    name: "RPS",
+    description:
+      "(on collision): Collide with another player to start a rock-paper-scissors game. Winner steals 5 coins.",
     icon: faHandScissors,
   },
   GHOST: {
-    name: 'Ghost',
-    description: '(instant): A ghost moves across to arena, stunning and stealing a coin from each opponent it collides with.',
+    name: "Ghost",
+    description:
+      "(instant): A ghost moves across to arena, stunning and stealing a coin from each opponent it collides with.",
     icon: faGhost,
   },
-}
+};
 
 export const TECH_STACK = {
   SOCKETIO: {
-    name: 'Socket.io',
-    description: 'Instant communication between server and player clients'
+    name: "Socket.io",
+    description: "Instant communication between server and player clients",
   },
   FIREBASE: {
-    name: 'Firebase',
-    description: 'User authentication and database'
+    name: "Firebase",
+    description: "User authentication and database",
   },
   REACT: {
-    name: 'React.js',
-    description: 'UI library for reusing components and managing state'
+    name: "React.js",
+    description: "UI library for reusing components and managing state",
   },
   SASS: {
-    name: 'Sass',
-    description: 'CSS preprocessor for neater styling code'
+    name: "Sass",
+    description: "CSS preprocessor for neater styling code",
   },
   BOOTSTRAP: {
-    name: 'Bootstrap',
-    description: 'UI responsiveness and easier styling'
+    name: "Bootstrap",
+    description: "UI responsiveness and easier styling",
   },
-
-}
+};
 
 export const firebaseConfig = {
   apiKey: "AIzaSyAIPYSCzBarY45ObEhm8BQu9jAhnIsUcNE",
@@ -168,5 +183,5 @@ export const firebaseConfig = {
   storageBucket: "final-project-f528e.appspot.com",
   messagingSenderId: "312001451038",
   appId: "1:312001451038:web:72f6416555e32201a7ca0f",
-  measurementId: "G-F0TLFCPVG2"
+  measurementId: "G-F0TLFCPVG2",
 };
