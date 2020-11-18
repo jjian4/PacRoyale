@@ -1,7 +1,6 @@
 import React from "react";
-import { useState, useContext, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { AVATARS, POWERUPS, SITE_NAME, TECH_STACK } from "./../../utils/constants";
+import { POWERUPS, SITE_NAME, TECH_STACK } from "./../../utils/constants";
 import "./About.scss";
 
 function About() {

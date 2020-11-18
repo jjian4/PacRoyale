@@ -2,33 +2,39 @@ import React from "react";
 import { useState, useEffect, useContext } from "react";
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { ARENA_COLORS, POWERUPS } from "../../utils/constants"
+import { ARENA_COLORS, GAME_MODES, POWERUPS } from "../../utils/constants"
 import AppContext from "./../../contexts/AppContext";
 import "./GameSettings.scss";
 
 function GameSettings(props) {
-  const [selectedArenaColor, setSelectedArenaColor] = useState(ARENA_COLORS.WHITE.name);
-  const [selectedPowerups, setSSelectedPowerups] = useState([POWERUPS.EAT.name, POWERUPS.QUIZ.name]);
-  const [quizDuration, setQuizDuration] = useState("10");
-
   const { socket, goToLobby, setIsHost, user } = useContext(AppContext);
-  const handleCreateLobby = () => {
-    // First check that input is valid
-    const parsedQuizDuration = parseInt(quizDuration);
-    if (isNaN(parsedQuizDuration) || parsedQuizDuration < 8 || parsedQuizDuration > 20) {
-      alert('Quiz duration must be a number between 8 and 20.')
-      return;
-    }
 
-    console.log(user.username);
-    socket.emit("newGame", user.username); //TODO: Update username
-  };
+  const [selectedArenaColor, setSelectedArenaColor] = useState(ARENA_COLORS.WHITE.name);
+  const [selectedPowerups, setSelectedPowerups] = useState([POWERUPS.EAT.name, POWERUPS.QUIZ.name]);
+  // const [quizDuration, setQuizDuration] = useState("10");
+  const [selectedGameMode, setSelectedGameMode] = useState(GAME_MODES.ELIMINATION.name);
+
   useEffect(() => {
     socket.on("lobbyCreated", (data) => {
       goToLobby();
       setIsHost(true);
     });
   }, []);
+
+
+  const handleCreateLobby = () => {
+    // // First check that quizDuration input is valid
+    // const parsedQuizDuration = parseInt(quizDuration);
+    // if (isNaN(parsedQuizDuration) || parsedQuizDuration < 8 || parsedQuizDuration > 20) {
+    //   alert('Quiz duration must be a number between 8 and 20.')
+    //   return;
+    // }
+
+    console.log(user.username);
+    socket.emit("newGame", user.username); //TODO: Update username
+  };
+
+
   return (
     <div className='GameSettings'>
 
@@ -63,9 +69,9 @@ function GameSettings(props) {
                 className={`powerupChoice ${selectedPowerups.includes(POWERUPS[powerup].name) && 'selectedPowerupChoice'}`}
                 onClick={() => {
                   if (selectedPowerups.includes(POWERUPS[powerup].name)) {
-                    setSSelectedPowerups(selectedPowerups.filter(item => item !== POWERUPS[powerup].name));
+                    setSelectedPowerups(selectedPowerups.filter(item => item !== POWERUPS[powerup].name));
                   } else {
-                    setSSelectedPowerups([...selectedPowerups, POWERUPS[powerup].name]);
+                    setSelectedPowerups([...selectedPowerups, POWERUPS[powerup].name]);
                   }
                 }}
               >
@@ -76,7 +82,7 @@ function GameSettings(props) {
           ))}
         </div>
 
-        <div className='subtitle'>
+        {/* <div className='subtitle'>
           Quiz Duration
           <div className='quizDurationDescription'>(Between 8 and 20 seconds)</div>
         </div>
@@ -88,11 +94,30 @@ function GameSettings(props) {
             value={quizDuration}
             onChange={e => setQuizDuration(e.target.value)}
           /> sec
+        </div> */}
+
+
+        <div className='subtitle'>
+          Game Mode
+        </div>
+
+        <div className='gameModeChoices' onChange={e => setSelectedGameMode(e.target.value)}>
+          {Object.keys(GAME_MODES).map((gameMode, index) => (
+            <label key={index} className='gameModeChoice'>
+              <input
+                type='radio'
+                value={GAME_MODES[gameMode].name}
+                checked={GAME_MODES[gameMode].name === selectedGameMode}
+              />
+              <span className='gameModeName'>{GAME_MODES[gameMode].name}:</span>
+              <span className='gameModeDescription'>{GAME_MODES[gameMode].description}</span>
+            </label>
+          ))}
         </div>
 
       </div>
 
-      {/* TODO: Check props to see if host is editting. If editting, change button text to "Return to Lobby" */}
+      {/* TODO: Check props to see if host is editing. If editing, change button text to "Return to Lobby" */}
       <button className='button lobbyButton' onClick={handleCreateLobby}>Create Lobby</button>
     </div>
   );

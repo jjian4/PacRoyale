@@ -2,9 +2,7 @@ import {
   faFastForward,
   faGhost,
   faHandScissors,
-  faLeaf,
   faPencilAlt,
-  faRocket,
   faUtensils,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -151,6 +149,23 @@ export const POWERUPS = {
     icon: faGhost,
   },
 };
+
+
+export const GAME_MODES = {
+  ELIMINATION: {
+    name: 'Elimination',
+    description: 'Last player standing (with remaining coins) wins.'
+  },
+  FIRST_TO_100: {
+    name: 'First to 100',
+    description: 'The first player to reach 100 coins wins.'
+  },
+  FREE_FOR_ALL: {
+    name: 'Free-for-all',
+    description: 'No winners. Game only ends when everyone leaves.'
+  }
+}
+
 
 export const TECH_STACK = {
   SOCKETIO: {

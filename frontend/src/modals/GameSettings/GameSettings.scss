@@ -69,6 +69,24 @@
                 margin-right: 5px;
             }    
         }
+
+        .gameModeChoices {
+            display: inline-block;
+            .gameModeChoice {
+                padding: 5px 0;
+                margin-bottom: 10px;
+                display: flex;
+                input {
+                    margin-top: 6px;
+                }
+                .gameModeName {
+                    font-weight: bold;
+                    padding: 0 10px 0 5px;
+                }
+                .gameModeDescription {
+                }    
+            }
+        }
     }
 
     .lobbyButton {
