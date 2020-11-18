@@ -1,15 +1,24 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
+import { faVolumeMute, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import AppContext from "./../../contexts/AppContext";
 import musicMp3 from "../../sounds/menu-music.mp3";
 import { AVATARS } from "./../../utils/constants";
 import "./Lobby.scss";
+import FloatingActionButton from "../../components/Modal/FloatingActionButton/FloatingActionButton";
+
+const music = new Audio(musicMp3);
+music.loop = true;
 
 function Lobby() {
   const { isHost, socket, goToMainMenu, goToArena } = useContext(AppContext);
   const [players, setPlayers] = useState([]);
   const [gameCode, setGameCode] = useState("");
   const [host, setHost] = useState("");
+  const [isMusicOn, setIsMusicOn] = useState(true);
+
+  // For some reaosn, audio can't play on safari
+  const isSafari = window.safari !== undefined;
 
   useEffect(() => {
     socket.emit("getPlayers");
@@ -27,11 +36,7 @@ function Lobby() {
       setPlayers(lobbyInfo.players);
     });
 
-    let music = new Audio(musicMp3);
-    music.loop = true;
-    // For some reaosn, audio can't play on safari
-    const isSafari = window.safari !== undefined;
-    if (!isSafari) {
+    if (!isSafari && isMusicOn) {
       music.play();
     }
 
@@ -40,6 +45,18 @@ function Lobby() {
       music.currentTime = 0;
     };
   }, []);
+
+  const toggleMusic = () => {
+    if (isSafari) {
+      return;
+    }
+    if (isMusicOn) {
+      music.pause();
+    } else {
+      music.play();
+    }
+    setIsMusicOn(!isMusicOn);
+  }
 
   const startGame = () => {
     // TODO: Start the game in socketio
@@ -110,6 +127,14 @@ function Lobby() {
             </div>
           </>
         )}
+      </div>
+
+      <div className='bottomRight'>
+        <FloatingActionButton
+          title='Music'
+          onClick={toggleMusic}
+          icon={isMusicOn ? faVolumeUp : faVolumeMute}
+        />
       </div>
     </div>
   );

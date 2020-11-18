@@ -1,12 +1,14 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt, faVolumeMute, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { POWERUPS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
 import musicMp3 from "../../sounds/arena-music.mp3";
 import powerupMp3 from "../../sounds/powerup.mp3";
 import "./Arena.scss";
+import FloatingActionButton from "../../components/Modal/FloatingActionButton/FloatingActionButton";
 
 const KEYS = {
   left: 37,
@@ -15,10 +17,19 @@ const KEYS = {
   down: 40,
 };
 
+const music = new Audio(musicMp3);
+music.loop = true;
+const powerupSound = new Audio(powerupMp3);
+
+
 function Arena() {
   const { socket, goToMainMenu } = useContext(AppContext);
   const [gameState, setGameState] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isMusicOn, setIsMusicOn] = useState(true);
+
+  // For some reaosn, audio can't play on safari
+  const isSafari = window.safari !== undefined;
 
   useEffect(() => {
     // Keep arena window a square even on mobile views
@@ -28,12 +39,7 @@ function Arena() {
     // Arrow key listener
     window.addEventListener("keydown", handleArrowKey);
 
-    let music = new Audio(musicMp3);
-    music.loop = true;
-    let powerupSound = new Audio(powerupMp3);
-    // For some reaosn, audio can't play on safari
-    const isSafari = window.safari !== undefined;
-    if (!isSafari) {
+    if (!isSafari && isMusicOn) {
       music.play();
     }
 
@@ -58,7 +64,20 @@ function Arena() {
       music.pause();
       music.currentTime = 0;
     };
+
   }, []);
+
+  const toggleMusic = () => {
+    if (isSafari) {
+      return;
+    }
+    if (isMusicOn) {
+      music.pause();
+    } else {
+      music.play();
+    }
+    setIsMusicOn(!isMusicOn);
+  }
 
   const resizeArena = () => {
     if (window.innerWidth <= window.innerHeight) {
@@ -67,6 +86,7 @@ function Arena() {
       setIsMobile(false);
     }
   };
+
 
   const handleArrowKey = (e) => {
     console.log(e.which);
@@ -91,6 +111,7 @@ function Arena() {
         break;
     }
   };
+
 
   // Game state
   console.log(gameState);
@@ -150,6 +171,7 @@ function Arena() {
     });
   }
 
+
   return (
     <div className={`Arena ${isMobile && "Arena-mobile"}`}>
       <div className="arenaBox">
@@ -169,14 +191,27 @@ function Arena() {
                 <div
                   className="innerHealthBar"
                   style={{
-                    width: `calc(100% * ${
-                      gameState.players[username].score * 0.01
-                    })`,
+                    width: `calc(100% * ${gameState.players[username].score * 0.01
+                      })`,
                   }}
                 />
               </div>
             </div>
           ))}
+      </div>
+
+      <div className='bottomRight'>
+        <FloatingActionButton
+          title='Music'
+          onClick={toggleMusic}
+          icon={isMusicOn ? faVolumeUp : faVolumeMute}
+        />
+        {/* TODO: Send message to socketio to leave game */}
+        <FloatingActionButton
+          title='Exit'
+          onClick={() => { console.log('TODO: Leave game') }}
+          icon={faSignOutAlt}
+        />
       </div>
     </div>
   );
