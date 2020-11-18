@@ -11,11 +11,10 @@ const music = new Audio(musicMp3);
 music.loop = true;
 
 function Lobby() {
-  const { isHost, socket, goToMainMenu, goToArena } = useContext(AppContext);
+  const { isHost, socket, isMusicOn, goToMainMenu, goToArena, setIsMusicOn } = useContext(AppContext);
   const [players, setPlayers] = useState([]);
   const [gameCode, setGameCode] = useState("");
   const [host, setHost] = useState("");
-  const [isMusicOn, setIsMusicOn] = useState(true);
 
   // For some reaosn, audio can't play on safari
   const isSafari = window.safari !== undefined;

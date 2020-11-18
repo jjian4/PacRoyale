@@ -23,10 +23,10 @@ const powerupSound = new Audio(powerupMp3);
 
 
 function Arena() {
-  const { socket, goToMainMenu } = useContext(AppContext);
+  const { socket, goToMainMenu, isMusicOn, setIsMusicOn } = useContext(AppContext);
+
   const [gameState, setGameState] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [isMusicOn, setIsMusicOn] = useState(true);
 
   // For some reaosn, audio can't play on safari
   const isSafari = window.safari !== undefined;

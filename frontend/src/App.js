@@ -23,6 +23,7 @@ function App() {
   const [currentPage, setCurrentPage] = useState(PAGES.SPLASH_SCREEN);
   const [isHost, setStateIsHost] = useState(false);
   const [user, setUser] = useState(true);
+  const [isMusicOn, setIsMusicOn] = useState(true);
 
   // If user is signed in, we redirect to main menu
   // If not, we go to the login page
@@ -83,9 +84,13 @@ function App() {
           setUser: (user) => {
             setUser(user);
           },
+          setIsMusicOn: (isMusicOn) => {
+            setIsMusicOn(isMusicOn);
+          },
           isHost: isHost,
           socket,
           user,
+          isMusicOn: isMusicOn
         }}
       >
         {page}
