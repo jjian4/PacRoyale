@@ -71,7 +71,7 @@ io.on("connection", (client) => {
 
   function handleKeydown(keyCode) {
     const roomName = clientRooms[client.id];
-    if (!roomName) {
+    if (!roomName || !state[roomName]) {
       return;
     }
     try {
