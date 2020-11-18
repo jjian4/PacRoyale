@@ -1,13 +1,5 @@
-module.exports = {
-  initLobby,
-  addPlayerToLobby,
-  gameLoop,
-  updatePlayerVelocity,
-  spawnFoods,
-  spawnPowerups: spawnPowerups,
-};
+const { POWERUPS } = require("./constants");
 
-const POWERUPS = ["EAT", "QUIZ", "SPEED", "RPS", "GHOST"];
 const WIN_AMOUNT = 100;
 
 const playerSize = 4;
@@ -201,3 +193,12 @@ function spawnPowerups(state) {
     type: "SPEED",
   });
 }
+
+module.exports = {
+  initLobby,
+  addPlayerToLobby,
+  gameLoop,
+  updatePlayerVelocity,
+  spawnFoods,
+  spawnPowerups: spawnPowerups,
+};

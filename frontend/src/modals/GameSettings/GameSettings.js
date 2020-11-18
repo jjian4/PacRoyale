@@ -10,7 +10,7 @@ function GameSettings(props) {
   const { socket, goToLobby, setIsHost, user } = useContext(AppContext);
 
   const [selectedArenaColor, setSelectedArenaColor] = useState(ARENA_COLORS.WHITE.name);
-  const [selectedPowerups, setSelectedPowerups] = useState([POWERUPS.EAT.name, POWERUPS.QUIZ.name]);
+  const [selectedPowerups, setSelectedPowerups] = useState([POWERUPS.EAT.name, POWERUPS.SPEED.name, POWERUPS.SHOOT.name]);
   // const [quizDuration, setQuizDuration] = useState("10");
   const [selectedGameMode, setSelectedGameMode] = useState(GAME_MODES.ELIMINATION.name);
 
@@ -101,13 +101,14 @@ function GameSettings(props) {
           Game Mode
         </div>
 
-        <div className='gameModeChoices' onChange={e => setSelectedGameMode(e.target.value)}>
+        <div className='gameModeChoices'>
           {Object.keys(GAME_MODES).map((gameMode, index) => (
             <label key={index} className='gameModeChoice'>
               <input
                 type='radio'
                 value={GAME_MODES[gameMode].name}
                 checked={GAME_MODES[gameMode].name === selectedGameMode}
+                onChange={e => setSelectedGameMode(e.target.value)}
               />
               <span className='gameModeName'>{GAME_MODES[gameMode].name}:</span>
               <span className='gameModeDescription'>{GAME_MODES[gameMode].description}</span>

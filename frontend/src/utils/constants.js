@@ -1,4 +1,5 @@
 import {
+  faBolt,
   faFastForward,
   faGhost,
   faHandScissors,
@@ -122,8 +123,13 @@ export const POWERUPS = {
   EAT: {
     name: "Eat",
     description:
-      "(10 sec): Collide with other players to stun them and steal a coin.",
+      "(7 sec): Collide with other players to stun them and steal a coin.",
     icon: faUtensils,
+  },
+  SPEED: {
+    name: "Speed",
+    description: "(7 sec): Move twice as fact to collect more coins!",
+    icon: faFastForward,
   },
   QUIZ: {
     name: "Quiz",
@@ -131,23 +137,24 @@ export const POWERUPS = {
       "(on collision): Collide with another player to start a trivia quiz on a topic of your choice. Winner steals 10 coins.",
     icon: faPencilAlt,
   },
-  SPEED: {
-    name: "Speed",
-    description: "(10 sec): Movement speed increases.",
-    icon: faFastForward,
-  },
   RPS: {
     name: "RPS",
     description:
       "(on collision): Collide with another player to start a rock-paper-scissors game. Winner steals 5 coins.",
     icon: faHandScissors,
   },
+  SHOOT: {
+    name: "Shoot",
+    description:
+      "(press space): Shoot a ????? in a straight line, stunning and stealing a coin from each opponent that was hit.",
+    icon: faBolt,
+  },
   GHOST: {
     name: "Ghost",
     description:
-      "(instant): A ghost moves across to arena, stunning and stealing a coin from each opponent it collides with.",
+      "(instant): Spawn a ghost that moves across to arena, stunning opponents and causing them to drop 2 coins.",
     icon: faGhost,
-  },
+  }
 };
 
 
