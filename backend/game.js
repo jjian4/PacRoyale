@@ -20,9 +20,9 @@ function initLobby(username, arenaColor, selectedPowerups) {
     host: username,
     players: {},
     playerCount: 0,
-    foods: new Map(),
-    powerups: new Map(),
-    shots: new Map(),
+    foods: {},
+    powerups: {},
+    shots: {},
     started: false,
     arenaColor,
     selectedPowerups,
@@ -107,7 +107,7 @@ function gameLoop(state, client) {
       }
     }
 
-    for (let [key, shot] of state.shots) {
+    for (let [key, shot] of Object.entries(state.shots)) {
       shot.pos.x += shot.vel.x;
       shot.pos.y += shot.vel.y;
       if (
@@ -116,7 +116,7 @@ function gameLoop(state, client) {
         shot.pos.y < 0 ||
         shot.pos.y > 100
       ) {
-        state.shots.delete(key);
+        delete state.shots[key];
       }
     }
 
@@ -124,11 +124,11 @@ function gameLoop(state, client) {
     const playerX = player.pos.x;
     let winner = false;
 
-    for (let [key, food] of state.foods) {
+    for (let [key, food] of Object.entries(state.foods)) {
       if (
         isColliding(playerX, playerY, PLAYER_SIZE, food.x, food.y, FOOD_SIZE)
       ) {
-        state.foods.delete(key);
+        delete state.foods[key];
         player.score += 1;
         if (player.score >= WIN_AMOUNT) {
           winner = true;
@@ -139,7 +139,7 @@ function gameLoop(state, client) {
       return username;
     }
     if (player.powerup === "") {
-      for (let [key, powerup] of state.powerups) {
+      for (const [key, powerup] of Object.entries(state.powerups)) {
         if (
           isColliding(
             playerX,
@@ -151,7 +151,7 @@ function gameLoop(state, client) {
           )
         ) {
           client.emit("playPowerupSound");
-          state.powerups.delete(key);
+          delete state.powerups[key];
           player.powerup = powerup.name;
           if (powerup.name === "Speed") {
             updateForSpeed(player, 2);
@@ -219,7 +219,8 @@ function updatePlayerVelocity(state, username, keyCode) {
       if (state.players[username].powerup === "Shoot") {
         state.players[username].powerup = "";
         state.players[username].clearShot();
-        state.shots.set(uuid(), {
+
+        state.shots[uuid()] = {
           pos: {
             x:
               state.players[username].pos.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
@@ -231,8 +232,7 @@ function updatePlayerVelocity(state, username, keyCode) {
             y: state.players[username].vel.y * BULLET_VELOCITY,
           },
           owner: username,
-        });
-        console.log(state.shots);
+        };
       }
       break;
     }
@@ -266,10 +266,10 @@ function updatePlayerVelocity(state, username, keyCode) {
 }
 
 function spawnFoods(state) {
-  state.foods.set(uuid(), {
+  state.foods[uuid()] = {
     x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
     y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
-  });
+  };
 }
 
 function spawnPowerups(state) {
@@ -277,11 +277,12 @@ function spawnPowerups(state) {
     state.selectedPowerups[
       Math.floor(Math.random() * state.selectedPowerups.length)
     ];
-  state.powerups.set(uuid(), {
+
+  state.powerups[uuid()] = {
     x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
     y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
     name,
-  });
+  };
 }
 
 module.exports = {

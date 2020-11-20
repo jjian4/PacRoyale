@@ -207,9 +207,10 @@ function emitGameState(room, gameState) {
     "gameState",
     JSON.stringify({
       ...gameState,
-      foods: Array.from(gameState.foods.values()),
-      powerups: Array.from(gameState.powerups.values()),
-      shots: Array.from(gameState.shots.values()),
+      // No need to give frontend object ids
+      foods: Object.values(gameState.foods),
+      powerups: Object.values(gameState.powerups),
+      shots: Object.values(gameState.shots),
     })
   );
 }
