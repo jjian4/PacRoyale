@@ -7,15 +7,14 @@ class User {
         // initialise the local user state from the firebase user object
         this.username = firebaseUser.displayName;
         this.uid = firebaseUser.uid;
-        this.coins = 100;
+        this.coins = 1000;
         this.wins = 0;
         this.purchasedSkins = {};
+        this.equippedSkin = "Blue";
         // initialise owned avatars
         Object.keys(AVATARS).forEach(key => {
             let avatar = AVATARS[key];
-            avatar['owned'] = avatar.price === 0;
-            avatar['selected'] = key === "Blue";
-            this.purchasedSkins[key] = avatar;
+            if(avatar['price'] === 0) this.purchasedSkins[key] = true;
         });
     }
 
@@ -28,49 +27,47 @@ class User {
             coins: this.coins,
             purchasedSkins: this.purchasedSkins,
             wins: this.wins,
+            equippedSkin: this.equippedSkin
           });
     }
 
-    getFirebaseData() {
+    getFirebaseData(callback) {
         // update all local state from firebase
-        var coins, wins, purchasedSkins;
+        var coins, wins, purchasedSkins, equippedSkin;
         firebase.database().ref('users/' + this.uid).once('value').then(function(snapshot) {
             coins = (snapshot.val() && snapshot.val().coins) || 0;
             wins = (snapshot.val() && snapshot.val().wins) || 0;
             purchasedSkins = (snapshot.val() && snapshot.val().purchasedSkins) || {};
+            equippedSkin = (snapshot.val() && snapshot.val().equippedSkin) || "";
         }).then( () => {
             this.coins = coins;
             this.wins = wins;
             this.purchasedSkins = purchasedSkins;
-        });
+            this.equippedSkin = equippedSkin;
+        }).then(() => callback());
        
     }
 
-    getCoins() {
-        // gets the update value of coins from firebase
-        var coins = 0;
-        firebase.database().ref('users/' + this.uid).once('value').then(function(snapshot) {
-            coins = (snapshot.val() && snapshot.val().coins) || 0;
-        });
-        this.coins = coins;
+
+    selectPurchasedSkin(avatar) {
+        // equips an owned skin as the current skin for the user
+        this.equippedSkin = avatar;
+
+        // update state in firebase
+        firebase.database().ref('users/' + this.uid).update({
+            equippedSkin: this.equippedSkin,
+        })
     }
 
-    getWins() {
-        // gets the update value of wins from firebase
-        var wins = 0;
-        firebase.database().ref('users/' + this.uid).once('value').then(function(snapshot) {
-            wins = (snapshot.val() && snapshot.val().wins) || 0;
-        });
-        this.wins = wins;
-    }
+    buySkin(avatar, price){
+        this.coins = this.coins - price;
+        this.purchasedSkins[avatar] = true;
 
-    getPurchasedSkins() {
-        // gets the update value of wins from firebase
-        var skins = {};
-        firebase.database().ref('users/' + this.uid).once('value').then(function(snapshot) {
-            skins = (snapshot.val() && snapshot.val().purchasedSkins) || 0;
-        });
-        this.purchasedSkins = skins;
+        // update state in firebase
+        firebase.database().ref('users/' + this.uid).update({
+            coins: this.coins,
+            purchasedSkins: this.purchasedSkins,
+        })
     }
 }
 
