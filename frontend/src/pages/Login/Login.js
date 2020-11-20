@@ -113,6 +113,7 @@ function Login() {
                   className="close"
                   data-dismiss="alert"
                   aria-label="Close"
+                  onClick={() => setErrorMessage("")}
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -163,6 +164,7 @@ function Login() {
                   className="close"
                   data-dismiss="alert"
                   aria-label="Close"
+                  onClick={() => setErrorMessage("")}
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
