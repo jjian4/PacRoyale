@@ -23,12 +23,12 @@ io.on("connection", (client) => {
   client.on("getRooms", emitAllRoomInfo);
   client.on("getPlayers", emitRoomInfo);
 
-  function handleNewGame(username) {
+  function handleNewGame(username, arenaColor, selectedPowerups) {
     let roomName = makeId(5);
     clientRooms[client.id] = roomName;
     client.emit("gameCode", roomName);
 
-    state[roomName] = initLobby(username);
+    state[roomName] = initLobby(username, arenaColor, selectedPowerups);
     console.log("newgame", state[roomName]);
     console.log(state);
     addPlayerToLobby(state[roomName], username, true);
@@ -203,7 +203,15 @@ function startGameInterval(roomName, client) {
 }
 
 function emitGameState(room, gameState) {
-  io.sockets.in(room).emit("gameState", JSON.stringify(gameState));
+  io.sockets.in(room).emit(
+    "gameState",
+    JSON.stringify({
+      ...gameState,
+      foods: Array.from(gameState.foods.values()),
+      powerups: Array.from(gameState.powerups.values()),
+      shots: Array.from(gameState.shots.values()),
+    })
+  );
 }
 
 function emitGameOver(room, winner) {
