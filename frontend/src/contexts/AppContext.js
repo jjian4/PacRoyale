@@ -11,7 +11,7 @@ const AppContext = createContext({
   setIsMusicOn: () => { },
   isHost: false,
   socket: null,
-  user: new User({ username: '', uid: {} }),
+  user: {},
   isMusicOn: true,
 });
 

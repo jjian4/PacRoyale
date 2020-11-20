@@ -22,8 +22,8 @@ function App() {
   // signed in or not, we show a splash/loading screen
   const [currentPage, setCurrentPage] = useState(PAGES.SPLASH_SCREEN);
   const [isHost, setStateIsHost] = useState(false);
-  const [user, setUser] = useState(true);
-  const [isMusicOn, setIsMusicOn] = useState(false);
+  const [user, setStateUser] = useState(new User({ displayName:"loading...", uid: "" }));
+  const [isMusicOn, setIsMusicOn] = useState(true);
 
   // If user is signed in, we redirect to main menu
   // If not, we go to the login page
@@ -31,10 +31,9 @@ function App() {
     firebase.auth().onAuthStateChanged((firebaseUser) => {
       if (firebaseUser) {
         // if the user is logged in, retrieve his info
-        setCurrentPage(PAGES.MAIN_MENU);
         let newUser = new User(firebaseUser);
-        newUser.getFirebaseData();
-        setUser(newUser);
+        newUser.getFirebaseData(() => setStateUser(newUser));
+        setCurrentPage(PAGES.MAIN_MENU);
       } else {
         setCurrentPage(PAGES.LOGIN);
       }
@@ -82,15 +81,15 @@ function App() {
             setStateIsHost(isHost);
           },
           setUser: (user) => {
-            setUser(user);
+            setStateUser(user);
           },
           setIsMusicOn: (isMusicOn) => {
             setIsMusicOn(isMusicOn);
           },
           isHost: isHost,
           socket,
-          user,
-          isMusicOn: isMusicOn,
+          user: user,
+          isMusicOn: isMusicOn
         }}
       >
         {page}

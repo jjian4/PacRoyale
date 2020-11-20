@@ -36,8 +36,7 @@ function Login() {
         setErrorMessage("");
         // if the user is logged in, retrieve his info
         let newUser = new User(firebase.auth().currentUser);
-        newUser.getFirebaseData();
-        setUser(newUser);
+        newUser.getFirebaseData(() => setUser(newUser));
         goToMainMenu();
       })
       .catch(function (error) {
@@ -114,6 +113,7 @@ function Login() {
                   className="close"
                   data-dismiss="alert"
                   aria-label="Close"
+                  onClick={() => setErrorMessage("")}
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
@@ -164,6 +164,7 @@ function Login() {
                   className="close"
                   data-dismiss="alert"
                   aria-label="Close"
+                  onClick={() => setErrorMessage("")}
                 >
                   <span aria-hidden="true">&times;</span>
                 </button>
