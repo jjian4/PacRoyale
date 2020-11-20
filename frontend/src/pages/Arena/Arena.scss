@@ -20,8 +20,6 @@
     .player {
       z-index: 3;
       position: absolute;
-      top: 0;
-      left: 15%;
       width: 4%;
       height: 4%;
       z-index: 3;
@@ -29,16 +27,34 @@
       .playerName {
       }
     }
-    .SPEED {
-      box-shadow: 0 0 5px 5px yellow, 0 0 15px 15px rgba(255, 255, 15, 0.5);
-    }
-    .EAT {
-      box-shadow: 0 0 5px 5px red, 0 0 15px 15px rgba(255, 0, 15, 0.5);
-    }
     .avatar {
       // Otherwise, avatar mouth overlaps with arena border
       overflow: hidden;
     }
+    .stunnedPlayer {
+      animation: spin 0.4s infinite linear;
+      opacity: 25%;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .Speed {
+      box-shadow: 0 0 5px 5px yellow, 0 0 15px 15px rgba(255, 255, 15, 0.5);
+    }
+    .Eat {
+      box-shadow: 0 0 5px 5px green, 0 0 15px 15px rgba(0, 100, 0, 0.5);
+    }
+    .Shoot {
+      box-shadow: 0 0 5px 5px red, 0 0 15px 15px rgba(255, 0, 15, 0.5);
+    }
+
     .food {
       position: absolute;
       height: 2%;
@@ -63,6 +79,15 @@
         color: white;
         font-size: 90%;
       }
+    }
+    .shot {
+      position: absolute;
+      height: 1%;
+      width: 1%;
+      border: 0.5px solid black;
+      border-radius: 50%;
+      background-color: red;
+      box-shadow: 0 0 5px 5px red, 0 0 15px 15px rgba(255, 0, 15, 0.5);
     }
   }
   .leaderboard {

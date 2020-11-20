@@ -1,16 +1,21 @@
 import React from "react";
 import { useEffect, useContext, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSignOutAlt, faVolumeMute, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
-import { POWERUPS } from "../../utils/constants";
+import {
+  faSignOutAlt,
+  faVolumeMute,
+  faVolumeUp,
+} from "@fortawesome/free-solid-svg-icons";
+import { POWERUPS, ARENA_COLORS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
 import musicMp3 from "../../sounds/arena-music.mp3";
 import powerupMp3 from "../../sounds/powerup.mp3";
-import "./Arena.scss";
 import FloatingActionButton from "../../components/Modal/FloatingActionButton/FloatingActionButton";
+import "./Arena.scss";
 
 const KEYS = {
+  space: 32,
   left: 37,
   up: 38,
   right: 39,
@@ -21,9 +26,10 @@ const music = new Audio(musicMp3);
 music.loop = true;
 const powerupSound = new Audio(powerupMp3);
 
-
 function Arena() {
-  const { socket, goToMainMenu, isMusicOn, setIsMusicOn } = useContext(AppContext);
+  const { socket, goToMainMenu, isMusicOn, setIsMusicOn } = useContext(
+    AppContext
+  );
 
   const [gameState, setGameState] = useState(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -53,7 +59,7 @@ function Arena() {
       goToMainMenu();
     });
     socket.on("playPowerupSound", () => {
-      if (!isSafari) {
+      if (!isSafari && isMusicOn) {
         powerupSound.play();
       }
     });
@@ -64,7 +70,6 @@ function Arena() {
       music.pause();
       music.currentTime = 0;
     };
-
   }, []);
 
   const toggleMusic = () => {
@@ -77,7 +82,7 @@ function Arena() {
       music.play();
     }
     setIsMusicOn(!isMusicOn);
-  }
+  };
 
   const resizeArena = () => {
     if (window.innerWidth <= window.innerHeight) {
@@ -87,37 +92,26 @@ function Arena() {
     }
   };
 
-
   const handleArrowKey = (e) => {
-    console.log(e.which);
     switch (e.which) {
+      case KEYS.space:
       case KEYS.left:
-        e.preventDefault();
-        socket.emit("keydown", KEYS.left);
-        break;
       case KEYS.right:
-        e.preventDefault();
-        socket.emit("keydown", KEYS.right);
-        break;
       case KEYS.up:
-        e.preventDefault();
-        socket.emit("keydown", KEYS.up);
-        break;
       case KEYS.down:
         e.preventDefault();
-        socket.emit("keydown", KEYS.down);
+        socket.emit("keydown", e.which);
         break;
       default:
         break;
     }
   };
 
-
   // Game state
-  console.log(gameState);
   const players = [];
   const foods = [];
   const powerups = [];
+  const shots = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -130,11 +124,12 @@ function Arena() {
       } else if (value.vel.y < 0) {
         rotateDeg = 270;
       }
-      console.log(value.powerup);
       players.push(
         <div
           key={username}
-          className={`player avatar ${value.powerup}`}
+          className={`player avatar ${value.powerup} ${
+            value.isStunned && "stunnedPlayer"
+          }`}
           style={{
             ...AVATARS.Blue.style,
             top: value.pos.y + "%",
@@ -142,7 +137,15 @@ function Arena() {
             transform: "rotate(" + rotateDeg + "deg)",
           }}
         >
-          <div className="avatarMouth" />
+          <div
+            className="avatarMouth"
+            style={
+              gameState &&
+              Object.values(ARENA_COLORS).find(
+                (x) => x.name === gameState.arenaColor
+              ).style
+            }
+          />
         </div>
       );
     }
@@ -163,21 +166,40 @@ function Arena() {
           style={{ top: powerup.y + "%", left: powerup.x + "%" }}
         >
           <FontAwesomeIcon
-            icon={POWERUPS[powerup.type].icon}
+            icon={
+              Object.values(POWERUPS).find((x) => x.name === powerup.name).icon
+            }
             className="powerupIcon"
           />
         </div>
       );
     });
+    gameState.shots.forEach((shot, idx) => {
+      shots.push(
+        <div
+          className="shot"
+          key={"shot" + idx}
+          style={{ top: shot.pos.y + "%", left: shot.pos.x + "%" }}
+        ></div>
+      );
+    });
   }
-
 
   return (
     <div className={`Arena ${isMobile && "Arena-mobile"}`}>
-      <div className="arenaBox">
+      <div
+        className="arenaBox"
+        style={
+          gameState &&
+          Object.values(ARENA_COLORS).find(
+            (x) => x.name === gameState.arenaColor
+          ).style
+        }
+      >
         {players}
         {foods}
         {powerups}
+        {shots}
       </div>
       <div className="leaderboard">
         <div className="leaderboardTitle">Leaderboard (? alive)</div>
@@ -191,8 +213,9 @@ function Arena() {
                 <div
                   className="innerHealthBar"
                   style={{
-                    width: `calc(100% * ${gameState.players[username].score * 0.01
-                      })`,
+                    width: `calc(100% * ${
+                      gameState.players[username].score * 0.01
+                    })`,
                   }}
                 />
               </div>
@@ -200,16 +223,18 @@ function Arena() {
           ))}
       </div>
 
-      <div className='bottomRight'>
+      <div className="bottomRight">
         <FloatingActionButton
-          title='Music'
+          title="Music"
           onClick={toggleMusic}
           icon={isMusicOn ? faVolumeUp : faVolumeMute}
         />
         {/* TODO: Send message to socketio to leave game */}
         <FloatingActionButton
-          title='Exit'
-          onClick={() => { console.log('TODO: Leave game') }}
+          title="Exit"
+          onClick={() => {
+            console.log("TODO: Leave game");
+          }}
           icon={faSignOutAlt}
         />
       </div>

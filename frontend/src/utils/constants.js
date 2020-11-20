@@ -2,9 +2,9 @@ import {
   faBolt,
   faFastForward,
   faGhost,
-  faHandScissors,
-  faPencilAlt,
   faUtensils,
+  faBomb,
+  faSnowflake,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const SITE_NAME = "493 Battle Royale";
@@ -123,56 +123,57 @@ export const POWERUPS = {
   EAT: {
     name: "Eat",
     description:
-      "(7 sec): Collide with other players to stun them and steal a coin.",
+      "(5 sec): Collide with other players to stun them and steal a coin.",
     icon: faUtensils,
   },
   SPEED: {
     name: "Speed",
-    description: "(7 sec): Move twice as fact to collect more coins!",
+    description: "(5 sec): Move twice as fact to collect more coins!",
     icon: faFastForward,
-  },
-  QUIZ: {
-    name: "Quiz",
-    description:
-      "(on collision): Collide with another player to start a trivia quiz on a topic of your choice. Winner steals 10 coins.",
-    icon: faPencilAlt,
-  },
-  RPS: {
-    name: "RPS",
-    description:
-      "(on collision): Collide with another player to start a rock-paper-scissors game. Winner steals 5 coins.",
-    icon: faHandScissors,
   },
   SHOOT: {
     name: "Shoot",
     description:
-      "(press space): Shoot a ????? in a straight line, stunning and stealing a coin from each opponent that was hit.",
+      "(press space): Shoot a projectile in a straight line, stunning and stealing a coin from each opponent that was hit.",
     icon: faBolt,
   },
+};
+
+export const WEAKNESSES = {
   GHOST: {
     name: "Ghost",
     description:
-      "(instant): Spawn a ghost that moves across to arena, stunning opponents and causing them to drop 2 coins.",
+      "Ghosts periodically move across to arena, stunning players and causing them to drop 2 coins.",
     icon: faGhost,
-  }
+  },
+  BOMB: {
+    name: "Bomb",
+    description:
+      "Bombs spawn periodically and explode in a t-shape if a player collides with it.",
+    icon: faBomb,
+  },
+  SLOW: {
+    name: "Slow",
+    description:
+      "Colliding with this will slow down your movement for 5 seconds.",
+    icon: faSnowflake,
+  },
 };
-
 
 export const GAME_MODES = {
   ELIMINATION: {
-    name: 'Elimination',
-    description: 'Last player standing (with remaining coins) wins.'
+    name: "Elimination",
+    description: "Last player standing (with remaining coins) wins.",
   },
   FIRST_TO_100: {
-    name: 'First to 100',
-    description: 'The first player to reach 100 coins wins.'
+    name: "First to 100",
+    description: "The first player to reach 100 coins wins.",
   },
   FREE_FOR_ALL: {
-    name: 'Free-for-all',
-    description: 'No winners. Game only ends when everyone leaves.'
-  }
-}
-
+    name: "Free-for-all",
+    description: "No winners. Game only ends when everyone leaves.",
+  },
+};
 
 export const TECH_STACK = {
   SOCKETIO: {

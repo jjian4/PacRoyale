@@ -1,19 +1,32 @@
-const { POWERUPS } = require("./constants");
+const { v4: uuid } = require("uuid");
 
 const WIN_AMOUNT = 100;
 
-const playerSize = 4;
-const powerupSize = 3;
-const foodSize = 2;
+const PLAYER_SIZE = 4;
+const POWERUP_SIZE = 3;
+const FOOD_SIZE = 2;
+const BULLET_SIZE = 1;
 
-function initLobby(username) {
+const SPEED_TIMEOUT = 3000;
+const EAT_TIMEOUT = 5000;
+const SHOOT_TIMEOUT = 5000;
+const STUN_TIMEOUT = 5000;
+const SLOW_TIMEOUT = 5000;
+
+const BULLET_VELOCITY = 2.5;
+
+function initLobby(username, arenaColor, selectedPowerups) {
   return {
     host: username,
     players: {},
     playerCount: 0,
-    foods: [],
-    powerups: [],
+    foods: new Map(),
+    powerups: new Map(),
+    shots: new Map(),
     started: false,
+    arenaColor,
+    selectedPowerups,
+    isStunned: false,
   };
 }
 
@@ -21,8 +34,8 @@ function addPlayerToLobby(state, username, isHost) {
   state.playerCount++;
   state.players[username] = {
     pos: {
-      x: Math.floor(Math.random() * (100 - playerSize)),
-      y: Math.floor(Math.random() * (100 - playerSize)),
+      x: Math.floor(Math.random() * (100 - PLAYER_SIZE)),
+      y: Math.floor(Math.random() * (100 - PLAYER_SIZE)),
     },
     vel: {
       x: 0,
@@ -73,62 +86,114 @@ function isColliding(item1x, item1y, item1Size, item2x, item2y, item2Size) {
 function gameLoop(state, client) {
   for (const username of Object.keys(state.players)) {
     const player = state.players[username];
-    player.pos.x += player.vel.x;
-    // Horizontal border collision
-    if (player.pos.x > 100 - playerSize) {
-      player.pos.x = 100 - playerSize;
-      player.vel.x = 0;
-    } else if (player.pos.x < 0) {
-      player.pos.x = 0;
-      player.vel.x = 0;
+    if (!player.isStunned) {
+      player.pos.x += player.vel.x;
+      // Horizontal border collision
+      if (player.pos.x > 100 - PLAYER_SIZE) {
+        player.pos.x = 100 - PLAYER_SIZE;
+        player.vel.x = 0;
+      } else if (player.pos.x < 0) {
+        player.pos.x = 0;
+        player.vel.x = 0;
+      }
+      // Vertical border collision
+      player.pos.y += player.vel.y;
+      if (player.pos.y > 100 - PLAYER_SIZE) {
+        player.pos.y = 100 - PLAYER_SIZE;
+        player.vel.y = 0;
+      } else if (player.pos.y < 0) {
+        player.pos.y = 0;
+        player.vel.y = 0;
+      }
     }
-    // Vertical border collision
-    player.pos.y += player.vel.y;
-    if (player.pos.y > 100 - playerSize) {
-      player.pos.y = 100 - playerSize;
-      player.vel.y = 0;
-    } else if (player.pos.y < 0) {
-      player.pos.y = 0;
-      player.vel.y = 0;
+
+    for (let [key, shot] of state.shots) {
+      shot.pos.x += shot.vel.x;
+      shot.pos.y += shot.vel.y;
+      if (
+        shot.pos.x < 0 ||
+        shot.pos.x > 100 ||
+        shot.pos.y < 0 ||
+        shot.pos.y > 100
+      ) {
+        state.shots.delete(key);
+      }
     }
+
     const playerY = player.pos.y;
     const playerX = player.pos.x;
     let winner = false;
-    state.foods.forEach((food, idx, arr) => {
-      if (isColliding(playerX, playerY, playerSize, food.x, food.y, foodSize)) {
-        arr.splice(idx, 1);
+
+    for (let [key, food] of state.foods) {
+      if (
+        isColliding(playerX, playerY, PLAYER_SIZE, food.x, food.y, FOOD_SIZE)
+      ) {
+        state.foods.delete(key);
         player.score += 1;
         if (player.score >= WIN_AMOUNT) {
           winner = true;
         }
       }
-    });
+    }
     if (winner) {
       return username;
     }
-    if (player.powerup == "") {
-      state.powerups.forEach((powerup, idx, arr) => {
+    if (player.powerup === "") {
+      for (let [key, powerup] of state.powerups) {
         if (
           isColliding(
             playerX,
             playerY,
-            playerSize,
+            PLAYER_SIZE,
             powerup.x,
             powerup.y,
-            powerupSize
+            POWERUP_SIZE
           )
         ) {
           client.emit("playPowerupSound");
-          arr.splice(idx, 1);
-          player.powerup = powerup.type;
-          updateForSpeed(player, 2);
-          setTimeout(() => {
-            player.powerup = "";
-            player.velocity = 1;
-            updateForSpeed(player, 1);
-          }, 3000);
+          state.powerups.delete(key);
+          player.powerup = powerup.name;
+          if (powerup.name === "Speed") {
+            updateForSpeed(player, 2);
+            setTimeout(() => {
+              player.powerup = "";
+              updateForSpeed(player, 1);
+            }, SPEED_TIMEOUT);
+          } else if (powerup.name === "Eat") {
+            setTimeout(() => {
+              player.powerup = "";
+            }, EAT_TIMEOUT);
+          } else if (powerup.name === "Shoot") {
+            const shotTimeout = setTimeout(() => {
+              player.powerup = "";
+            }, SHOOT_TIMEOUT);
+            player.clearShot = () => {
+              clearTimeout(shotTimeout);
+            };
+          }
         }
-      });
+      }
+    } else if (player.powerup === "Eat") {
+      for (const otherUsername of Object.keys(state.players)) {
+        if (
+          username != otherUsername &&
+          !state.players[otherUsername].isStunned &&
+          state.players[otherUsername].powerup !== "Eat" &&
+          isColliding(
+            playerX,
+            playerY,
+            PLAYER_SIZE,
+            state.players[otherUsername].pos.x,
+            state.players[otherUsername].pos.y,
+            PLAYER_SIZE
+          )
+        ) {
+          state.players[otherUsername].isStunned = true;
+          setTimeout(() => {
+            state.players[otherUsername].isStunned = false;
+          }, STUN_TIMEOUT);
+        }
+      }
     }
   }
   return null;
@@ -150,6 +215,27 @@ function updateForSpeed(player, newVelocity) {
 
 function updatePlayerVelocity(state, username, keyCode) {
   switch (keyCode) {
+    case 32: {
+      if (state.players[username].powerup === "Shoot") {
+        state.players[username].powerup = "";
+        state.players[username].clearShot();
+        state.shots.set(uuid(), {
+          pos: {
+            x:
+              state.players[username].pos.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+            y:
+              state.players[username].pos.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+          },
+          vel: {
+            x: state.players[username].vel.x * BULLET_VELOCITY,
+            y: state.players[username].vel.y * BULLET_VELOCITY,
+          },
+          owner: username,
+        });
+        console.log(state.shots);
+      }
+      break;
+    }
     case 37: {
       // left
       state.players[username].vel.x = -state.players[username].velocity;
@@ -180,17 +266,21 @@ function updatePlayerVelocity(state, username, keyCode) {
 }
 
 function spawnFoods(state) {
-  state.foods.push({
-    x: Math.floor(Math.random() * (100 - foodSize)),
-    y: Math.floor(Math.random() * (100 - foodSize)),
+  state.foods.set(uuid(), {
+    x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
+    y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
   });
 }
 
 function spawnPowerups(state) {
-  state.powerups.push({
-    x: Math.floor(Math.random() * (100 - foodSize)),
-    y: Math.floor(Math.random() * (100 - foodSize)),
-    type: "SPEED",
+  var name =
+    state.selectedPowerups[
+      Math.floor(Math.random() * state.selectedPowerups.length)
+    ];
+  state.powerups.set(uuid(), {
+    x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
+    y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
+    name,
   });
 }
 
@@ -200,5 +290,5 @@ module.exports = {
   gameLoop,
   updatePlayerVelocity,
   spawnFoods,
-  spawnPowerups: spawnPowerups,
+  spawnPowerups,
 };
