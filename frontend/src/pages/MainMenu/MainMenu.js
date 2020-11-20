@@ -20,12 +20,12 @@ function MainMenu() {
 
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
-  const { goToLogin, user } = useContext(AppContext);
+
+  const { goToLogin, user} = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
     window.addEventListener("mousedown", handleClickOutside);
-
     // Returned function called on component unmount
     return () => {
       window.removeEventListener("mousedown", handleClickOutside);
@@ -69,7 +69,7 @@ function MainMenu() {
         ref={(node) => (topRightRef = node)}
       >
         {/* TODO: get the user's equiped skin from database */}
-        <div className="profileButton avatar" style={AVATARS.Blue.style}>
+        <div className="profileButton avatar" style={AVATARS[user.equippedSkin].style}>
           <div className="avatarMouth" />
         </div>
         <div className="profileButtonLabel">{user.username}</div>
