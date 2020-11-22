@@ -14,7 +14,7 @@ function Login() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [doPasswordsMatch, setDoPasswordsMatch] = useState(true);
-  const { goToMainMenu, goToLogin, user, setUser } = useContext(AppContext);
+  const { goToMainMenu, setUser } = useContext(AppContext);
 
   const changeForm = (shouldShowRegister) => {
     setUsername("");
@@ -77,7 +77,8 @@ function Login() {
             setUser(newUser);
           })
           .then(function () {
-            goToMainMenu();
+            // There are errors when we use goToMainMenu. Just refresh page
+            window.location.reload();
           })
           .catch(function (error) {
             console.log(error);

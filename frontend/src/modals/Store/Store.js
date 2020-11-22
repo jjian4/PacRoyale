@@ -6,11 +6,11 @@ import "./Store.scss";
 
 function Store() {
     // TODO; get numCoins from database
-    const { user, setUser } = useContext(AppContext);
-    const [ purchasedSkins, setSkins ] = useState({});
-    const [ equippedSkin, setEquipped ] = useState({});
-    const [ coins, setCoins ] = useState(1000);
-    const [ error, setError ] = useState(false);
+    const { user } = useContext(AppContext);
+    const [purchasedSkins, setSkins] = useState({});
+    const [equippedSkin, setEquipped] = useState({});
+    const [coins, setCoins] = useState(1000);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         setSkins(user.purchasedSkins);
@@ -21,7 +21,7 @@ function Store() {
 
     const buyItem = (avatar) => {
         let price = AVATARS[avatar].price;
-        if(price > coins) {
+        if (price > coins) {
             setError(true);
             return;
         }
@@ -49,47 +49,44 @@ function Store() {
             </div>
 
             {error && (
-              <div
-                className="alert alert-danger alert-dismissible fade show"
-                role="alert"
-              >
-                You do not own enough coins to purchase this item.
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="alert"
-                  aria-label="Close"
-                  onClick={() => setError(false)}
+                <div
+                    className="alert alert-danger alert-dismissible fade show"
+                    role="alert"
                 >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
+                    You do not own enough coins to purchase this item.
+                    <button
+                        type="button"
+                        className="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                        onClick={() => setError(false)}
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             )}
 
             <div className='storeItems'>
                 <div className='row'>
                     {Object.keys(AVATARS).map((avatar, index) => (
-                        <div className='col-md-4' key={index}>
+                        <div className='col-md-4 col-sm-6' key={index}>
                             <div className='storeItem'>
                                 <div className='itemName'>
                                     {avatar}
                                 </div>
                                 <div className='itemBox'>
                                     <div className='avatar' style={AVATARS[avatar].style}>
-                                      <div className='avatarMouth'/>
+                                        <div className='avatarMouth' />
                                     </div>
                                 </div>
-                                {/* TODO: If already owned and already selected */}
                                 {(avatar in purchasedSkins) && (avatar === equippedSkin) && (
                                     <div>(Selected)</div>
                                 )}
-                                {/* TODO: If already owned but not selected */}
                                 {(avatar in purchasedSkins) && !(avatar === equippedSkin) && (
                                     <div className='itemButton'><div onClick={() => equipItem(avatar)}>SELECT</div></div>
                                 )}
-                                {/* If not owned yet */}
                                 {!(avatar in purchasedSkins) && (
-                                <div className='itemButton'><div onClick={() => buyItem(avatar)}>{AVATARS[avatar].price} coins</div></div>
+                                    <div className='itemButton'><div onClick={() => buyItem(avatar)}>{AVATARS[avatar].price} coins</div></div>
                                 )}
                             </div>
                         </div>

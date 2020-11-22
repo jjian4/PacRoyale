@@ -21,7 +21,7 @@ function MainMenu() {
   const [showGameSettingsModal, setShowGameSettingsModal] = useState(false);
   const [showJoinGameModal, setJoinGameModal] = useState(false);
 
-  const { goToLogin, user} = useContext(AppContext);
+  const { goToLogin, user, isUserLoaded } = useContext(AppContext);
 
   useEffect(() => {
     // Called on component mount
@@ -68,11 +68,14 @@ function MainMenu() {
         onClick={() => setShowDropdown(!showDropdown)}
         ref={(node) => (topRightRef = node)}
       >
-        {/* TODO: get the user's equiped skin from database */}
-        <div className="profileButton avatar" style={AVATARS[user.equippedSkin].style}>
-          <div className="avatarMouth" />
-        </div>
-        <div className="profileButtonLabel">{user.username}</div>
+        {isUserLoaded && (
+          <>
+            <div className="profileButton avatar" style={AVATARS[user.equippedSkin].style}>
+              <div className="avatarMouth" />
+            </div>
+            <div className="profileButtonLabel">{user.username}</div>
+          </>
+        )}
 
         {showDropdown && (
           <div className="profileDropdown">

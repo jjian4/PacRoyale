@@ -1,5 +1,4 @@
 import { createContext } from "react";
-import User from "../utils/user";
 
 const AppContext = createContext({
   goToArena: () => { },
@@ -12,6 +11,7 @@ const AppContext = createContext({
   isHost: false,
   socket: null,
   user: {},
+  isUserLoaded: false, // Can't just check if user is empty bc it may be initialized before it loads
   isMusicOn: true,
 });
 
