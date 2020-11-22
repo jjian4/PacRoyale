@@ -8,6 +8,7 @@ function JoinGame() {
   const { socket, user, goToLobby, setIsHost } = useContext(AppContext);
   const [activeGames, setActiveGames] = useState([]);
   const [filterInput, setFilterInput] = useState("");
+
   useEffect(() => {
     socket.emit("getRooms");
     socket.on("rooms", (data) => {
@@ -24,6 +25,7 @@ function JoinGame() {
     socket.on("tooManyPlayers", () => {
       alert("Too many players");
     });
+    // eslint-disable-next-line
   }, []);
 
   const onClickJoinGame = (gameCode) => {

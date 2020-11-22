@@ -7,6 +7,7 @@ import JoinGame from "./../../modals/JoinGame/JoinGame";
 import GameSettings from "./../../modals/GameSettings/GameSettings";
 import Store from "./../../modals/Store/Store";
 import About from "../../modals/About/About";
+import Profile from "../../modals/Profile/Profile";
 import { AVATARS, SITE_NAME } from "../../utils/constants";
 import "./MainMenu.scss";
 
@@ -105,8 +106,11 @@ function MainMenu() {
         </div>
       </div>
 
-      <Modal isOpen={showProfileModal} onClose={closeModal} title="jjian">
-        My Profile
+      <Modal isOpen={showProfileModal} onClose={closeModal} title={user.username}>
+        <Profile onChangeAvatar={() => {
+          closeModal();
+          setShowStoreModal(true);
+        }} />
       </Modal>
       <Modal isOpen={showStoreModal} onClose={closeModal} title="Store">
         <Store />

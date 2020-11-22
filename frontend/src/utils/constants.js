@@ -19,6 +19,15 @@ export const PAGES = {
   SPLASH_SCREEN: "splash_screen",
 };
 
+export const PLAYER_STATS = {
+  dateJoined: 'Date Joined',
+  lastLogin: 'Last Login',
+  gamesPlayed: 'Games Played',
+  gamesHosted: 'Games Hosted',
+  gamesWon: 'Games Won',
+  totalCoins: 'Total Coins',
+}
+
 export const AVATARS = {
   Blue: {
     name: "blue",

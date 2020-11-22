@@ -43,6 +43,7 @@ function Lobby() {
       music.pause();
       music.currentTime = 0;
     };
+    // eslint-disable-next-line
   }, []);
 
   const toggleMusic = () => {

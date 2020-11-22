@@ -5,7 +5,6 @@ import AppContext from "./../../contexts/AppContext";
 import "./Store.scss";
 
 function Store() {
-    // TODO; get numCoins from database
     const { user } = useContext(AppContext);
     const [purchasedSkins, setSkins] = useState({});
     const [equippedSkin, setEquipped] = useState({});
@@ -79,12 +78,15 @@ function Store() {
                                         <div className='avatarMouth' />
                                     </div>
                                 </div>
+                                {/* Skin is currently selected */}
                                 {(avatar in purchasedSkins) && (avatar === equippedSkin) && (
                                     <div>(Selected)</div>
                                 )}
+                                {/* Skin is owned but not selected */}
                                 {(avatar in purchasedSkins) && !(avatar === equippedSkin) && (
                                     <div className='itemButton'><div onClick={() => equipItem(avatar)}>SELECT</div></div>
                                 )}
+                                {/* Skin not owned and can be bought */}
                                 {!(avatar in purchasedSkins) && (
                                     <div className='itemButton'><div onClick={() => buyItem(avatar)}>{AVATARS[avatar].price} coins</div></div>
                                 )}

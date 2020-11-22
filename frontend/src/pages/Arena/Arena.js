@@ -70,6 +70,7 @@ function Arena() {
       music.pause();
       music.currentTime = 0;
     };
+    // eslint-disable-next-line
   }, []);
 
   const toggleMusic = () => {
@@ -127,9 +128,8 @@ function Arena() {
       players.push(
         <div
           key={username}
-          className={`player avatar ${value.powerup} ${
-            value.isStunned && "stunnedPlayer"
-          }`}
+          className={`player avatar ${value.powerup} ${value.isStunned && "stunnedPlayer"
+            }`}
           style={{
             ...AVATARS.Blue.style,
             top: value.pos.y + "%",
@@ -213,9 +213,8 @@ function Arena() {
                 <div
                   className="innerHealthBar"
                   style={{
-                    width: `calc(100% * ${
-                      gameState.players[username].score * 0.01
-                    })`,
+                    width: `calc(100% * ${gameState.players[username].score * 0.01
+                      })`,
                   }}
                 />
               </div>

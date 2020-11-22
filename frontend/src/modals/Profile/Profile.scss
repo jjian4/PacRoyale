@@ -1,0 +1,26 @@
+.Profile {
+    text-align: center;
+    padding: 30px 0 10px 0;
+    .avatar {
+        width: 120px;
+        height: 120px;
+        cursor: pointer;
+    }
+    .changeAvatarButton {
+        margin: 20px 0;
+    }
+    .stats {
+        padding-top: 20px;
+        font-size: 25px;
+        .statsTable {
+            display: inline-block;
+            text-align: left;
+            .statsLabel {
+                font-weight: bold;
+            }
+            td {
+                padding: 5px 20px;
+            }
+        }
+    }
+}
