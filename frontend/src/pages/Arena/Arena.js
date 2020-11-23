@@ -5,8 +5,9 @@ import {
   faSignOutAlt,
   faVolumeMute,
   faVolumeUp,
+  faGhost,
 } from "@fortawesome/free-solid-svg-icons";
-import { POWERUPS, ARENA_COLORS } from "../../utils/constants";
+import { POWERUPS, ARENA_COLORS, WEAKNESSES } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
 import musicMp3 from "../../sounds/arena-music.mp3";
@@ -113,6 +114,7 @@ function Arena() {
   const foods = [];
   const powerups = [];
   const shots = [];
+  const ghosts = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -128,10 +130,12 @@ function Arena() {
       players.push(
         <div
           key={username}
-          className={`player avatar ${value.powerup} ${value.isStunned && "stunnedPlayer"
-            }`}
+          className={`player avatar ${value.powerup} ${
+            value.isStunned && "stunnedPlayer"
+          }`}
           style={{
-            ...AVATARS.Blue.style,
+            ...AVATARS[value.equippedSkin].style,
+            // ...AVATARS.Blue.style,
             top: value.pos.y + "%",
             left: value.pos.x + "%",
             transform: "rotate(" + rotateDeg + "deg)",
@@ -167,7 +171,7 @@ function Arena() {
         >
           <FontAwesomeIcon
             icon={
-              Object.values(POWERUPS).find((x) => x.name === powerup.name).icon
+              Object.values(POWERUPS).find((x) => x.name === powerup.name)?.icon
             }
             className="powerupIcon"
           />
@@ -181,6 +185,17 @@ function Arena() {
           key={"shot" + idx}
           style={{ top: shot.pos.y + "%", left: shot.pos.x + "%" }}
         ></div>
+      );
+    });
+    gameState.ghosts.forEach((ghost, idx) => {
+      ghosts.push(
+        <div
+          className="ghost"
+          key={"ghost" + idx}
+          style={{ top: ghost.pos.y + "%", left: ghost.pos.x + "%" }}
+        >
+          <FontAwesomeIcon icon={faGhost} className="ghostIcon" />
+        </div>
       );
     });
   }
@@ -200,6 +215,7 @@ function Arena() {
         {foods}
         {powerups}
         {shots}
+        {ghosts}
       </div>
       <div className="leaderboard">
         <div className="leaderboardTitle">Leaderboard (? alive)</div>
@@ -213,8 +229,9 @@ function Arena() {
                 <div
                   className="innerHealthBar"
                   style={{
-                    width: `calc(100% * ${gameState.players[username].score * 0.01
-                      })`,
+                    width: `calc(100% * ${
+                      gameState.players[username].score * 0.01
+                    })`,
                   }}
                 />
               </div>

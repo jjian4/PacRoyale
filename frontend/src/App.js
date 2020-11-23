@@ -4,17 +4,24 @@ import Login from "./pages/Login/Login";
 import MainMenu from "./pages/MainMenu/MainMenu";
 import Lobby from "./pages/Lobby/Lobby";
 import Arena from "./pages/Arena/Arena";
-import "./App.scss";
+import { faVolumeMute, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import { PAGES } from "./utils/constants";
 import firebase from "./utils/firebase";
 import User from "./utils/user";
 import SplashScreen from "./pages/SplashScreen/SplashScreen";
 import AppContext from "./contexts/AppContext";
+import FloatingActionButton from "./components/Modal/FloatingActionButton/FloatingActionButton";
+import musicMp3 from "./sounds/menu-music.mp3";
+import "./App.scss";
+
 import io from "socket.io-client";
 
 const socket = io("http://localhost:3001", {
   transports: ["websocket", "polling", "flashsocket"],
 });
+
+const music = new Audio(musicMp3);
+music.loop = true;
 
 function App() {
   // detecting if the user is signed in is async
@@ -24,7 +31,10 @@ function App() {
   const [isHost, setStateIsHost] = useState(false);
   const [user, setStateUser] = useState(new User({ uid: "" }));
   const [isUserLoaded, setIsUserLoaded] = useState(false);
-  const [isMusicOn, setIsMusicOn] = useState(true);
+  const [isMusicOn, setIsMusicOn] = useState(false);
+
+  // For some reason, audio can't play on safari
+  const isSafari = window.safari !== undefined;
 
   // If user is signed in, we redirect to main menu
   // If not, we go to the login page
@@ -42,7 +52,28 @@ function App() {
         setCurrentPage(PAGES.LOGIN);
       }
     });
+
+    if (!isSafari && isMusicOn) {
+      music.play();
+    }
+    return () => {
+      music.pause();
+      music.currentTime = 0;
+    };
+    // eslint-disable-next-line
   }, []);
+
+  const toggleMusic = () => {
+    if (isSafari) {
+      return;
+    }
+    if (isMusicOn) {
+      music.pause();
+    } else {
+      music.play();
+    }
+    setIsMusicOn(!isMusicOn);
+  };
 
   let page = null;
   switch (currentPage) {
@@ -94,10 +125,20 @@ function App() {
           socket,
           user: user,
           isUserLoaded: isUserLoaded,
-          isMusicOn: isMusicOn
+          isMusicOn: isMusicOn,
         }}
       >
         {page}
+        {/* Arena has different music and different bottomRight layout */}
+        {currentPage !== PAGES.ARENA && (
+          <div className="bottomRight">
+            <FloatingActionButton
+              title="Music"
+              onClick={toggleMusic}
+              icon={isMusicOn ? faVolumeUp : faVolumeMute}
+            />{" "}
+          </div>
+        )}
       </AppContext.Provider>
     </div>
   );

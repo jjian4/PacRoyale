@@ -29,7 +29,7 @@ function JoinGame() {
   }, []);
 
   const onClickJoinGame = (gameCode) => {
-    socket.emit("joinGame", gameCode, user.username);
+    socket.emit("joinGame", gameCode, user.username, user.equippedSkin);
   };
 
   return (
@@ -58,7 +58,7 @@ function JoinGame() {
             {/* TODO: include game code */}
             <span className="gameRowLeft">
               {/* TODO: get avatar name from database */}
-              <div className="avatar" style={AVATARS.Blue.style}>
+              <div className="avatar" style={AVATARS[game.equippedSkin].style}>
                 <div className="avatarMouth" />
               </div>
               <div>

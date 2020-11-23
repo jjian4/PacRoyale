@@ -18,9 +18,9 @@ function GameSettings(props) {
     ARENA_COLORS.WHITE.name
   );
   const [selectedPowerups, setSelectedPowerups] = useState([
-    POWERUPS.EAT.name,
+    // POWERUPS.EAT.name,
     // POWERUPS.SPEED.name,
-    POWERUPS.SHOOT.name,
+    // POWERUPS.SHOOT.name,
   ]);
   const [selectedWeaknesses, setSelectedWeaknesses] = useState([
     WEAKNESSES.GHOST.name,
@@ -39,8 +39,15 @@ function GameSettings(props) {
   }, []);
 
   const handleCreateLobby = () => {
-    console.log(user.username);
-    socket.emit("newGame", user.username, selectedArenaColor, selectedPowerups); //TODO: Update username
+    console.log(user);
+    socket.emit(
+      "newGame",
+      user.username,
+      user.equippedSkin,
+      selectedArenaColor,
+      selectedPowerups,
+      selectedWeaknesses
+    ); //TODO: Update username
   };
 
   return (
@@ -52,9 +59,10 @@ function GameSettings(props) {
           {Object.keys(ARENA_COLORS).map((arenaColor, index) => (
             <div
               key={index}
-              className={`arenaChoice ${selectedArenaColor === ARENA_COLORS[arenaColor].name &&
+              className={`arenaChoice ${
+                selectedArenaColor === ARENA_COLORS[arenaColor].name &&
                 "selectedArenaChoice"
-                }`}
+              }`}
               style={ARENA_COLORS[arenaColor].style}
               onClick={() =>
                 setSelectedArenaColor(ARENA_COLORS[arenaColor].name)
@@ -73,9 +81,10 @@ function GameSettings(props) {
           {Object.keys(POWERUPS).map((powerup, index) => (
             <div key={index}>
               <div
-                className={`powerupChoice ${selectedPowerups.includes(POWERUPS[powerup].name) &&
+                className={`powerupChoice ${
+                  selectedPowerups.includes(POWERUPS[powerup].name) &&
                   "selectedPowerupChoice"
-                  }`}
+                }`}
                 onClick={() => {
                   if (selectedPowerups.includes(POWERUPS[powerup].name)) {
                     setSelectedPowerups(
@@ -107,9 +116,10 @@ function GameSettings(props) {
           {Object.keys(WEAKNESSES).map((weakness, index) => (
             <div key={index}>
               <div
-                className={`powerupChoice ${selectedWeaknesses.includes(WEAKNESSES[weakness].name) &&
+                className={`powerupChoice ${
+                  selectedWeaknesses.includes(WEAKNESSES[weakness].name) &&
                   "selectedPowerupChoice"
-                  }`}
+                }`}
                 onClick={() => {
                   if (selectedWeaknesses.includes(WEAKNESSES[weakness].name)) {
                     setSelectedWeaknesses(
