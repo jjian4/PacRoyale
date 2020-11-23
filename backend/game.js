@@ -5,17 +5,24 @@ const WIN_AMOUNT = 100;
 const PLAYER_SIZE = 4;
 const POWERUP_SIZE = 3;
 const FOOD_SIZE = 2;
-const BULLET_SIZE = 1;
+const SHOT_SIZE = 1;
+const GHOST_SIZE = 4;
 
 const SPEED_TIMEOUT = 3000;
 const EAT_TIMEOUT = 5000;
 const SHOOT_TIMEOUT = 5000;
-const STUN_TIMEOUT = 5000;
-const SLOW_TIMEOUT = 5000;
+const STUN_TIMEOUT = 3000;
+const SLOW_TIMEOUT = 3000;
 
-const BULLET_VELOCITY = 2.5;
+const SHOT_VELOCITY = 2.5;
+const GHOST_VELOCITY = 1.5;
 
-function initLobby(username, arenaColor, selectedPowerups) {
+function initLobby(username, arenaColor, selectedPowerups, selectedWeaknesses) {
+  console.log(selectedWeaknesses);
+  const isSlowSelected = selectedWeaknesses.find((x) => x === "Slow") != null;
+  const isGhostSelected = selectedWeaknesses.find((x) => x === "Ghost") != null;
+  const isBombSelected = selectedWeaknesses.find((x) => x === "Bomb") != null;
+
   return {
     host: username,
     players: {},
@@ -23,6 +30,12 @@ function initLobby(username, arenaColor, selectedPowerups) {
     foods: {},
     powerups: {},
     shots: {},
+    ghosts: {},
+    bombs: {},
+    slows: {},
+    isSlowSelected,
+    isGhostSelected,
+    isBombSelected,
     started: false,
     arenaColor,
     selectedPowerups,
@@ -30,7 +43,7 @@ function initLobby(username, arenaColor, selectedPowerups) {
   };
 }
 
-function addPlayerToLobby(state, username, isHost) {
+function addPlayerToLobby(state, username, equippedSkin, isHost) {
   state.playerCount++;
   state.players[username] = {
     pos: {
@@ -45,6 +58,7 @@ function addPlayerToLobby(state, username, isHost) {
     score: 0,
     isHost,
     powerup: "",
+    equippedSkin,
   };
 }
 
@@ -75,7 +89,6 @@ function isCollidingOneDimension(item1x, item1Size, item2x, item2Size) {
 
   return false;
 }
-
 function isColliding(item1x, item1y, item1Size, item2x, item2y, item2Size) {
   return (
     isCollidingOneDimension(item1x, item1Size, item2x, item2Size) &&
@@ -117,6 +130,21 @@ function gameLoop(state, client) {
         shot.pos.y > 100
       ) {
         delete state.shots[key];
+      }
+    }
+
+    if (state.isGhostSelected) {
+      for (let [key, ghost] of Object.entries(state.ghosts)) {
+        ghost.pos.x += ghost.vel.x;
+        ghost.pos.y += ghost.vel.y;
+        if (
+          ghost.pos.x < -GHOST_SIZE ||
+          ghost.pos.x > 100 + GHOST_SIZE ||
+          ghost.pos.y < -GHOST_SIZE ||
+          ghost.pos.y > 100 + GHOST_SIZE
+        ) {
+          delete state.ghosts[key];
+        }
       }
     }
 
@@ -170,6 +198,12 @@ function gameLoop(state, client) {
             player.clearShot = () => {
               clearTimeout(shotTimeout);
             };
+          } else if (powerup.name === "Slow") {
+            updateForSpeed(player, 0.5);
+            setTimeout(() => {
+              player.powerup = "";
+              updateForSpeed(player, 1);
+            }, SLOW_TIMEOUT);
           }
         }
       }
@@ -195,6 +229,46 @@ function gameLoop(state, client) {
         }
       }
     }
+
+    for (let [key, shot] of Object.entries(state.shots)) {
+      if (
+        shot.owner != username &&
+        !state.players[username].isStunned &&
+        isColliding(
+          playerX,
+          playerY,
+          PLAYER_SIZE,
+          shot.pos.x,
+          shot.pos.y,
+          SHOT_SIZE
+        )
+      ) {
+        delete state.shots[key];
+        state.players[username].isStunned = true;
+        setTimeout(() => {
+          state.players[username].isStunned = false;
+        }, STUN_TIMEOUT);
+      }
+    }
+
+    for (let [key, ghost] of Object.entries(state.ghosts)) {
+      if (
+        !state.players[username].isStunned &&
+        isColliding(
+          playerX,
+          playerY,
+          PLAYER_SIZE,
+          ghost.pos.x,
+          ghost.pos.y,
+          GHOST_SIZE
+        )
+      ) {
+        state.players[username].isStunned = true;
+        setTimeout(() => {
+          state.players[username].isStunned = false;
+        }, STUN_TIMEOUT);
+      }
+    }
   }
   return null;
 }
@@ -213,6 +287,49 @@ function updateForSpeed(player, newVelocity) {
   }
 }
 
+function spawnGhosts(state) {
+  const spawnFromTopOrBot = Math.random() > 0.5;
+  let posX, posY, velX, velY;
+
+  if (spawnFromTopOrBot) {
+    const spawnFromTop = Math.random() > 0.5;
+    if (spawnFromTop) {
+      posX = Math.random() * 100;
+      posY = -GHOST_SIZE;
+      velX = 0;
+      velY = GHOST_VELOCITY;
+    } else {
+      posX = Math.random() * 100;
+      posY = 100;
+      velX = 0;
+      velY = -GHOST_VELOCITY;
+    }
+  } else {
+    const spawnFromLeft = Math.random() > 0.5;
+    if (spawnFromLeft) {
+      posX = -GHOST_SIZE;
+      posY = Math.random() * 100;
+      velX = GHOST_VELOCITY;
+      velY = 0;
+    } else {
+      posX = 100;
+      posY = Math.random() * 100;
+      velX = -GHOST_VELOCITY;
+      velY = 0;
+    }
+  }
+  state.ghosts[uuid()] = {
+    pos: {
+      x: posX,
+      y: posY,
+    },
+    vel: {
+      x: velX,
+      y: velY,
+    },
+  };
+}
+
 function updatePlayerVelocity(state, username, keyCode) {
   switch (keyCode) {
     case 32: {
@@ -222,14 +339,12 @@ function updatePlayerVelocity(state, username, keyCode) {
 
         state.shots[uuid()] = {
           pos: {
-            x:
-              state.players[username].pos.x + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
-            y:
-              state.players[username].pos.y + PLAYER_SIZE / 2 - BULLET_SIZE / 2,
+            x: state.players[username].pos.x + PLAYER_SIZE / 2 - SHOT_SIZE / 2,
+            y: state.players[username].pos.y + PLAYER_SIZE / 2 - SHOT_SIZE / 2,
           },
           vel: {
-            x: state.players[username].vel.x * BULLET_VELOCITY,
-            y: state.players[username].vel.y * BULLET_VELOCITY,
+            x: state.players[username].vel.x * SHOT_VELOCITY,
+            y: state.players[username].vel.y * SHOT_VELOCITY,
           },
           owner: username,
         };
@@ -277,7 +392,7 @@ function spawnPowerups(state) {
     state.selectedPowerups[
       Math.floor(Math.random() * state.selectedPowerups.length)
     ];
-
+  console.log(name);
   state.powerups[uuid()] = {
     x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
     y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
@@ -292,4 +407,5 @@ module.exports = {
   updatePlayerVelocity,
   spawnFoods,
   spawnPowerups,
+  spawnGhosts,
 };

@@ -1,23 +1,14 @@
 import React from "react";
 import { useState, useContext, useEffect } from "react";
-import { faVolumeMute, faVolumeUp } from "@fortawesome/free-solid-svg-icons";
 import AppContext from "./../../contexts/AppContext";
-import musicMp3 from "../../sounds/menu-music.mp3";
 import { AVATARS } from "./../../utils/constants";
 import "./Lobby.scss";
-import FloatingActionButton from "../../components/Modal/FloatingActionButton/FloatingActionButton";
-
-const music = new Audio(musicMp3);
-music.loop = true;
 
 function Lobby() {
-  const { isHost, socket, isMusicOn, goToMainMenu, goToArena, setIsMusicOn } = useContext(AppContext);
+  const { isHost, socket, goToMainMenu, goToArena } = useContext(AppContext);
   const [players, setPlayers] = useState([]);
   const [gameCode, setGameCode] = useState("");
   const [host, setHost] = useState("");
-
-  // For some reaosn, audio can't play on safari
-  const isSafari = window.safari !== undefined;
 
   useEffect(() => {
     socket.emit("getPlayers");
@@ -34,35 +25,15 @@ function Lobby() {
       setHost(lobbyInfo.host);
       setPlayers(lobbyInfo.players);
     });
-
-    if (!isSafari && isMusicOn) {
-      music.play();
-    }
-
-    return () => {
-      music.pause();
-      music.currentTime = 0;
-    };
     // eslint-disable-next-line
   }, []);
 
-  const toggleMusic = () => {
-    if (isSafari) {
-      return;
-    }
-    if (isMusicOn) {
-      music.pause();
-    } else {
-      music.play();
-    }
-    setIsMusicOn(!isMusicOn);
-  }
-
   const startGame = () => {
-    // TODO: Start the game in socketio
     socket.emit("startGame", gameCode);
     goToArena();
   };
+
+  console.log(players);
 
   return (
     <div className="Lobby">
@@ -83,7 +54,10 @@ function Lobby() {
           {players.map((player, index) => (
             <div className="col-md-6" key={index}>
               <div className="playerRow">
-                <div className="avatar" style={AVATARS.Blue.style}>
+                <div
+                  className="avatar"
+                  style={AVATARS[player.equippedSkin].style}
+                >
                   <div className="avatarMouth" />
                 </div>
                 {player.username} {player.isHost && "(host)"}
@@ -127,14 +101,6 @@ function Lobby() {
             </div>
           </>
         )}
-      </div>
-
-      <div className='bottomRight'>
-        <FloatingActionButton
-          title='Music'
-          onClick={toggleMusic}
-          icon={isMusicOn ? faVolumeUp : faVolumeMute}
-        />
       </div>
     </div>
   );

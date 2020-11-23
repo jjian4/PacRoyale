@@ -1,3 +1,9 @@
+.bottomRight {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
 /* Reusable */
 .button {
   display: inline-block;
@@ -51,7 +57,6 @@
     clip-path: polygon(100% 74%, 44% 48%, 100% 21%);
   }
 }
-
 
 /* Box sizing rules */
 *,

@@ -8,6 +8,7 @@ const {
   updatePlayerVelocity,
   spawnFoods,
   spawnPowerups,
+  spawnGhosts,
 } = require("./game");
 
 const state = {};
@@ -23,15 +24,26 @@ io.on("connection", (client) => {
   client.on("getRooms", emitAllRoomInfo);
   client.on("getPlayers", emitRoomInfo);
 
-  function handleNewGame(username, arenaColor, selectedPowerups) {
+  function handleNewGame(
+    username,
+    equippedSkin,
+    arenaColor,
+    selectedPowerups,
+    selectedWeaknesses
+  ) {
     let roomName = makeId(5);
     clientRooms[client.id] = roomName;
     client.emit("gameCode", roomName);
 
-    state[roomName] = initLobby(username, arenaColor, selectedPowerups);
+    state[roomName] = initLobby(
+      username,
+      arenaColor,
+      selectedPowerups,
+      selectedWeaknesses
+    );
     console.log("newgame", state[roomName]);
     console.log(state);
-    addPlayerToLobby(state[roomName], username, true);
+    addPlayerToLobby(state[roomName], username, equippedSkin, true);
 
     client.join(roomName);
     client.username = username;
@@ -40,7 +52,7 @@ io.on("connection", (client) => {
     broadcastAllRoomInfo();
   }
 
-  function handleJoinGame(roomName, username) {
+  function handleJoinGame(roomName, username, equippedSkin) {
     const room = io.sockets.adapter.rooms.get(roomName);
     let numClients = 0;
     if (room) {
@@ -57,7 +69,7 @@ io.on("connection", (client) => {
     client.join(roomName);
     client.username = username;
     client.isHost = false;
-    addPlayerToLobby(state[roomName], username, false);
+    addPlayerToLobby(state[roomName], username, equippedSkin, false);
     broadcastRoomInfo(roomName);
     broadcastAllRoomInfo();
     client.emit("joinedLobby");
@@ -116,6 +128,7 @@ io.on("connection", (client) => {
       if (room && !room.started) {
         rooms.push({
           host: room.host,
+          equippedSkin: room.players[room.host].equippedSkin,
           gameCode,
           numPlayers: room.playerCount,
         });
@@ -131,6 +144,7 @@ io.on("connection", (client) => {
         console.log(gameCode, room);
         rooms.push({
           host: room.host,
+          equippedSkin: room.players[room.host].equippedSkin,
           gameCode,
           numPlayers: room.playerCount,
         });
@@ -142,7 +156,11 @@ io.on("connection", (client) => {
   function broadcastRoomInfo(roomName) {
     const players = [];
     for (const [username, value] of Object.entries(state[roomName].players)) {
-      players.push({ username, isHost: value.isHost });
+      players.push({
+        username,
+        isHost: value.isHost,
+        equippedSkin: value.equippedSkin,
+      });
     }
     io.sockets.in(roomName).emit(
       "players",
@@ -162,7 +180,11 @@ io.on("connection", (client) => {
     }
     const players = [];
     for (const [username, value] of Object.entries(state[roomName].players)) {
-      players.push({ username, isHost: value.isHost });
+      players.push({
+        username,
+        isHost: value.isHost,
+        equippedSkin: value.equippedSkin,
+      });
     }
     client.emit(
       "players",
@@ -180,9 +202,18 @@ function startGameInterval(roomName, client) {
   const spawnFoodIntervalId = setInterval(() => {
     spawnFoods(state[roomName]);
   }, 500);
-  const spawnPowerupsIntervalId = setInterval(() => {
-    spawnPowerups(state[roomName]);
-  }, 1000);
+  let spawnPowerupsIntervalId = null;
+  let spawnGhostsIntervalId = null;
+  if (state[roomName].selectedPowerups.length !== 0) {
+    spawnPowerupsIntervalId = setInterval(() => {
+      spawnPowerups(state[roomName]);
+    }, 1000);
+  }
+  if (state[roomName].isGhostSelected) {
+    spawnGhostsIntervalId = setInterval(() => {
+      spawnGhosts(state[roomName]);
+    }, 500);
+  }
   const movementIntervalId = setInterval(() => {
     const winner = gameLoop(state[roomName], client);
     if (!winner) {
@@ -193,12 +224,14 @@ function startGameInterval(roomName, client) {
       clearInterval(movementIntervalId);
       clearInterval(spawnFoodIntervalId);
       clearInterval(spawnPowerupsIntervalId);
+      clearInterval(spawnGhostsIntervalId);
     }
   }, 1000 / FRAME_RATE);
   state[roomName].clearIntervals = () => {
     clearInterval(movementIntervalId);
     clearInterval(spawnFoodIntervalId);
     clearInterval(spawnPowerupsIntervalId);
+    clearInterval(spawnGhostsIntervalId);
   };
 }
 
@@ -211,6 +244,9 @@ function emitGameState(room, gameState) {
       foods: Object.values(gameState.foods),
       powerups: Object.values(gameState.powerups),
       shots: Object.values(gameState.shots),
+      ghosts: Object.values(gameState.ghosts),
+      bombs: Object.values(gameState.bombs),
+      slows: Object.values(gameState.slows),
     })
   );
 }

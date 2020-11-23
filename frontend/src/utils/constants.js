@@ -7,7 +7,7 @@ import {
   faSnowflake,
 } from "@fortawesome/free-solid-svg-icons";
 
-export const SITE_NAME = "493 Battle Royale";
+export const SITE_NAME = "Pac Royale";
 
 export const PAGES = {
   LOGIN: "login",
@@ -20,13 +20,13 @@ export const PAGES = {
 };
 
 export const PLAYER_STATS = {
-  dateJoined: 'Date Joined',
-  lastLogin: 'Last Login',
-  gamesPlayed: 'Games Played',
-  gamesHosted: 'Games Hosted',
-  gamesWon: 'Games Won',
-  totalCoins: 'Total Coins',
-}
+  dateJoined: "Date Joined",
+  lastLogin: "Last Login",
+  gamesPlayed: "Games Played",
+  gamesHosted: "Games Hosted",
+  gamesWon: "Games Won",
+  totalCoins: "Total Coins",
+};
 
 export const AVATARS = {
   Blue: {
@@ -64,12 +64,20 @@ export const AVATARS = {
       backgroundColor: "gold",
     },
   },
+  "Red Sripes": {
+    name: "red-stripes",
+    price: 1200,
+    style: {
+      background:
+        "repeating-linear-gradient(90deg, red, red, 20%, lightpink 20%, lightpink 40%)",
+    },
+  },
   "Navy Sripes": {
     name: "navy-stripes",
     price: 1200,
     style: {
       background:
-        "repeating-linear-gradient(45deg, darkslateblue, darkslateblue, 10px, navy 10px, navy 20px)",
+        "repeating-linear-gradient(45deg, darkslateblue, darkslateblue, 20%, navy 20%, navy 40%)",
     },
   },
   "Gray Sripes": {
@@ -77,7 +85,7 @@ export const AVATARS = {
     price: 1200,
     style: {
       background:
-        "repeating-linear-gradient(45deg, lightgray, lightgray, 10px, gray 10px, gray 20px)",
+        "repeating-linear-gradient(0deg, lightgray, lightgray, 20%, gray 20%, gray 40%)",
     },
   },
   Target: {
@@ -96,9 +104,31 @@ export const AVATARS = {
         "repeating-radial-gradient(circle, blue, red 20%, yellow 20%, yellow 30%)",
     },
   },
+  Belgium: {
+    name: "belgium",
+    price: 1200,
+    style: {
+      background:
+        "linear-gradient(90deg, black 0, black 33%, #fdda24 33%, #fdda24 66%, #ef3340 66%, #ef3340 100%)",
+    },
+  },
+  "Red Eye": {
+    name: "red-eye",
+    price: 5000,
+    style: {
+      background: "radial-gradient(red 30%, black 3px)",
+    },
+  },
+  "Pink Eye": {
+    name: "pink-eye",
+    price: 5000,
+    style: {
+      background: "radial-gradient(pink 30%, black 3px)",
+    },
+  },
   Black: {
     name: "black",
-    price: 9000,
+    price: 11000,
     style: {
       backgroundColor: "black",
     },
@@ -132,18 +162,18 @@ export const POWERUPS = {
   EAT: {
     name: "Eat",
     description:
-      "(5 sec): Collide with other players to stun them and steal a coin.",
+      "(5 sec) Collide with other players to stun them and steal a coin.",
     icon: faUtensils,
   },
   SPEED: {
     name: "Speed",
-    description: "(5 sec): Move twice as fact to collect more coins!",
+    description: "(5 sec) Move twice as fact to collect more coins!",
     icon: faFastForward,
   },
   SHOOT: {
     name: "Shoot",
     description:
-      "(press space): Shoot a projectile in a straight line, stunning and stealing a coin from each opponent that was hit.",
+      "(press space) Shoot a projectile in a straight line, stunning and stealing a coin from each opponent that was hit.",
     icon: faBolt,
   },
 };

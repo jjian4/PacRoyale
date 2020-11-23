@@ -49,7 +49,7 @@ function About() {
               />
             </div>
             <div className="powerupDescription">
-              <b>{POWERUPS[powerup].name}</b> {POWERUPS[powerup].description}
+              <b>{POWERUPS[powerup].name}:</b> {POWERUPS[powerup].description}
             </div>
           </div>
         ))}
@@ -65,7 +65,7 @@ function About() {
               />
             </div>
             <div className="powerupDescription">
-              <b>{WEAKNESSES[weakness].name}</b>{" "}
+              <b>{WEAKNESSES[weakness].name}:</b>{" "}
               {WEAKNESSES[weakness].description}
             </div>
           </div>
