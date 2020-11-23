@@ -200,17 +200,19 @@ export const WEAKNESSES = {
 };
 
 export const GAME_MODES = {
-  ELIMINATION: {
-    name: "Elimination",
-    description: "Last player standing (with remaining coins) wins.",
-  },
   FIRST_TO_100: {
     name: "First to 100",
     description: "The first player to reach 100 coins wins.",
   },
-  FREE_FOR_ALL: {
-    name: "Free-for-all",
-    description: "No winners. Game only ends when everyone leaves.",
+  ELIMINATION: {
+    name: "Elimination",
+    description:
+      "The player with the least coins is eliminated every 30 seconds. Last player standing wins.",
+  },
+  SURVIVAL: {
+    name: "Survival",
+    description:
+      "Players are eliminated when they reach 0 coins. The effects of all weaknesses are doubled. Last player standing wins.",
   },
 };
 

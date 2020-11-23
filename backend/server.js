@@ -107,15 +107,14 @@ io.on("connection", (client) => {
         delete state[roomName];
       } else {
         delete state[roomName].players[client.username];
-        state[roomName].playerCount--;
         client.emit("lobbyDisconnect");
         broadcastRoomInfo(roomName);
       }
       broadcastAllRoomInfo();
     } else {
       delete state[roomName].players[client.username];
-      state[roomName].playerCount--;
-      if (state[roomName].playerCount === 0) {
+      console.log(Object.keys(state[roomName].players));
+      if (Object.keys(state[roomName].players).length === 0) {
         state[roomName].clearIntervals();
         delete state[roomName];
       }
@@ -130,7 +129,7 @@ io.on("connection", (client) => {
           host: room.host,
           equippedSkin: room.players[room.host].equippedSkin,
           gameCode,
-          numPlayers: room.playerCount,
+          numPlayers: Object.keys(room.players).length,
         });
       }
     }
@@ -146,7 +145,7 @@ io.on("connection", (client) => {
           host: room.host,
           equippedSkin: room.players[room.host].equippedSkin,
           gameCode,
-          numPlayers: room.playerCount,
+          numPlayers: Object.keys(room.players).length,
         });
       }
     }

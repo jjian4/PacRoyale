@@ -17,6 +17,7 @@
     width: 100vh;
     border: 3px solid black;
     position: relative;
+    overflow: hidden;
     .player {
       z-index: 3;
       position: absolute;
@@ -94,9 +95,10 @@
       position: absolute;
       height: 4%;
       width: 4%;
-      border: 0.5px solid black;
-      border-radius: 50%;
-      background-color: rgb(255, 0, 247);
+      .ghostIcon {
+        height: 100%;
+        width: 100%;
+      }
     }
   }
   .leaderboard {

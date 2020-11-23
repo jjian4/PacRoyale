@@ -18,7 +18,6 @@ const SHOT_VELOCITY = 2.5;
 const GHOST_VELOCITY = 1.5;
 
 function initLobby(username, arenaColor, selectedPowerups, selectedWeaknesses) {
-  console.log(selectedWeaknesses);
   const isSlowSelected = selectedWeaknesses.find((x) => x === "Slow") != null;
   const isGhostSelected = selectedWeaknesses.find((x) => x === "Ghost") != null;
   const isBombSelected = selectedWeaknesses.find((x) => x === "Bomb") != null;
@@ -26,7 +25,6 @@ function initLobby(username, arenaColor, selectedPowerups, selectedWeaknesses) {
   return {
     host: username,
     players: {},
-    playerCount: 0,
     foods: {},
     powerups: {},
     shots: {},
@@ -44,7 +42,6 @@ function initLobby(username, arenaColor, selectedPowerups, selectedWeaknesses) {
 }
 
 function addPlayerToLobby(state, username, equippedSkin, isHost) {
-  state.playerCount++;
   state.players[username] = {
     pos: {
       x: Math.floor(Math.random() * (100 - PLAYER_SIZE)),
@@ -184,26 +181,26 @@ function gameLoop(state, client) {
           if (powerup.name === "Speed") {
             updateForSpeed(player, 2);
             setTimeout(() => {
-              player.powerup = "";
-              updateForSpeed(player, 1);
+              if (player) {
+                player.powerup = "";
+                updateForSpeed(player, 1);
+              }
             }, SPEED_TIMEOUT);
           } else if (powerup.name === "Eat") {
             setTimeout(() => {
-              player.powerup = "";
+              if (player) {
+                player.powerup = "";
+              }
             }, EAT_TIMEOUT);
           } else if (powerup.name === "Shoot") {
             const shotTimeout = setTimeout(() => {
-              player.powerup = "";
+              if (player) {
+                player.powerup = "";
+              }
             }, SHOOT_TIMEOUT);
             player.clearShot = () => {
               clearTimeout(shotTimeout);
             };
-          } else if (powerup.name === "Slow") {
-            updateForSpeed(player, 0.5);
-            setTimeout(() => {
-              player.powerup = "";
-              updateForSpeed(player, 1);
-            }, SLOW_TIMEOUT);
           }
         }
       }
@@ -224,7 +221,9 @@ function gameLoop(state, client) {
         ) {
           state.players[otherUsername].isStunned = true;
           setTimeout(() => {
-            state.players[otherUsername].isStunned = false;
+            if (state.players[otherUsername]) {
+              state.players[otherUsername].isStunned = false;
+            }
           }, STUN_TIMEOUT);
         }
       }
@@ -246,7 +245,9 @@ function gameLoop(state, client) {
         delete state.shots[key];
         state.players[username].isStunned = true;
         setTimeout(() => {
-          state.players[username].isStunned = false;
+          if (state.players[username]) {
+            state.players[username].isStunned = false;
+          }
         }, STUN_TIMEOUT);
       }
     }
@@ -265,7 +266,9 @@ function gameLoop(state, client) {
       ) {
         state.players[username].isStunned = true;
         setTimeout(() => {
-          state.players[username].isStunned = false;
+          if (state.players[username]) {
+            state.players[username].isStunned = false;
+          }
         }, STUN_TIMEOUT);
       }
     }

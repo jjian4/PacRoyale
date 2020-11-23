@@ -61,6 +61,7 @@
 
     .gameModeChoices {
       display: inline-block;
+      width: 80%;
       .gameModeChoice {
         padding: 5px 0;
         margin-bottom: 10px;
@@ -73,6 +74,7 @@
           padding: 0 10px 0 5px;
         }
         .gameModeDescription {
+          text-align: left;
         }
       }
     }

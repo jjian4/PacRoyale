@@ -5,6 +5,7 @@ import {
   faSignOutAlt,
   faVolumeMute,
   faVolumeUp,
+  faGhost,
 } from "@fortawesome/free-solid-svg-icons";
 import { POWERUPS, ARENA_COLORS, WEAKNESSES } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
@@ -170,10 +171,7 @@ function Arena() {
         >
           <FontAwesomeIcon
             icon={
-              (
-                Object.values(POWERUPS).find((x) => x.name === powerup.name) ??
-                Object.values(WEAKNESSES).find((x) => x.name === powerup.name)
-              )?.icon
+              Object.values(POWERUPS).find((x) => x.name === powerup.name)?.icon
             }
             className="powerupIcon"
           />
@@ -195,7 +193,9 @@ function Arena() {
           className="ghost"
           key={"ghost" + idx}
           style={{ top: ghost.pos.y + "%", left: ghost.pos.x + "%" }}
-        ></div>
+        >
+          <FontAwesomeIcon icon={faGhost} className="ghostIcon" />
+        </div>
       );
     });
   }
