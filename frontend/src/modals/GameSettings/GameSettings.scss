@@ -61,18 +61,17 @@
 
     .gameModeChoices {
       display: inline-block;
+      width: 80%;
+      text-align: left;
       .gameModeChoice {
         padding: 5px 0;
         margin-bottom: 10px;
-        display: flex;
         input {
           margin-top: 6px;
         }
         .gameModeName {
           font-weight: bold;
-          padding: 0 10px 0 5px;
-        }
-        .gameModeDescription {
+          padding: 0 5px 0 5px;
         }
       }
     }

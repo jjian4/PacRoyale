@@ -148,10 +148,12 @@ function GameSettings(props) {
                 checked={GAME_MODES[gameMode].name === selectedGameMode}
                 onChange={(e) => setSelectedGameMode(e.target.value)}
               />
-              <span className="gameModeName">{GAME_MODES[gameMode].name}:</span>
-              <span className="gameModeDescription">
-                {GAME_MODES[gameMode].description}
+              <span>
+                <span className="gameModeName">{GAME_MODES[gameMode].name}:</span> {GAME_MODES[gameMode].description}
               </span>
+              {/* <span className="gameModeName">{GAME_MODES[gameMode].name}:</span>
+                <span className="gameModeDescription">{GAME_MODES[gameMode].description}</span>
+              </span> */}
             </label>
           ))}
         </div>
