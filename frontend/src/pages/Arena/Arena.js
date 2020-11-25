@@ -115,6 +115,7 @@ function Arena() {
   const powerups = [];
   const shots = [];
   const ghosts = [];
+  const slows = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -130,8 +131,9 @@ function Arena() {
       players.push(
         <div
           key={username}
-          className={`player avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ''
-            }`}
+          className={`player avatar ${value.powerup} ${
+            value.isStunned ? "stunnedPlayer" : ""
+          }`}
           style={{
             ...AVATARS[value.equippedSkin].style,
             top: value.pos.y + "%",
@@ -196,10 +198,24 @@ function Arena() {
         </div>
       );
     });
+    gameState.slows.forEach((slow, idx) => {
+      slows.push(
+        <div
+          className="slow"
+          key={"slow" + idx}
+          style={{
+            top: slow.pos.y + "%",
+            left: slow.pos.x + "%",
+            width: slow.size + "%",
+            height: slow.size + "%",
+          }}
+        ></div>
+      );
+    });
   }
 
   return (
-    <div className={`Arena ${isMobile ? "Arena-mobile" : ''}`}>
+    <div className={`Arena ${isMobile ? "Arena-mobile" : ""}`}>
       <div
         className="arenaBox"
         style={
@@ -214,24 +230,25 @@ function Arena() {
         {powerups}
         {shots}
         {ghosts}
+        {slows}
       </div>
       <div className="leaderboard">
         <div className="leaderboardTitle">Leaderboard</div>
         {gameState &&
           Object.keys(gameState.players).map((username) => (
             <div className="playerInfo">
-              <div className='playerUsernameAvatar'>
+              <div className="playerUsernameAvatar">
                 <div
                   className="avatar"
-                  style={AVATARS[gameState.players[username].equippedSkin].style}
+                  style={
+                    AVATARS[gameState.players[username].equippedSkin].style
+                  }
                 >
                   <div className="avatarMouth" />
                 </div>
                 {username}:
               </div>
-              <div>
-                {gameState.players[username].score}
-              </div>
+              <div>{gameState.players[username].score}</div>
 
               {/* <div>
                 {username} ({gameState.players[username].score}coins)

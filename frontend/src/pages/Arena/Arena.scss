@@ -62,6 +62,7 @@
       width: 2%;
       border: 1px solid rgb(177, 177, 177);
       border-radius: 50%;
+      z-index: 1;
       background-color: whitesmoke;
     }
     .powerup {
@@ -95,10 +96,18 @@
       position: absolute;
       height: 4%;
       width: 4%;
+      z-index: 4;
       .ghostIcon {
         height: 100%;
         width: 100%;
       }
+    }
+
+    .slow {
+      position: absolute;
+      background-color: lightblue;
+      border-radius: 10px;
+      z-index: 0;
     }
   }
   .leaderboard {

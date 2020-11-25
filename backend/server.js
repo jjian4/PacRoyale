@@ -9,6 +9,7 @@ const {
   spawnFoods,
   spawnPowerups,
   spawnGhosts,
+  spawnSlows,
 } = require("./game");
 
 const state = {};
@@ -203,6 +204,7 @@ function startGameInterval(roomName, client) {
   }, 500);
   let spawnPowerupsIntervalId = null;
   let spawnGhostsIntervalId = null;
+  let spawnSlowsIntervalId = null;
   if (state[roomName].selectedPowerups.length !== 0) {
     spawnPowerupsIntervalId = setInterval(() => {
       spawnPowerups(state[roomName]);
@@ -212,6 +214,12 @@ function startGameInterval(roomName, client) {
     spawnGhostsIntervalId = setInterval(() => {
       spawnGhosts(state[roomName]);
     }, 500);
+  }
+  if (state[roomName].isSlowSelected) {
+    const time = Math.floor(Math.random() * 3 + 1);
+    spawnSlowsIntervalId = setInterval(() => {
+      spawnSlows(state[roomName]);
+    }, time * 1000);
   }
   const movementIntervalId = setInterval(() => {
     const winner = gameLoop(state[roomName], client);
@@ -224,6 +232,7 @@ function startGameInterval(roomName, client) {
       clearInterval(spawnFoodIntervalId);
       clearInterval(spawnPowerupsIntervalId);
       clearInterval(spawnGhostsIntervalId);
+      clearInterval(spawnSlowsIntervalId);
     }
   }, 1000 / FRAME_RATE);
   state[roomName].clearIntervals = () => {
@@ -231,6 +240,7 @@ function startGameInterval(roomName, client) {
     clearInterval(spawnFoodIntervalId);
     clearInterval(spawnPowerupsIntervalId);
     clearInterval(spawnGhostsIntervalId);
+    clearInterval(spawnSlowsIntervalId);
   };
 }
 

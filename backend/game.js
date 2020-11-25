@@ -179,11 +179,9 @@ function gameLoop(state, client) {
           delete state.powerups[key];
           player.powerup = powerup.name;
           if (powerup.name === "Speed") {
-            updateForSpeed(player, 2);
             setTimeout(() => {
               if (player) {
                 player.powerup = "";
-                updateForSpeed(player, 1);
               }
             }, SPEED_TIMEOUT);
           } else if (powerup.name === "Eat") {
@@ -270,6 +268,36 @@ function gameLoop(state, client) {
             state.players[username].isStunned = false;
           }
         }, STUN_TIMEOUT);
+      }
+    }
+    let isSlowed = false;
+    const isFast = state.players[username].powerup === "Speed";
+    for (let [key, slow] of Object.entries(state.slows)) {
+      if (
+        isColliding(
+          playerX,
+          playerY,
+          PLAYER_SIZE,
+          slow.pos.x,
+          slow.pos.y,
+          slow.size
+        )
+      ) {
+        isSlowed = true;
+        break;
+      }
+    }
+    if (isSlowed) {
+      if (isFast) {
+        updateForSpeed(state.players[username], 1);
+      } else {
+        updateForSpeed(state.players[username], 0.5);
+      }
+    } else {
+      if (isFast) {
+        updateForSpeed(state.players[username], 2);
+      } else {
+        updateForSpeed(state.players[username], 1);
       }
     }
   }
@@ -403,6 +431,24 @@ function spawnPowerups(state) {
   };
 }
 
+function spawnSlows(state) {
+  const size = Math.floor(Math.random() * 5 + 10);
+  const slowId = uuid();
+  state.slows[slowId] = {
+    pos: {
+      x: Math.floor(Math.random() * (100 - size)),
+      y: Math.floor(Math.random() * (100 - size)),
+    },
+    size,
+  };
+  const time = Math.floor(Math.random() * 10 + 10);
+  setTimeout(() => {
+    if (state.slows[slowId]) {
+      delete state.slows[slowId];
+    }
+  }, time * 1000);
+}
+
 module.exports = {
   initLobby,
   addPlayerToLobby,
@@ -411,4 +457,5 @@ module.exports = {
   spawnFoods,
   spawnPowerups,
   spawnGhosts,
+  spawnSlows,
 };
