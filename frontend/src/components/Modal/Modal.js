@@ -14,7 +14,8 @@ const customStyles = {
         transform: 'translate(-50%, -50%)',
         width: '70vw',
         maxWidth: '750px',
-        height: '90vh',
+        minHeight: '80vh',
+        maxHeight: '95vh',
         backgroundColor: 'white',
     },
     overlay: {

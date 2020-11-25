@@ -3,8 +3,8 @@
   .form {
     min-height: 70vh;
     .subtitle {
-      font-size: 25px;
-      padding: 30px 0 10px 0;
+      font-size: 22px;
+      padding: 20px 0 10px 0;
     }
     .arenaChoices {
       display: flex;
@@ -64,8 +64,7 @@
       width: 80%;
       text-align: left;
       .gameModeChoice {
-        padding: 5px 0;
-        margin-bottom: 10px;
+        padding: 4px 0;
         input {
           margin-top: 6px;
         }

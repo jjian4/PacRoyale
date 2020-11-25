@@ -130,12 +130,10 @@ function Arena() {
       players.push(
         <div
           key={username}
-          className={`player avatar ${value.powerup} ${
-            value.isStunned && "stunnedPlayer"
-          }`}
+          className={`player avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ''
+            }`}
           style={{
             ...AVATARS[value.equippedSkin].style,
-            // ...AVATARS.Blue.style,
             top: value.pos.y + "%",
             left: value.pos.x + "%",
             transform: "rotate(" + rotateDeg + "deg)",
@@ -201,7 +199,7 @@ function Arena() {
   }
 
   return (
-    <div className={`Arena ${isMobile && "Arena-mobile"}`}>
+    <div className={`Arena ${isMobile ? "Arena-mobile" : ''}`}>
       <div
         className="arenaBox"
         style={
@@ -218,23 +216,35 @@ function Arena() {
         {ghosts}
       </div>
       <div className="leaderboard">
-        <div className="leaderboardTitle">Leaderboard (? alive)</div>
+        <div className="leaderboardTitle">Leaderboard</div>
         {gameState &&
           Object.keys(gameState.players).map((username) => (
             <div className="playerInfo">
+              <div className='playerUsernameAvatar'>
+                <div
+                  className="avatar"
+                  style={AVATARS[gameState.players[username].equippedSkin].style}
+                >
+                  <div className="avatarMouth" />
+                </div>
+                {username}:
+              </div>
               <div>
+                {gameState.players[username].score}
+              </div>
+
+              {/* <div>
                 {username} ({gameState.players[username].score}coins)
               </div>
               <div className="healthBar">
                 <div
                   className="innerHealthBar"
                   style={{
-                    width: `calc(100% * ${
-                      gameState.players[username].score * 0.01
-                    })`,
+                    width: `calc(100% * ${gameState.players[username].score * 0.01
+                      })`,
                   }}
                 />
-              </div>
+              </div> */}
             </div>
           ))}
       </div>

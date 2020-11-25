@@ -27,7 +27,7 @@ function GameSettings(props) {
   ]);
 
   const [selectedGameMode, setSelectedGameMode] = useState(
-    GAME_MODES.ELIMINATION.name
+    GAME_MODES.FIRST_TO_100.name
   );
 
   useEffect(() => {
@@ -59,10 +59,9 @@ function GameSettings(props) {
           {Object.keys(ARENA_COLORS).map((arenaColor, index) => (
             <div
               key={index}
-              className={`arenaChoice ${
-                selectedArenaColor === ARENA_COLORS[arenaColor].name &&
+              className={`arenaChoice ${selectedArenaColor === ARENA_COLORS[arenaColor].name &&
                 "selectedArenaChoice"
-              }`}
+                }`}
               style={ARENA_COLORS[arenaColor].style}
               onClick={() =>
                 setSelectedArenaColor(ARENA_COLORS[arenaColor].name)
@@ -81,10 +80,9 @@ function GameSettings(props) {
           {Object.keys(POWERUPS).map((powerup, index) => (
             <div key={index}>
               <div
-                className={`powerupChoice ${
-                  selectedPowerups.includes(POWERUPS[powerup].name) &&
+                className={`powerupChoice ${selectedPowerups.includes(POWERUPS[powerup].name) &&
                   "selectedPowerupChoice"
-                }`}
+                  }`}
                 onClick={() => {
                   if (selectedPowerups.includes(POWERUPS[powerup].name)) {
                     setSelectedPowerups(
@@ -116,10 +114,9 @@ function GameSettings(props) {
           {Object.keys(WEAKNESSES).map((weakness, index) => (
             <div key={index}>
               <div
-                className={`powerupChoice ${
-                  selectedWeaknesses.includes(WEAKNESSES[weakness].name) &&
+                className={`powerupChoice ${selectedWeaknesses.includes(WEAKNESSES[weakness].name) &&
                   "selectedPowerupChoice"
-                }`}
+                  }`}
                 onClick={() => {
                   if (selectedWeaknesses.includes(WEAKNESSES[weakness].name)) {
                     setSelectedWeaknesses(
@@ -161,9 +158,6 @@ function GameSettings(props) {
               <span>
                 <span className="gameModeName">{GAME_MODES[gameMode].name}:</span> {GAME_MODES[gameMode].description}
               </span>
-              {/* <span className="gameModeName">{GAME_MODES[gameMode].name}:</span>
-                <span className="gameModeDescription">{GAME_MODES[gameMode].description}</span>
-              </span> */}
             </label>
           ))}
         </div>
