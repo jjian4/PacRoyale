@@ -1,6 +1,6 @@
 const io = require("socket.io")();
 const { makeId } = require("./utils");
-const { MAX_PLAYERS, FRAME_RATE, GAME_MODES } = require("./constants");
+const { MAX_PLAYERS, FRAME_RATE, GAME_MODES, ELIMINATION_RATE } = require("./constants");
 const {
   initLobby,
   addPlayerToLobby,
@@ -11,6 +11,7 @@ const {
   spawnGhosts,
   spawnSlows,
   spawnBombs,
+  eliminateLowestPlayer
 } = require("./game");
 
 const state = {};
@@ -209,6 +210,7 @@ function startGameInterval(roomName, client) {
   let spawnGhostsIntervalId = null;
   let spawnSlowsIntervalId = null;
   let spawnBombsIntervalId = null;
+  let eliminateLowestPlayerIntervalId = null;
   if (state[roomName].selectedPowerups.length !== 0) {
     spawnPowerupsIntervalId = setInterval(() => {
       spawnPowerups(state[roomName]);
@@ -230,13 +232,36 @@ function startGameInterval(roomName, client) {
       spawnBombs(state[roomName]);
     }, 1000);
   }
+
+  if (state[roomName].selectedGameMode === GAME_MODES.ELIMINATION) {
+    eliminateLowestPlayerIntervalId = setInterval(() => {
+      const eliminatedPlayer = eliminateLowestPlayer(state[roomName]);
+      if (state[roomName].players[eliminatedPlayer]) {
+        emitElimination(roomName, eliminatedPlayer, 'You failed to collect enough coins and were eliminated from the arena');
+      }
+    }, ELIMINATION_RATE)
+  }
+
   const movementIntervalId = setInterval(() => {
-    // if (state[roomName].selectedGameMode === GAME_MODES.FIRST_TO_100) {}
     const winner = gameLoop(state[roomName], client);
     if (!winner) {
       emitGameState(roomName, state[roomName]);
     } else {
-      emitGameOver(roomName, winner);
+      let message;
+      switch (state[roomName].selectedGameMode) {
+        case GAME_MODES.FIRST_TO_100:
+          message = `${winner} collected 100 coins and is the winner!`;
+          break;
+        case GAME_MODES.ELIMINATION:
+          message = `${winner} is the last one standing and wins!`;
+          break;
+        case GAME_MODES.SURVIVAL:
+          message = `${winner} is the last one standing and wins!`;
+          break;
+        default:
+          message = `Game over: ${winner} wins!`;
+      }
+      emitGameOver(roomName, message);
       state[roomName] = null;
       clearInterval(movementIntervalId);
       clearInterval(spawnFoodIntervalId);
@@ -244,6 +269,7 @@ function startGameInterval(roomName, client) {
       clearInterval(spawnGhostsIntervalId);
       clearInterval(spawnSlowsIntervalId);
       clearInterval(spawnBombsIntervalId);
+      clearInterval(eliminateLowestPlayerIntervalId);
     }
   }, 1000 / FRAME_RATE);
   state[roomName].clearIntervals = () => {
@@ -253,6 +279,7 @@ function startGameInterval(roomName, client) {
     clearInterval(spawnGhostsIntervalId);
     clearInterval(spawnSlowsIntervalId);
     clearInterval(spawnBombsIntervalId);
+    clearInterval(eliminateLowestPlayerIntervalId);
   };
 }
 
@@ -273,11 +300,15 @@ function emitGameState(room, gameState) {
   );
 }
 
-function emitGameOver(room, winner) {
+function emitGameOver(room, message) {
   io.sockets
     .in(room)
-    .emit("gameOver", `${winner} collected 100 coins and won!`);
+    .emit("gameOver", message);
   delete state[room];
+}
+
+function emitElimination(room, username, message) {
+  // TODO: SEND TO SPECIFIC PLAYER
 }
 
 io.listen(3001);

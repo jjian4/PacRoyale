@@ -77,8 +77,7 @@ function Login() {
             setUser(newUser);
           })
           .then(function () {
-            // There are errors when we use goToMainMenu. Just refresh page
-            window.location.reload();
+            goToMainMenu();
           })
           .catch(function (error) {
             console.log(error);

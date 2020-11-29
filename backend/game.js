@@ -1,6 +1,7 @@
 const { v4: uuid } = require("uuid");
+const { GAME_MODES } = require("./constants");
 
-const FIRST_TO_100_WIN_AMOUNT = 100;
+const FIRST_TO_100_WIN_AMOUNT = 3;
 
 const PLAYER_SIZE = 4;
 const POWERUP_SIZE = 3;
@@ -101,9 +102,31 @@ function isColliding(item1x, item1y, item1Size, item2x, item2y, item2Size) {
   );
 }
 
+// Returns null if no winner, returns username if there's a winner
 function gameLoop(state, client) {
   for (const username of Object.keys(state.players)) {
     const player = state.players[username];
+
+    // CHECK FOR WINNER (Game modes: Elimination & Survival)
+    // Note: Checking inside the loop to avoid the unlikely possibility of having no/multiple winners
+    if (state.selectedGameMode === GAME_MODES.ELIMINATION || state.selectedGameMode === GAME_MODES.SURVIVAL) {
+      console.log(state.players.length)
+      if (Object.keys(state.players).length === 1) {
+        return username;
+      }
+    }
+
+    // CHECK FOR WINNER (Game mode: First to 100)
+    // Note: Not checking in inner food collision loop to ensure the UI updates before winner is declaring
+    if (state.selectedGameMode === GAME_MODES.FIRST_TO_100 && player.score >= FIRST_TO_100_WIN_AMOUNT) {
+      return username;
+    }
+
+    // Remove player from arena if they reach 0 (Game mode: Survival)
+    if (state.selectedGameMode === GAME_MODES.SURVIVAL && player.score <= 0) {
+      // TODO: REMOVE SINGLE PLAYER FROM ARENA
+    }
+
     if (!player.isStunned) {
       player.pos.x += player.vel.x;
       // Horizontal border collision
@@ -127,7 +150,6 @@ function gameLoop(state, client) {
 
     const playerY = player.pos.y;
     const playerX = player.pos.x;
-    let winner = false;
 
     for (let [key, food] of Object.entries(state.foods)) {
       if (
@@ -135,14 +157,9 @@ function gameLoop(state, client) {
       ) {
         delete state.foods[key];
         player.score += 1;
-        if (player.score >= FIRST_TO_100_WIN_AMOUNT) {
-          winner = true;
-        }
       }
     }
-    if (winner) {
-      return username;
-    }
+
     if (player.powerup === "") {
       for (const [key, powerup] of Object.entries(state.powerups)) {
         if (
@@ -407,14 +424,14 @@ function updatePlayerVelocity(state, username, keyCode) {
               state.players[username].vel.x < 0
                 ? -SHOT_VELOCITY
                 : state.players[username].vel.x > 0
-                ? SHOT_VELOCITY
-                : 0,
+                  ? SHOT_VELOCITY
+                  : 0,
             y:
               state.players[username].vel.y < 0
                 ? -SHOT_VELOCITY
                 : state.players[username].vel.y > 0
-                ? SHOT_VELOCITY
-                : 0,
+                  ? SHOT_VELOCITY
+                  : 0,
           },
           owner: username,
         };
@@ -463,7 +480,7 @@ function spawnPowerups(state) {
   if (state.powerups) {
     var name =
       state.selectedPowerups[
-        Math.floor(Math.random() * state.selectedPowerups.length)
+      Math.floor(Math.random() * state.selectedPowerups.length)
       ];
     state.powerups[uuid()] = {
       x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
@@ -539,6 +556,24 @@ function spawnExplosion(state, bombX, bombY) {
   }
 }
 
+function eliminateLowestPlayer(state) {
+  let minScore = Number.MAX_SAFE_INTEGER;
+  let minPlayers = []
+
+  for (const username of Object.keys(state.players)) {
+    const player = state.players[username];
+    if (player.score < minScore) {
+      minScore = player.score;
+      minPlayers = [username];
+    } else if (player.score === minScore) {
+      minPlayers.push(username);
+    }
+
+    // Randomly eliminate a player with the lowest current score
+    return minPlayers[Math.floor(Math.random() * minPlayers.length)];
+  }
+}
+
 module.exports = {
   initLobby,
   addPlayerToLobby,
@@ -549,4 +584,5 @@ module.exports = {
   spawnGhosts,
   spawnSlows,
   spawnBombs,
+  eliminateLowestPlayer
 };

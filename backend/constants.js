@@ -11,9 +11,12 @@ const GAME_MODES = {
   SURVIVAL: "Survival",
 };
 
+const ELIMINATION_RATE = 30000;
+
 module.exports = {
   MAX_PLAYERS,
   FRAME_RATE,
   GRID_SIZE,
   GAME_MODES,
+  ELIMINATION_RATE
 };

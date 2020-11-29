@@ -141,9 +141,8 @@ function Arena() {
           <p className="playerName">{username}</p>
           <div
             key={username}
-            className={`avatar ${value.powerup} ${
-              value.isStunned ? "stunnedPlayer" : ""
-            }`}
+            className={`avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ""
+              }`}
             style={{
               ...AVATARS[value.equippedSkin].style,
               transform: "rotate(" + rotateDeg + "deg)",
