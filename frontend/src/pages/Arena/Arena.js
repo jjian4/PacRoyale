@@ -8,7 +8,7 @@ import {
   faGhost,
   faBomb,
 } from "@fortawesome/free-solid-svg-icons";
-import { POWERUPS, ARENA_COLORS, WEAKNESSES } from "../../utils/constants";
+import { POWERUPS, ARENA_COLORS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
 import musicMp3 from "../../sounds/arena-music.mp3";

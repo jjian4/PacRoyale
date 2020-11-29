@@ -135,6 +135,23 @@ export const AVATARS = {
   },
 };
 
+export const GAME_MODES = {
+  FIRST_TO_100: {
+    name: "First to 100",
+    description: "The first player to reach 100 coins wins.",
+  },
+  ELIMINATION: {
+    name: "Elimination",
+    description:
+      "The player with the least coins is eliminated every 30 seconds. Last player standing wins.",
+  },
+  SURVIVAL: {
+    name: "Survival",
+    description:
+      "Players are eliminated when they reach 0 coins. Last player standing wins.",
+  },
+};
+
 export const ARENA_COLORS = {
   WHITE: {
     name: "white",
@@ -158,11 +175,12 @@ export const ARENA_COLORS = {
   },
 };
 
+
 export const POWERUPS = {
   EAT: {
     name: "Eat",
     description:
-      "(5 sec) Collide with other players to stun them and steal a coin.",
+      "(5 sec) Collide with other players to stun them and steal a coin. Also grants ghost immunity.",
     icon: faUtensils,
   },
   SPEED: {
@@ -173,7 +191,7 @@ export const POWERUPS = {
   SHOOT: {
     name: "Shoot",
     description:
-      "(press space) Shoot a projectile in a straight line, stunning and stealing a coin from each opponent that was hit.",
+      "(press space) Shoot a projectile in a straight line, stunning and stealing a coin an opponent if its hits.",
     icon: faBolt,
   },
 };
@@ -182,13 +200,13 @@ export const WEAKNESSES = {
   GHOST: {
     name: "Ghost",
     description:
-      "Ghosts periodically move across to arena, stunning players and causing them to drop 2 coins.",
+      "Ghosts move across to arena, stunning players and causing them to drop 2 coins.",
     icon: faGhost,
   },
   BOMB: {
     name: "Bomb",
     description:
-      "Bombs spawn periodically and explode in a t-shape if a player collides with it.",
+      "Bombs spawn and explode in a square shape, stunning playerd and causing players to lose 2 coins.",
     icon: faBomb,
   },
   SLOW: {
@@ -196,23 +214,6 @@ export const WEAKNESSES = {
     description:
       "Patches of snow will spawn on the arena, slowing down players in the area.",
     icon: faSnowflake,
-  },
-};
-
-export const GAME_MODES = {
-  FIRST_TO_100: {
-    name: "First to 100",
-    description: "The first player to reach 100 coins wins.",
-  },
-  ELIMINATION: {
-    name: "Elimination",
-    description:
-      "The player with the least coins is eliminated every 30 seconds. Last player standing wins.",
-  },
-  SURVIVAL: {
-    name: "Survival",
-    description:
-      "Players are eliminated when they reach 0 coins. The effects of all weaknesses are doubled. Last player standing wins.",
   },
 };
 
