@@ -6,6 +6,7 @@ import {
   faVolumeMute,
   faVolumeUp,
   faGhost,
+  faBomb,
 } from "@fortawesome/free-solid-svg-icons";
 import { POWERUPS, ARENA_COLORS, WEAKNESSES } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
@@ -116,6 +117,7 @@ function Arena() {
   const shots = [];
   const ghosts = [];
   const slows = [];
+  const bombs = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -212,6 +214,24 @@ function Arena() {
         ></div>
       );
     });
+    gameState.bombs.forEach((bomb, idx) => {
+      bombs.push(
+        <div
+          className="bomb"
+          key={"bomb" + idx}
+          style={{
+            top: bomb.pos.y + "%",
+            left: bomb.pos.x + "%",
+          }}
+        >
+          <FontAwesomeIcon
+            icon={faBomb}
+            className="bombIcon"
+            style={{ color: `rgb(${0.01 * bomb.percentage * 255},0,0)` }}
+          />
+        </div>
+      );
+    });
   }
 
   return (
@@ -231,6 +251,7 @@ function Arena() {
         {shots}
         {ghosts}
         {slows}
+        {bombs}
       </div>
       <div className="leaderboard">
         <div className="leaderboardTitle">Leaderboard</div>

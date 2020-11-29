@@ -10,6 +10,7 @@ const {
   spawnPowerups,
   spawnGhosts,
   spawnSlows,
+  spawnBombs,
 } = require("./game");
 
 const state = {};
@@ -205,6 +206,7 @@ function startGameInterval(roomName, client) {
   let spawnPowerupsIntervalId = null;
   let spawnGhostsIntervalId = null;
   let spawnSlowsIntervalId = null;
+  let spawnBombsIntervalId = null;
   if (state[roomName].selectedPowerups.length !== 0) {
     spawnPowerupsIntervalId = setInterval(() => {
       spawnPowerups(state[roomName]);
@@ -221,6 +223,11 @@ function startGameInterval(roomName, client) {
       spawnSlows(state[roomName]);
     }, time * 1000);
   }
+  if (state[roomName].isBombSelected) {
+    spawnBombsIntervalId = setInterval(() => {
+      spawnBombs(state[roomName]);
+    }, 2000);
+  }
   const movementIntervalId = setInterval(() => {
     const winner = gameLoop(state[roomName], client);
     if (!winner) {
@@ -233,6 +240,7 @@ function startGameInterval(roomName, client) {
       clearInterval(spawnPowerupsIntervalId);
       clearInterval(spawnGhostsIntervalId);
       clearInterval(spawnSlowsIntervalId);
+      clearInterval(spawnBombsIntervalId);
     }
   }, 1000 / FRAME_RATE);
   state[roomName].clearIntervals = () => {
@@ -241,6 +249,7 @@ function startGameInterval(roomName, client) {
     clearInterval(spawnPowerupsIntervalId);
     clearInterval(spawnGhostsIntervalId);
     clearInterval(spawnSlowsIntervalId);
+    clearInterval(spawnBombsIntervalId);
   };
 }
 
@@ -255,6 +264,7 @@ function emitGameState(room, gameState) {
       shots: Object.values(gameState.shots),
       ghosts: Object.values(gameState.ghosts),
       bombs: Object.values(gameState.bombs),
+      explosions: Object.values(gameState.explosions),
       slows: Object.values(gameState.slows),
     })
   );

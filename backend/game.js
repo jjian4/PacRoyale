@@ -7,6 +7,7 @@ const POWERUP_SIZE = 3;
 const FOOD_SIZE = 2;
 const SHOT_SIZE = 1;
 const GHOST_SIZE = 4;
+const BOMB_SIZE = 3;
 
 const SPEED_TIMEOUT = 3000;
 const EAT_TIMEOUT = 5000;
@@ -114,34 +115,6 @@ function gameLoop(state, client) {
       } else if (player.pos.y < 0) {
         player.pos.y = 0;
         player.vel.y = 0;
-      }
-    }
-
-    for (let [key, shot] of Object.entries(state.shots)) {
-      shot.pos.x += shot.vel.x;
-      shot.pos.y += shot.vel.y;
-      if (
-        shot.pos.x < 0 ||
-        shot.pos.x > 100 ||
-        shot.pos.y < 0 ||
-        shot.pos.y > 100
-      ) {
-        delete state.shots[key];
-      }
-    }
-
-    if (state.isGhostSelected) {
-      for (let [key, ghost] of Object.entries(state.ghosts)) {
-        ghost.pos.x += ghost.vel.x;
-        ghost.pos.y += ghost.vel.y;
-        if (
-          ghost.pos.x < -GHOST_SIZE ||
-          ghost.pos.x > 100 + GHOST_SIZE ||
-          ghost.pos.y < -GHOST_SIZE ||
-          ghost.pos.y > 100 + GHOST_SIZE
-        ) {
-          delete state.ghosts[key];
-        }
       }
     }
 
@@ -301,6 +274,35 @@ function gameLoop(state, client) {
       }
     }
   }
+
+  for (let [key, shot] of Object.entries(state.shots)) {
+    shot.pos.x += shot.vel.x;
+    shot.pos.y += shot.vel.y;
+    if (
+      shot.pos.x < 0 ||
+      shot.pos.x > 100 ||
+      shot.pos.y < 0 ||
+      shot.pos.y > 100
+    ) {
+      delete state.shots[key];
+    }
+  }
+
+  if (state.isGhostSelected) {
+    for (let [key, ghost] of Object.entries(state.ghosts)) {
+      ghost.pos.x += ghost.vel.x;
+      ghost.pos.y += ghost.vel.y;
+      if (
+        ghost.pos.x < -GHOST_SIZE ||
+        ghost.pos.x > 100 + GHOST_SIZE ||
+        ghost.pos.y < -GHOST_SIZE ||
+        ghost.pos.y > 100 + GHOST_SIZE
+      ) {
+        delete state.ghosts[key];
+      }
+    }
+  }
+
   return null;
 }
 
@@ -412,41 +414,68 @@ function updatePlayerVelocity(state, username, keyCode) {
 }
 
 function spawnFoods(state) {
-  state.foods[uuid()] = {
-    x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
-    y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
-  };
+  if (state.foods) {
+    state.foods[uuid()] = {
+      x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
+      y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
+    };
+  }
 }
 
 function spawnPowerups(state) {
-  var name =
-    state.selectedPowerups[
-      Math.floor(Math.random() * state.selectedPowerups.length)
-    ];
-  console.log(name);
-  state.powerups[uuid()] = {
-    x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
-    y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
-    name,
-  };
+  if (state.powerups) {
+    var name =
+      state.selectedPowerups[
+        Math.floor(Math.random() * state.selectedPowerups.length)
+      ];
+    state.powerups[uuid()] = {
+      x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
+      y: Math.floor(Math.random() * (100 - FOOD_SIZE)),
+      name,
+    };
+  }
 }
 
 function spawnSlows(state) {
-  const size = Math.floor(Math.random() * 5 + 10);
-  const slowId = uuid();
-  state.slows[slowId] = {
-    pos: {
-      x: Math.floor(Math.random() * (100 - size)),
-      y: Math.floor(Math.random() * (100 - size)),
-    },
-    size,
-  };
-  const time = Math.floor(Math.random() * 10 + 10);
-  setTimeout(() => {
-    if (state.slows[slowId]) {
-      delete state.slows[slowId];
-    }
-  }, time * 1000);
+  if (state.slows) {
+    const size = Math.floor(Math.random() * 5 + 10);
+    const slowId = uuid();
+    state.slows[slowId] = {
+      pos: {
+        x: Math.floor(Math.random() * (100 - size)),
+        y: Math.floor(Math.random() * (100 - size)),
+      },
+      size,
+    };
+    const time = Math.floor(Math.random() * 10 + 10);
+    setTimeout(() => {
+      if (state.slows[slowId]) {
+        delete state.slows[slowId];
+      }
+    }, time * 1000);
+  }
+}
+
+function spawnBombs(state) {
+  if (state.bombs) {
+    const bombId = uuid();
+    state.bombs[bombId] = {
+      pos: {
+        x: Math.floor(Math.random() * (100 - BOMB_SIZE)),
+        y: Math.floor(Math.random() * (100 - BOMB_SIZE)),
+      },
+      percentage: 0,
+    };
+    const bombPercentInterval = setInterval(() => {
+      if (state.bombs[bombId]) {
+        state.bombs[bombId].percentage += 1;
+        if (state.bombs[bombId].percentage > 100) {
+          clearInterval(bombPercentInterval);
+          delete state.bombs[bombId];
+        }
+      }
+    }, 30);
+  }
 }
 
 module.exports = {
@@ -458,4 +487,5 @@ module.exports = {
   spawnPowerups,
   spawnGhosts,
   spawnSlows,
+  spawnBombs,
 };
