@@ -2,12 +2,18 @@ const MAX_PLAYERS = 20;
 const FRAME_RATE = 20;
 const GRID_SIZE = 20;
 
-const POWERUPS = ["EAT", "SPEED", "SHOOT", "GHOST"];
-const WEAKNESSES = ["GHOST", "BOMB"];
+// const POWERUPS = ["EAT", "SPEED", "SHOOT", "GHOST"];
+// const WEAKNESSES = ["GHOST", "BOMB"];
+
+const GAME_MODES = {
+  FIRST_TO_100: "First to 100",
+  ELIMINATION: "Elimination",
+  SURVIVAL: "Survival",
+};
 
 module.exports = {
   MAX_PLAYERS,
   FRAME_RATE,
   GRID_SIZE,
-  POWERUPS,
+  GAME_MODES,
 };

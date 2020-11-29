@@ -194,25 +194,10 @@ export const WEAKNESSES = {
   SLOW: {
     name: "Slow",
     description:
-      "Colliding with this will slow down your movement for 5 seconds.",
+      "Patches of snow will spawn on the arena, slowing down players in the area.",
     icon: faSnowflake,
   },
 };
-
-// export const GAME_MODES = {
-//   ELIMINATION: {
-//     name: "Elimination",
-//     description: "Last player standing (with remaining coins) wins.",
-//   },
-//   FIRST_TO_100: {
-//     name: "First to 100",
-//     description: "The first player to reach 100 coins wins.",
-//   },
-//   FREE_FOR_ALL: {
-//     name: "Free-for-all",
-//     description: "No winners. Game only ends when everyone leaves.",
-//   },
-// };
 
 export const GAME_MODES = {
   FIRST_TO_100: {

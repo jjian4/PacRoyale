@@ -1,6 +1,6 @@
 const io = require("socket.io")();
 const { makeId } = require("./utils");
-const { MAX_PLAYERS, FRAME_RATE } = require("./constants");
+const { MAX_PLAYERS, FRAME_RATE, GAME_MODES } = require("./constants");
 const {
   initLobby,
   addPlayerToLobby,
@@ -31,7 +31,8 @@ io.on("connection", (client) => {
     equippedSkin,
     arenaColor,
     selectedPowerups,
-    selectedWeaknesses
+    selectedWeaknesses,
+    selectedGameMode
   ) {
     let roomName = makeId(5);
     clientRooms[client.id] = roomName;
@@ -41,7 +42,8 @@ io.on("connection", (client) => {
       username,
       arenaColor,
       selectedPowerups,
-      selectedWeaknesses
+      selectedWeaknesses,
+      selectedGameMode
     );
     console.log("newgame", state[roomName]);
     console.log(state);
@@ -215,7 +217,7 @@ function startGameInterval(roomName, client) {
   if (state[roomName].isGhostSelected) {
     spawnGhostsIntervalId = setInterval(() => {
       spawnGhosts(state[roomName]);
-    }, 500);
+    }, 1000);
   }
   if (state[roomName].isSlowSelected) {
     const time = Math.floor(Math.random() * 3 + 1);
@@ -226,9 +228,10 @@ function startGameInterval(roomName, client) {
   if (state[roomName].isBombSelected) {
     spawnBombsIntervalId = setInterval(() => {
       spawnBombs(state[roomName]);
-    }, 2000);
+    }, 1000);
   }
   const movementIntervalId = setInterval(() => {
+    // if (state[roomName].selectedGameMode === GAME_MODES.FIRST_TO_100) {}
     const winner = gameLoop(state[roomName], client);
     if (!winner) {
       emitGameState(roomName, state[roomName]);
@@ -271,7 +274,9 @@ function emitGameState(room, gameState) {
 }
 
 function emitGameOver(room, winner) {
-  io.sockets.in(room).emit("gameOver", JSON.stringify({ winner }));
+  io.sockets
+    .in(room)
+    .emit("gameOver", `${winner} collected 100 coins and won!`);
   delete state[room];
 }
 

@@ -55,9 +55,8 @@ function Arena() {
       console.log(JSON.parse(data));
       setGameState(JSON.parse(data));
     });
-    socket.on("gameOver", (data) => {
-      const gameOver = JSON.parse(data);
-      alert(gameOver.winner + " has won the game!!!");
+    socket.on("gameOver", (message) => {
+      alert(message);
       goToMainMenu();
     });
     socket.on("playPowerupSound", () => {
@@ -118,6 +117,7 @@ function Arena() {
   const ghosts = [];
   const slows = [];
   const bombs = [];
+  const explosions = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -132,26 +132,33 @@ function Arena() {
       }
       players.push(
         <div
-          key={username}
-          className={`player avatar ${value.powerup} ${
-            value.isStunned ? "stunnedPlayer" : ""
-          }`}
+          className="playerContainer"
           style={{
-            ...AVATARS[value.equippedSkin].style,
             top: value.pos.y + "%",
             left: value.pos.x + "%",
-            transform: "rotate(" + rotateDeg + "deg)",
           }}
         >
+          <p className="playerName">{username}</p>
           <div
-            className="avatarMouth"
-            style={
-              gameState &&
-              Object.values(ARENA_COLORS).find(
-                (x) => x.name === gameState.arenaColor
-              ).style
-            }
-          />
+            key={username}
+            className={`avatar ${value.powerup} ${
+              value.isStunned ? "stunnedPlayer" : ""
+            }`}
+            style={{
+              ...AVATARS[value.equippedSkin].style,
+              transform: "rotate(" + rotateDeg + "deg)",
+            }}
+          >
+            <div
+              className="avatarMouth"
+              style={
+                gameState &&
+                Object.values(ARENA_COLORS).find(
+                  (x) => x.name === gameState.arenaColor
+                ).style
+              }
+            />
+          </div>
         </div>
       );
     }
@@ -232,6 +239,20 @@ function Arena() {
         </div>
       );
     });
+    gameState.explosions.forEach((explosion, idx) => {
+      explosions.push(
+        <div
+          className="explosion"
+          key={"explosion" + idx}
+          style={{
+            top: explosion.pos.y + "%",
+            left: explosion.pos.x + "%",
+            width: explosion.size + "%",
+            height: explosion.size + "%",
+          }}
+        ></div>
+      );
+    });
   }
 
   return (
@@ -252,6 +273,7 @@ function Arena() {
         {ghosts}
         {slows}
         {bombs}
+        {explosions}
       </div>
       <div className="leaderboard">
         <div className="leaderboardTitle">Leaderboard</div>

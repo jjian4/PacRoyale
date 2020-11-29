@@ -1,6 +1,6 @@
 const { v4: uuid } = require("uuid");
 
-const WIN_AMOUNT = 100;
+const FIRST_TO_100_WIN_AMOUNT = 100;
 
 const PLAYER_SIZE = 4;
 const POWERUP_SIZE = 3;
@@ -13,12 +13,17 @@ const SPEED_TIMEOUT = 3000;
 const EAT_TIMEOUT = 5000;
 const SHOOT_TIMEOUT = 5000;
 const STUN_TIMEOUT = 3000;
-const SLOW_TIMEOUT = 3000;
 
-const SHOT_VELOCITY = 2.5;
+const SHOT_VELOCITY = 3.5;
 const GHOST_VELOCITY = 1.5;
 
-function initLobby(username, arenaColor, selectedPowerups, selectedWeaknesses) {
+function initLobby(
+  username,
+  arenaColor,
+  selectedPowerups,
+  selectedWeaknesses,
+  selectedGameMode
+) {
   const isSlowSelected = selectedWeaknesses.find((x) => x === "Slow") != null;
   const isGhostSelected = selectedWeaknesses.find((x) => x === "Ghost") != null;
   const isBombSelected = selectedWeaknesses.find((x) => x === "Bomb") != null;
@@ -31,6 +36,7 @@ function initLobby(username, arenaColor, selectedPowerups, selectedWeaknesses) {
     shots: {},
     ghosts: {},
     bombs: {},
+    explosions: {},
     slows: {},
     isSlowSelected,
     isGhostSelected,
@@ -38,6 +44,7 @@ function initLobby(username, arenaColor, selectedPowerups, selectedWeaknesses) {
     started: false,
     arenaColor,
     selectedPowerups,
+    selectedGameMode,
     isStunned: false,
   };
 }
@@ -128,7 +135,7 @@ function gameLoop(state, client) {
       ) {
         delete state.foods[key];
         player.score += 1;
-        if (player.score >= WIN_AMOUNT) {
+        if (player.score >= FIRST_TO_100_WIN_AMOUNT) {
           winner = true;
         }
       }
@@ -233,6 +240,26 @@ function gameLoop(state, client) {
           ghost.pos.x,
           ghost.pos.y,
           GHOST_SIZE
+        )
+      ) {
+        state.players[username].isStunned = true;
+        setTimeout(() => {
+          if (state.players[username]) {
+            state.players[username].isStunned = false;
+          }
+        }, STUN_TIMEOUT);
+      }
+    }
+    for (let [key, explosion] of Object.entries(state.explosions)) {
+      if (
+        !state.players[username].isStunned &&
+        isColliding(
+          playerX,
+          playerY,
+          PLAYER_SIZE,
+          explosion.pos.x,
+          explosion.pos.y,
+          explosion.size
         )
       ) {
         state.players[username].isStunned = true;
@@ -376,8 +403,18 @@ function updatePlayerVelocity(state, username, keyCode) {
             y: state.players[username].pos.y + PLAYER_SIZE / 2 - SHOT_SIZE / 2,
           },
           vel: {
-            x: state.players[username].vel.x * SHOT_VELOCITY,
-            y: state.players[username].vel.y * SHOT_VELOCITY,
+            x:
+              state.players[username].vel.x < 0
+                ? -SHOT_VELOCITY
+                : state.players[username].vel.x > 0
+                ? SHOT_VELOCITY
+                : 0,
+            y:
+              state.players[username].vel.y < 0
+                ? -SHOT_VELOCITY
+                : state.players[username].vel.y > 0
+                ? SHOT_VELOCITY
+                : 0,
           },
           owner: username,
         };
@@ -470,11 +507,35 @@ function spawnBombs(state) {
       if (state.bombs[bombId]) {
         state.bombs[bombId].percentage += 1;
         if (state.bombs[bombId].percentage > 100) {
+          spawnExplosion(
+            state,
+            state.bombs[bombId].pos.x,
+            state.bombs[bombId].pos.y
+          );
           clearInterval(bombPercentInterval);
           delete state.bombs[bombId];
         }
       }
     }, 30);
+  }
+}
+
+function spawnExplosion(state, bombX, bombY) {
+  if (state.explosions) {
+    const explosionId = uuid();
+    const explosionSize = Math.floor(Math.random() * 10 + 10);
+    state.explosions[explosionId] = {
+      pos: {
+        x: bombX + BOMB_SIZE / 2 - explosionSize / 2,
+        y: bombY + BOMB_SIZE / 2 - explosionSize / 2,
+      },
+      size: explosionSize,
+    };
+    setTimeout(() => {
+      if (state.explosions[explosionId]) {
+        delete state.explosions[explosionId];
+      }
+    }, 2000);
   }
 }
 
