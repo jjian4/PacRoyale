@@ -1,10 +1,11 @@
-.Arena-mobile {
+.Arena-vertical {
   flex-direction: column;
   align-items: center;
-  .arenaBox {
-    height: 100vw !important;
-    width: 100vw !important;
-  }
+}
+
+.arenaBox-mobile {
+  height: 100vw !important;
+  width: 100vw !important;
 }
 
 .Arena {
@@ -145,19 +146,21 @@
   }
   .leaderboard {
     text-align: center;
-    min-width: 200px;
-    max-width: 400px;
-    padding: 20px 10px;
+    min-width: 250px;
+    margin: 20px 10px;
+    padding: 10px 5px;
+    // border: 1px solid black;
     .leaderboardTitle {
       font-weight: bold;
       font-size: 20px;
       text-decoration: underline;
+      padding-bottom: 5px;
     }
     .playerInfo {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 5px 0;
+      padding: 10px 20px;
 
       .playerUsernameAvatar {
         display: flex;
@@ -170,25 +173,6 @@
           margin-right: 5px;
         }
         padding-right: 10px;
-      }
-
-      // TODO: remove if we dont end up using health bar
-      .healthBar {
-        display: inline-block;
-        position: relative;
-        border: 1px solid black;
-        width: 100%;
-        height: 20px;
-      }
-      .innerHealthBar {
-        display: inline-block;
-        position: absolute;
-        left: 0;
-        top: 0;
-        background-color: lightseagreen;
-        border-right: none;
-        height: 18px;
-        // Width is calculated in Arena.js
       }
     }
   }

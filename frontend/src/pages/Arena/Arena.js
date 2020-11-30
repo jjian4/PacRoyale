@@ -34,7 +34,11 @@ function Arena() {
   );
 
   const [gameState, setGameState] = useState(null);
+  // Used for setting arena box size
   const [isMobile, setIsMobile] = useState(false);
+  // Used for moving leaderboard
+  const [isAlmostMobile, setisAlmostMobile] = useState(false);
+
 
   // For some reaosn, audio can't play on safari
   const isSafari = window.safari !== undefined;
@@ -87,6 +91,11 @@ function Arena() {
   };
 
   const resizeArena = () => {
+    if (window.innerWidth <= window.innerHeight + 200) {
+      setisAlmostMobile(true);
+    } else {
+      setisAlmostMobile(false);
+    }
     if (window.innerWidth <= window.innerHeight) {
       setIsMobile(true);
     } else {
@@ -255,9 +264,9 @@ function Arena() {
   }
 
   return (
-    <div className={`Arena ${isMobile ? "Arena-mobile" : ""}`}>
+    <div className={`Arena ${isAlmostMobile ? "Arena-vertical" : ""}`}>
       <div
-        className="arenaBox"
+        className={`arenaBox ${isMobile ? 'arenaBox-mobile' : ''}`}
         style={
           gameState &&
           Object.values(ARENA_COLORS).find(
@@ -274,38 +283,27 @@ function Arena() {
         {bombs}
         {explosions}
       </div>
-      <div className="leaderboard">
+      <div className="leaderboard" style={{ width: isAlmostMobile ? '90%' : 'auto' }}>
         <div className="leaderboardTitle">Leaderboard</div>
-        {gameState &&
-          Object.keys(gameState.players).map((username) => (
-            <div className="playerInfo">
-              <div className="playerUsernameAvatar">
-                <div
-                  className="avatar"
-                  style={
-                    AVATARS[gameState.players[username].equippedSkin].style
-                  }
-                >
-                  <div className="avatarMouth" />
-                </div>
-                {username}:
+        <div className={`${isAlmostMobile ? 'row' : ''}`}>
+          {gameState &&
+            Object.keys(gameState.players).map((username) => (
+              <div className={`playerInfo ${isAlmostMobile ? 'col-sm-4 col-6' : ''}`}>
+                <div className="playerUsernameAvatar">
+                  <div
+                    className="avatar"
+                    style={
+                      AVATARS[gameState.players[username].equippedSkin].style
+                    }
+                  >
+                    <div className="avatarMouth" />
+                  </div>
+                  {username}:
               </div>
-              <div>{gameState.players[username].score}</div>
-
-              {/* <div>
-                {username} ({gameState.players[username].score}coins)
+                <div>{gameState.players[username].score}</div>
               </div>
-              <div className="healthBar">
-                <div
-                  className="innerHealthBar"
-                  style={{
-                    width: `calc(100% * ${gameState.players[username].score * 0.01
-                      })`,
-                  }}
-                />
-              </div> */}
-            </div>
-          ))}
+            ))}
+        </div>
       </div>
 
       <div className="bottomRight">
