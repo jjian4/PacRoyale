@@ -1,7 +1,7 @@
 const { v4: uuid } = require("uuid");
 const { GAME_MODES } = require("./constants");
 
-const FIRST_TO_100_WIN_AMOUNT = 3;
+const FIRST_TO_100_WIN_AMOUNT = 100;
 
 const PLAYER_SIZE = 4;
 const POWERUP_SIZE = 3;

@@ -127,6 +127,7 @@ function Arena() {
   const slows = [];
   const bombs = [];
   const explosions = [];
+  const sortedPlayerScores = []
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -261,7 +262,16 @@ function Arena() {
         ></div>
       );
     });
+
+
+    Object.keys(gameState.players).forEach(username => {
+      sortedPlayerScores.push([gameState.players[username].score, username]);
+    })
+    sortedPlayerScores.sort();
+    sortedPlayerScores.reverse();
   }
+
+
 
   return (
     <div className={`Arena ${isAlmostMobile ? "Arena-vertical" : ""}`}>
@@ -287,20 +297,20 @@ function Arena() {
         <div className="leaderboardTitle">Leaderboard</div>
         <div className={`${isAlmostMobile ? 'row' : ''}`}>
           {gameState &&
-            Object.keys(gameState.players).map((username) => (
+            sortedPlayerScores.map((scoreAndUsername) => (
               <div className={`playerInfo ${isAlmostMobile ? 'col-sm-4 col-6' : ''}`}>
                 <div className="playerUsernameAvatar">
                   <div
                     className="avatar"
                     style={
-                      AVATARS[gameState.players[username].equippedSkin].style
+                      AVATARS[gameState.players[scoreAndUsername[1]].equippedSkin].style
                     }
                   >
                     <div className="avatarMouth" />
                   </div>
-                  {username}:
+                  {scoreAndUsername[1]}:
               </div>
-                <div>{gameState.players[username].score}</div>
+                <div>{scoreAndUsername[0]}</div>
               </div>
             ))}
         </div>
