@@ -65,7 +65,7 @@ function addPlayerToLobby(state, id, username, equippedSkin, isHost) {
       y: 0,
     },
     velocity: PLAYER_VELOCITY,
-    score: state.selectedGameMode === GAME_MODES.SURVIVAL ? 20 : 0,
+    score: state.selectedGameMode === GAME_MODES.SURVIVAL ? 15 : 0,
     isHost,
     powerup: "",
     equippedSkin,
@@ -222,6 +222,9 @@ function gameLoop(state, client) {
         ) {
           player.score++;
           state.players[otherUsername].score--;
+          if (state.selectedGameMode === GAME_MODES.SURVIVAL) {
+            state.players[username].score -= 2;
+          }
           state.players[otherUsername].isStunned = true;
           setTimeout(() => {
             if (state.players[otherUsername]) {
@@ -248,6 +251,9 @@ function gameLoop(state, client) {
         delete state.shots[key];
         state.players[shot.owner].score++;
         player.score--;
+        if (state.selectedGameMode === GAME_MODES.SURVIVAL) {
+          player.score -= 2;
+        }
         state.players[username].isStunned = true;
         setTimeout(() => {
           if (state.players[username]) {
@@ -272,6 +278,10 @@ function gameLoop(state, client) {
         if (player.powerup === "Eat") {
           delete state.ghosts[key];
         } else {
+          state.players[username].score--;
+          if (state.selectedGameMode === GAME_MODES.SURVIVAL) {
+            player.score -= 2;
+          }
           state.players[username].isStunned = true;
           setTimeout(() => {
             if (state.players[username]) {
@@ -293,6 +303,10 @@ function gameLoop(state, client) {
           explosion.size
         )
       ) {
+        state.players[username].score--;
+        if (state.selectedGameMode === GAME_MODES.SURVIVAL) {
+          state.players[username].score -= 2;
+        }
         state.players[username].isStunned = true;
         setTimeout(() => {
           if (state.players[username]) {
@@ -608,7 +622,7 @@ function getNoCoinPlayers(state) {
   let playersToRemove = [];
   for (const username of Object.keys(state.players)) {
     const player = state.players[username];
-    if (player.score === 0) {
+    if (player.score <= 0) {
       playersToRemove.push(username);
     }
   }

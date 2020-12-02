@@ -101,6 +101,9 @@ function App() {
       <AppContext.Provider
         value={{
           goToArena: () => {
+            // The arena has different music
+            music.pause();
+            music.currentTime = 0;
             setCurrentPage(PAGES.ARENA);
           },
           goToLobby: () => {

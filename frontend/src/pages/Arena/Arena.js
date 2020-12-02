@@ -8,7 +8,7 @@ import {
   faGhost,
   faBomb,
 } from "@fortawesome/free-solid-svg-icons";
-import { POWERUPS, ARENA_COLORS } from "../../utils/constants";
+import { POWERUPS, ARENA_COLORS, GAME_MODES } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
 import musicMp3 from "../../sounds/arena-music.mp3";
@@ -63,7 +63,7 @@ function Arena() {
     });
     socket.on("gameOver", (message) => {
       if (!receivedGameOver) {
-        setReceivedGameOver(true)
+        setReceivedGameOver(true);
         alert(message);
         goToMainMenu();
       }
@@ -275,8 +275,7 @@ function Arena() {
     Object.keys(gameState.players).forEach((username) => {
       sortedPlayerScores.push([gameState.players[username].score, username]);
     });
-    sortedPlayerScores.sort();
-    sortedPlayerScores.reverse();
+    sortedPlayerScores.sort((a, b) => b[0] - a[0]);
   }
 
   return (
@@ -329,6 +328,9 @@ function Arena() {
               </div>
             ))}
         </div>
+        {gameState && gameState.eliminationTimer != null && (
+          <div>Next Elimination: {gameState.eliminationTimer}</div>
+        )}
       </div>
 
       <div className="bottomRight">

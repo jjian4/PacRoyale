@@ -4,7 +4,7 @@ const {
   MAX_PLAYERS,
   FRAME_RATE,
   GAME_MODES,
-  ELIMINATION_RATE,
+  ELIMINATION_TIME,
 } = require("./constants");
 const {
   initLobby,
@@ -217,9 +217,15 @@ function startGameInterval(roomName, client) {
       : state[roomName].selectedSpawnRate === "medium"
       ? 1000
       : 500;
-  const spawnFoodIntervalId = setInterval(() => {
-    spawnFoods(state[roomName]);
-  }, spawnRate);
+
+  // Don't spawn food (coins) in Survival mode
+  const spawnFoodIntervalId = setInterval(
+    () => {
+      spawnFoods(state[roomName]);
+    },
+    state[roomName].selectedGameMode === GAME_MODES.SURVIVAL ? 10000 : spawnRate
+  );
+
   let spawnPowerupsIntervalId = null;
   let spawnGhostsIntervalId = null;
   let spawnSlowsIntervalId = null;
@@ -251,17 +257,22 @@ function startGameInterval(roomName, client) {
 
   // Eliminate lowest player (Game mode: Elimination)
   if (state[roomName].selectedGameMode === GAME_MODES.ELIMINATION) {
+    state[roomName].eliminationTimer = ELIMINATION_TIME;
     eliminateLowestPlayerIntervalId = setInterval(() => {
-      const eliminatedPlayer = eliminateLowestPlayer(state[roomName]);
-      if (state[roomName].players[eliminatedPlayer]) {
-        emitElimination(
-          state,
-          roomName,
-          eliminatedPlayer,
-          `You (${eliminatedPlayer}) failed to collect enough coins and were eliminated from the arena`
-        );
+      state[roomName].eliminationTimer--;
+      if (state[roomName].eliminationTimer === 0) {
+        state[roomName].eliminationTimer = ELIMINATION_TIME;
+        const eliminatedPlayer = eliminateLowestPlayer(state[roomName]);
+        if (state[roomName].players[eliminatedPlayer]) {
+          emitElimination(
+            state,
+            roomName,
+            eliminatedPlayer,
+            `You (${eliminatedPlayer}) failed to collect enough coins and were eliminated from the arena`
+          );
+        }
       }
-    }, ELIMINATION_RATE);
+    }, 1000);
   }
 
   // Eliminate players with 0 coins (Game mode: Survival)

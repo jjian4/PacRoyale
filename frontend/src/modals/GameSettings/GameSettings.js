@@ -87,7 +87,7 @@ function GameSettings(props) {
               checked={selectedSpawnRate === "low"}
               onChange={(e) => setSelectedSpawnRate(e.target.value)}
             />
-            <span for="low">Low</span>
+            <span htmlFor="low">Low</span>
           </label>
           <label>
             <input
@@ -96,7 +96,7 @@ function GameSettings(props) {
               checked={selectedSpawnRate === "medium"}
               onChange={(e) => setSelectedSpawnRate(e.target.value)}
             />
-            <span for="medium">Medium</span>
+            <span htmlFor="medium">Medium</span>
           </label>
           <label>
             <input
@@ -105,7 +105,7 @@ function GameSettings(props) {
               checked={selectedSpawnRate === "high"}
               onChange={(e) => setSelectedSpawnRate(e.target.value)}
             />
-            <span for="high">High</span>
+            <span htmlFor="high">High</span>
           </label>
         </div>
         <div className="subtitle">Power-ups</div>

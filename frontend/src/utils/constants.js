@@ -147,7 +147,7 @@ export const GAME_MODES = {
   SURVIVAL: {
     name: "Survival",
     description:
-      "Players are eliminated when they reach 0 coins. Last player standing wins.",
+      "Players are eliminated when they reach 0 coins. Weaknesses are triple as effective. Last player standing wins.",
   },
 };
 
