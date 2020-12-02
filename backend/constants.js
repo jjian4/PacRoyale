@@ -13,6 +13,7 @@ const GAME_MODES = {
 
 const ELIMINATION_RATE = 30000;
 
+
 module.exports = {
   MAX_PLAYERS,
   FRAME_RATE,
