@@ -65,7 +65,7 @@ function addPlayerToLobby(state, id, username, equippedSkin, isHost) {
       y: 0,
     },
     velocity: PLAYER_VELOCITY,
-    score: 0,
+    score: state.selectedGameMode === GAME_MODES.SURVIVAL ? 20 : 0,
     isHost,
     powerup: "",
     equippedSkin,
@@ -132,11 +132,6 @@ function gameLoop(state, client) {
       return username;
     }
 
-    // Remove player from arena if they reach 0 (Game mode: Survival)
-    if (state.selectedGameMode === GAME_MODES.SURVIVAL && player.score <= 0) {
-      // TODO: REMOVE SINGLE PLAYER FROM ARENA
-    }
-
     if (!player.isStunned) {
       player.pos.x += player.vel.x;
       // Horizontal border collision
@@ -166,6 +161,7 @@ function gameLoop(state, client) {
         isColliding(playerX, playerY, PLAYER_SIZE, food.x, food.y, FOOD_SIZE)
       ) {
         delete state.foods[key];
+        // player.score += 1;
         player.score += 1;
       }
     }
@@ -588,6 +584,7 @@ function spawnExplosion(state, bombX, bombY) {
   }
 }
 
+// Game mode: Elimination
 function eliminateLowestPlayer(state) {
   let minScore = Number.MAX_SAFE_INTEGER;
   let minPlayers = [];
@@ -600,10 +597,22 @@ function eliminateLowestPlayer(state) {
     } else if (player.score === minScore) {
       minPlayers.push(username);
     }
-
-    // Randomly eliminate a player with the lowest current score
-    return minPlayers[Math.floor(Math.random() * minPlayers.length)];
   }
+
+  // Randomly eliminate a player with the lowest current score
+  return minPlayers[Math.floor(Math.random() * minPlayers.length)];
+}
+
+// Game mode: Survival
+function getNoCoinPlayers(state) {
+  let playersToRemove = [];
+  for (const username of Object.keys(state.players)) {
+    const player = state.players[username];
+    if (player.score === 0) {
+      playersToRemove.push(username);
+    }
+  }
+  return playersToRemove;
 }
 
 module.exports = {
@@ -617,4 +626,5 @@ module.exports = {
   spawnSlows,
   spawnBombs,
   eliminateLowestPlayer,
+  getNoCoinPlayers,
 };

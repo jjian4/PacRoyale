@@ -17,6 +17,7 @@ const {
   spawnSlows,
   spawnBombs,
   eliminateLowestPlayer,
+  getNoCoinPlayers,
 } = require("./game");
 
 const state = {};
@@ -224,6 +225,8 @@ function startGameInterval(roomName, client) {
   let spawnSlowsIntervalId = null;
   let spawnBombsIntervalId = null;
   let eliminateLowestPlayerIntervalId = null;
+  let eliminateNoCoinPlayersIntervalId = null;
+
   if (state[roomName].selectedPowerups.length !== 0) {
     spawnPowerupsIntervalId = setInterval(() => {
       spawnPowerups(state[roomName]);
@@ -246,16 +249,36 @@ function startGameInterval(roomName, client) {
     }, spawnRate * 1.5);
   }
 
+  // Eliminate lowest player (Game mode: Elimination)
   if (state[roomName].selectedGameMode === GAME_MODES.ELIMINATION) {
     eliminateLowestPlayerIntervalId = setInterval(() => {
       const eliminatedPlayer = eliminateLowestPlayer(state[roomName]);
       if (state[roomName].players[eliminatedPlayer]) {
         emitElimination(
-          state[roomName].players[eliminatedPlayer].id,
-          "You failed to collect enough coins and were eliminated from the arena"
+          state,
+          roomName,
+          eliminatedPlayer,
+          `You (${eliminatedPlayer}) failed to collect enough coins and were eliminated from the arena`
         );
       }
     }, ELIMINATION_RATE);
+  }
+
+  // Eliminate players with 0 coins (Game mode: Survival)
+  if (state[roomName].selectedGameMode === GAME_MODES.SURVIVAL) {
+    eliminateNoCoinPlayersIntervalId = setInterval(() => {
+      const playersToRemove = getNoCoinPlayers(state[roomName]);
+      for (const username of playersToRemove) {
+        if (state[roomName].players[username]) {
+          emitElimination(
+            state,
+            roomName,
+            username,
+            `You (${username}) reached 0 coins and were eliminated from the arena.`
+          );
+        }
+      }
+    }, 1000);
   }
 
   const movementIntervalId = setInterval(() => {
@@ -286,6 +309,7 @@ function startGameInterval(roomName, client) {
       clearInterval(spawnSlowsIntervalId);
       clearInterval(spawnBombsIntervalId);
       clearInterval(eliminateLowestPlayerIntervalId);
+      clearInterval(eliminateNoCoinPlayersIntervalId);
     }
   }, 1000 / FRAME_RATE);
   state[roomName].clearIntervals = () => {
@@ -296,6 +320,7 @@ function startGameInterval(roomName, client) {
     clearInterval(spawnSlowsIntervalId);
     clearInterval(spawnBombsIntervalId);
     clearInterval(eliminateLowestPlayerIntervalId);
+    clearInterval(eliminateNoCoinPlayersIntervalId);
   };
 }
 
@@ -321,6 +346,10 @@ function emitGameOver(room, message) {
   delete state[room];
 }
 
-function emitElimination(playerId, message) {}
+function emitElimination(state, roomName, playerUsername, message) {
+  const playerId = state[roomName].players[playerUsername].id;
+  delete state[roomName].players[playerUsername];
+  io.to(playerId).emit("gameOver", message);
+}
 
 io.listen(3001);

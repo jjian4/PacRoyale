@@ -33,6 +33,9 @@ function Arena() {
     AppContext
   );
 
+  // Otherwise, alerts might stack
+  const [receivedGameOver, setReceivedGameOver] = useState(false);
+
   const [gameState, setGameState] = useState(null);
   // Used for setting arena box size
   const [isMobile, setIsMobile] = useState(false);
@@ -59,8 +62,11 @@ function Arena() {
       setGameState(JSON.parse(data));
     });
     socket.on("gameOver", (message) => {
-      alert(message);
-      goToMainMenu();
+      if (!receivedGameOver) {
+        setReceivedGameOver(true)
+        alert(message);
+        goToMainMenu();
+      }
     });
     socket.on("playPowerupSound", () => {
       if (!isSafari && isMusicOn) {
