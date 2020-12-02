@@ -30,6 +30,8 @@ function GameSettings(props) {
     GAME_MODES.FIRST_TO_100.name
   );
 
+  const [selectedSpawnRate, setSelectedSpawnRate] = useState("medium");
+
   useEffect(() => {
     socket.on("lobbyCreated", (data) => {
       goToLobby();
@@ -47,7 +49,8 @@ function GameSettings(props) {
       selectedArenaColor,
       selectedPowerups,
       selectedWeaknesses,
-      selectedGameMode
+      selectedGameMode,
+      selectedSpawnRate
     );
   };
 
@@ -75,7 +78,36 @@ function GameSettings(props) {
             </div>
           ))}
         </div>
-
+        <div className="subtitle">Spawn Rate</div>
+        <div className="spawnRates">
+          <label>
+            <input
+              type="radio"
+              value={"low"}
+              checked={selectedSpawnRate === "low"}
+              onChange={(e) => setSelectedSpawnRate(e.target.value)}
+            />
+            <span for="low">Low</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              value={"medium"}
+              checked={selectedSpawnRate === "medium"}
+              onChange={(e) => setSelectedSpawnRate(e.target.value)}
+            />
+            <span for="medium">Medium</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              value={"high"}
+              checked={selectedSpawnRate === "high"}
+              onChange={(e) => setSelectedSpawnRate(e.target.value)}
+            />
+            <span for="high">High</span>
+          </label>
+        </div>
         <div className="subtitle">Power-ups</div>
 
         <div className="powerupChoices">

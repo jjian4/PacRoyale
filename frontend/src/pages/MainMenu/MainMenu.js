@@ -71,7 +71,14 @@ function MainMenu() {
       >
         {isUserLoaded && (
           <>
-            <div className="profileButton avatar" style={AVATARS[user.equippedSkin].style}>
+            <div
+              className="profileButton avatar"
+              style={
+                AVATARS[user.equippedSkin]
+                  ? AVATARS[user.equippedSkin].style
+                  : null
+              }
+            >
               <div className="avatarMouth" />
             </div>
             <div className="profileButtonLabel">{user.username}</div>
@@ -106,11 +113,17 @@ function MainMenu() {
         </div>
       </div>
 
-      <Modal isOpen={showProfileModal} onClose={closeModal} title={user.username}>
-        <Profile onChangeAvatar={() => {
-          closeModal();
-          setShowStoreModal(true);
-        }} />
+      <Modal
+        isOpen={showProfileModal}
+        onClose={closeModal}
+        title={user.username}
+      >
+        <Profile
+          onChangeAvatar={() => {
+            closeModal();
+            setShowStoreModal(true);
+          }}
+        />
       </Modal>
       <Modal isOpen={showStoreModal} onClose={closeModal} title="Store">
         <Store />

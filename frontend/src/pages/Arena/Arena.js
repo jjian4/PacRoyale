@@ -39,7 +39,6 @@ function Arena() {
   // Used for moving leaderboard
   const [isAlmostMobile, setisAlmostMobile] = useState(false);
 
-
   // For some reaosn, audio can't play on safari
   const isSafari = window.safari !== undefined;
 
@@ -127,7 +126,7 @@ function Arena() {
   const slows = [];
   const bombs = [];
   const explosions = [];
-  const sortedPlayerScores = []
+  const sortedPlayerScores = [];
   if (gameState) {
     for (const [username, value] of Object.entries(gameState.players)) {
       let rotateDeg;
@@ -140,6 +139,7 @@ function Arena() {
       } else if (value.vel.y < 0) {
         rotateDeg = 270;
       }
+      let marginLeft = -4 * (username.length - 2) + 8;
       players.push(
         <div
           className="playerContainer"
@@ -148,11 +148,14 @@ function Arena() {
             left: value.pos.x + "%",
           }}
         >
-          <p className="playerName">{username}</p>
+          <p className="playerName" style={{ marginLeft: marginLeft + "px" }}>
+            {username}
+          </p>
           <div
             key={username}
-            className={`avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ""
-              }`}
+            className={`avatar ${value.powerup} ${
+              value.isStunned ? "stunnedPlayer" : ""
+            }`}
             style={{
               ...AVATARS[value.equippedSkin].style,
               transform: "rotate(" + rotateDeg + "deg)",
@@ -263,20 +266,17 @@ function Arena() {
       );
     });
 
-
-    Object.keys(gameState.players).forEach(username => {
+    Object.keys(gameState.players).forEach((username) => {
       sortedPlayerScores.push([gameState.players[username].score, username]);
-    })
+    });
     sortedPlayerScores.sort();
     sortedPlayerScores.reverse();
   }
 
-
-
   return (
     <div className={`Arena ${isAlmostMobile ? "Arena-vertical" : ""}`}>
       <div
-        className={`arenaBox ${isMobile ? 'arenaBox-mobile' : ''}`}
+        className={`arenaBox ${isMobile ? "arenaBox-mobile" : ""}`}
         style={
           gameState &&
           Object.values(ARENA_COLORS).find(
@@ -293,23 +293,32 @@ function Arena() {
         {bombs}
         {explosions}
       </div>
-      <div className="leaderboard" style={{ width: isAlmostMobile ? '90%' : 'auto' }}>
+      <div
+        className="leaderboard"
+        style={{ width: isAlmostMobile ? "90%" : "auto" }}
+      >
         <div className="leaderboardTitle">Leaderboard</div>
-        <div className={`${isAlmostMobile ? 'row' : ''}`}>
+        <div className={`${isAlmostMobile ? "row" : ""}`}>
           {gameState &&
             sortedPlayerScores.map((scoreAndUsername) => (
-              <div className={`playerInfo ${isAlmostMobile ? 'col-sm-4 col-6' : ''}`}>
+              <div
+                className={`playerInfo ${
+                  isAlmostMobile ? "col-sm-4 col-6" : ""
+                }`}
+              >
                 <div className="playerUsernameAvatar">
                   <div
                     className="avatar"
                     style={
-                      AVATARS[gameState.players[scoreAndUsername[1]].equippedSkin].style
+                      AVATARS[
+                        gameState.players[scoreAndUsername[1]].equippedSkin
+                      ].style
                     }
                   >
                     <div className="avatarMouth" />
                   </div>
                   {scoreAndUsername[1]}:
-              </div>
+                </div>
                 <div>{scoreAndUsername[0]}</div>
               </div>
             ))}

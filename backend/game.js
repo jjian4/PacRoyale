@@ -10,11 +10,14 @@ const SHOT_SIZE = 1;
 const GHOST_SIZE = 4;
 const BOMB_SIZE = 3;
 
-const SPEED_TIMEOUT = 3000;
-const EAT_TIMEOUT = 5000;
-const SHOOT_TIMEOUT = 5000;
+const SPEED_TIMEOUT = 5000;
+const EAT_TIMEOUT = 3000;
+const SHOOT_TIMEOUT = 4000;
 const STUN_TIMEOUT = 3000;
 
+const PLAYER_VELOCITY = 1.25;
+const SLOW_VELOCITY = 0.75;
+const FAST_VELOCITY = 1.75;
 const SHOT_VELOCITY = 3.5;
 const GHOST_VELOCITY = 1.5;
 
@@ -23,7 +26,8 @@ function initLobby(
   arenaColor,
   selectedPowerups,
   selectedWeaknesses,
-  selectedGameMode
+  selectedGameMode,
+  selectedSpawnRate
 ) {
   const isSlowSelected = selectedWeaknesses.find((x) => x === "Slow") != null;
   const isGhostSelected = selectedWeaknesses.find((x) => x === "Ghost") != null;
@@ -46,11 +50,11 @@ function initLobby(
     arenaColor,
     selectedPowerups,
     selectedGameMode,
-    isStunned: false,
+    selectedSpawnRate,
   };
 }
 
-function addPlayerToLobby(state, username, equippedSkin, isHost) {
+function addPlayerToLobby(state, id, username, equippedSkin, isHost) {
   state.players[username] = {
     pos: {
       x: Math.floor(Math.random() * (100 - PLAYER_SIZE)),
@@ -60,11 +64,12 @@ function addPlayerToLobby(state, username, equippedSkin, isHost) {
       x: 0,
       y: 0,
     },
-    velocity: 1,
+    velocity: PLAYER_VELOCITY,
     score: 0,
     isHost,
     powerup: "",
     equippedSkin,
+    id,
   };
 }
 
@@ -109,8 +114,10 @@ function gameLoop(state, client) {
 
     // CHECK FOR WINNER (Game modes: Elimination & Survival)
     // Note: Checking inside the loop to avoid the unlikely possibility of having no/multiple winners
-    if (state.selectedGameMode === GAME_MODES.ELIMINATION || state.selectedGameMode === GAME_MODES.SURVIVAL) {
-      console.log(state.players.length)
+    if (
+      state.selectedGameMode === GAME_MODES.ELIMINATION ||
+      state.selectedGameMode === GAME_MODES.SURVIVAL
+    ) {
       if (Object.keys(state.players).length === 1) {
         return username;
       }
@@ -118,7 +125,10 @@ function gameLoop(state, client) {
 
     // CHECK FOR WINNER (Game mode: First to 100)
     // Note: Not checking in inner food collision loop to ensure the UI updates before winner is declaring
-    if (state.selectedGameMode === GAME_MODES.FIRST_TO_100 && player.score >= FIRST_TO_100_WIN_AMOUNT) {
+    if (
+      state.selectedGameMode === GAME_MODES.FIRST_TO_100 &&
+      player.score >= FIRST_TO_100_WIN_AMOUNT
+    ) {
       return username;
     }
 
@@ -214,6 +224,8 @@ function gameLoop(state, client) {
             PLAYER_SIZE
           )
         ) {
+          player.score++;
+          state.players[otherUsername].score--;
           state.players[otherUsername].isStunned = true;
           setTimeout(() => {
             if (state.players[otherUsername]) {
@@ -238,6 +250,8 @@ function gameLoop(state, client) {
         )
       ) {
         delete state.shots[key];
+        state.players[shot.owner].score++;
+        player.score--;
         state.players[username].isStunned = true;
         setTimeout(() => {
           if (state.players[username]) {
@@ -259,12 +273,16 @@ function gameLoop(state, client) {
           GHOST_SIZE
         )
       ) {
-        state.players[username].isStunned = true;
-        setTimeout(() => {
-          if (state.players[username]) {
-            state.players[username].isStunned = false;
-          }
-        }, STUN_TIMEOUT);
+        if (player.powerup === "Eat") {
+          delete state.ghosts[key];
+        } else {
+          state.players[username].isStunned = true;
+          setTimeout(() => {
+            if (state.players[username]) {
+              state.players[username].isStunned = false;
+            }
+          }, STUN_TIMEOUT);
+        }
       }
     }
     for (let [key, explosion] of Object.entries(state.explosions)) {
@@ -306,29 +324,43 @@ function gameLoop(state, client) {
     }
     if (isSlowed) {
       if (isFast) {
-        updateForSpeed(state.players[username], 1);
+        updateForSpeed(state.players[username], PLAYER_VELOCITY);
       } else {
-        updateForSpeed(state.players[username], 0.5);
+        updateForSpeed(state.players[username], SLOW_VELOCITY);
       }
     } else {
       if (isFast) {
-        updateForSpeed(state.players[username], 2);
+        updateForSpeed(state.players[username], FAST_VELOCITY);
       } else {
-        updateForSpeed(state.players[username], 1);
+        updateForSpeed(state.players[username], PLAYER_VELOCITY);
       }
     }
   }
 
-  for (let [key, shot] of Object.entries(state.shots)) {
+  for (let [shotKey, shot] of Object.entries(state.shots)) {
     shot.pos.x += shot.vel.x;
     shot.pos.y += shot.vel.y;
+    for (let [ghostKey, ghost] of Object.entries(state.ghosts)) {
+      if (
+        isColliding(
+          shot.pos.x,
+          shot.pos.y,
+          SHOT_SIZE,
+          ghost.pos.x,
+          ghost.pos.y,
+          GHOST_SIZE
+        )
+      ) {
+        delete state.ghosts[ghostKey];
+        delete state.shots[shotKey];
+        break;
+      }
+    }
     if (
-      shot.pos.x < 0 ||
-      shot.pos.x > 100 ||
-      shot.pos.y < 0 ||
-      shot.pos.y > 100
+      shot &&
+      (shot.pos.x < 0 || shot.pos.x > 100 || shot.pos.y < 0 || shot.pos.y > 100)
     ) {
-      delete state.shots[key];
+      delete state.shots[shotKey];
     }
   }
 
@@ -424,14 +456,14 @@ function updatePlayerVelocity(state, username, keyCode) {
               state.players[username].vel.x < 0
                 ? -SHOT_VELOCITY
                 : state.players[username].vel.x > 0
-                  ? SHOT_VELOCITY
-                  : 0,
+                ? SHOT_VELOCITY
+                : 0,
             y:
               state.players[username].vel.y < 0
                 ? -SHOT_VELOCITY
                 : state.players[username].vel.y > 0
-                  ? SHOT_VELOCITY
-                  : 0,
+                ? SHOT_VELOCITY
+                : 0,
           },
           owner: username,
         };
@@ -480,7 +512,7 @@ function spawnPowerups(state) {
   if (state.powerups) {
     var name =
       state.selectedPowerups[
-      Math.floor(Math.random() * state.selectedPowerups.length)
+        Math.floor(Math.random() * state.selectedPowerups.length)
       ];
     state.powerups[uuid()] = {
       x: Math.floor(Math.random() * (100 - FOOD_SIZE)),
@@ -552,13 +584,13 @@ function spawnExplosion(state, bombX, bombY) {
       if (state.explosions[explosionId]) {
         delete state.explosions[explosionId];
       }
-    }, 2000);
+    }, 1000);
   }
 }
 
 function eliminateLowestPlayer(state) {
   let minScore = Number.MAX_SAFE_INTEGER;
-  let minPlayers = []
+  let minPlayers = [];
 
   for (const username of Object.keys(state.players)) {
     const player = state.players[username];
@@ -584,5 +616,5 @@ module.exports = {
   spawnGhosts,
   spawnSlows,
   spawnBombs,
-  eliminateLowestPlayer
+  eliminateLowestPlayer,
 };

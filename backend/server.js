@@ -1,6 +1,11 @@
 const io = require("socket.io")();
 const { makeId } = require("./utils");
-const { MAX_PLAYERS, FRAME_RATE, GAME_MODES, ELIMINATION_RATE } = require("./constants");
+const {
+  MAX_PLAYERS,
+  FRAME_RATE,
+  GAME_MODES,
+  ELIMINATION_RATE,
+} = require("./constants");
 const {
   initLobby,
   addPlayerToLobby,
@@ -11,7 +16,7 @@ const {
   spawnGhosts,
   spawnSlows,
   spawnBombs,
-  eliminateLowestPlayer
+  eliminateLowestPlayer,
 } = require("./game");
 
 const state = {};
@@ -33,7 +38,8 @@ io.on("connection", (client) => {
     arenaColor,
     selectedPowerups,
     selectedWeaknesses,
-    selectedGameMode
+    selectedGameMode,
+    selectedSpawnRate
   ) {
     let roomName = makeId(5);
     clientRooms[client.id] = roomName;
@@ -44,11 +50,12 @@ io.on("connection", (client) => {
       arenaColor,
       selectedPowerups,
       selectedWeaknesses,
-      selectedGameMode
+      selectedGameMode,
+      selectedSpawnRate
     );
     console.log("newgame", state[roomName]);
     console.log(state);
-    addPlayerToLobby(state[roomName], username, equippedSkin, true);
+    addPlayerToLobby(state[roomName], client.id, username, equippedSkin, true);
 
     client.join(roomName);
     client.username = username;
@@ -74,7 +81,7 @@ io.on("connection", (client) => {
     client.join(roomName);
     client.username = username;
     client.isHost = false;
-    addPlayerToLobby(state[roomName], username, equippedSkin, false);
+    addPlayerToLobby(state[roomName], client.id, username, equippedSkin, false);
     broadcastRoomInfo(roomName);
     broadcastAllRoomInfo();
     client.emit("joinedLobby");
@@ -203,9 +210,15 @@ io.on("connection", (client) => {
 
 function startGameInterval(roomName, client) {
   state[roomName].started = true;
+  const spawnRate =
+    state[roomName].selectedSpawnRate === "low"
+      ? 1500
+      : state[roomName].selectedSpawnRate === "medium"
+      ? 1000
+      : 500;
   const spawnFoodIntervalId = setInterval(() => {
     spawnFoods(state[roomName]);
-  }, 500);
+  }, spawnRate);
   let spawnPowerupsIntervalId = null;
   let spawnGhostsIntervalId = null;
   let spawnSlowsIntervalId = null;
@@ -214,32 +227,35 @@ function startGameInterval(roomName, client) {
   if (state[roomName].selectedPowerups.length !== 0) {
     spawnPowerupsIntervalId = setInterval(() => {
       spawnPowerups(state[roomName]);
-    }, 1000);
+    }, spawnRate * 2);
   }
   if (state[roomName].isGhostSelected) {
     spawnGhostsIntervalId = setInterval(() => {
       spawnGhosts(state[roomName]);
-    }, 1000);
+    }, spawnRate * 1.5);
   }
   if (state[roomName].isSlowSelected) {
     const time = Math.floor(Math.random() * 3 + 1);
     spawnSlowsIntervalId = setInterval(() => {
       spawnSlows(state[roomName]);
-    }, time * 1000);
+    }, time * spawnRate * 1.5);
   }
   if (state[roomName].isBombSelected) {
     spawnBombsIntervalId = setInterval(() => {
       spawnBombs(state[roomName]);
-    }, 1000);
+    }, spawnRate * 1.5);
   }
 
   if (state[roomName].selectedGameMode === GAME_MODES.ELIMINATION) {
     eliminateLowestPlayerIntervalId = setInterval(() => {
       const eliminatedPlayer = eliminateLowestPlayer(state[roomName]);
       if (state[roomName].players[eliminatedPlayer]) {
-        emitElimination(roomName, eliminatedPlayer, 'You failed to collect enough coins and were eliminated from the arena');
+        emitElimination(
+          state[roomName].players[eliminatedPlayer].id,
+          "You failed to collect enough coins and were eliminated from the arena"
+        );
       }
-    }, ELIMINATION_RATE)
+    }, ELIMINATION_RATE);
   }
 
   const movementIntervalId = setInterval(() => {
@@ -301,14 +317,10 @@ function emitGameState(room, gameState) {
 }
 
 function emitGameOver(room, message) {
-  io.sockets
-    .in(room)
-    .emit("gameOver", message);
+  io.sockets.in(room).emit("gameOver", message);
   delete state[room];
 }
 
-function emitElimination(room, username, message) {
-  // TODO: SEND TO SPECIFIC PLAYER
-}
+function emitElimination(playerId, message) {}
 
 io.listen(3001);

@@ -21,11 +21,10 @@ export const PAGES = {
 
 export const PLAYER_STATS = {
   dateJoined: "Date Joined",
-  lastLogin: "Last Login",
   gamesPlayed: "Games Played",
-  gamesHosted: "Games Hosted",
   gamesWon: "Games Won",
   totalCoins: "Total Coins",
+  numSkins: "Number of skins",
 };
 
 export const AVATARS = {
@@ -175,23 +174,22 @@ export const ARENA_COLORS = {
   },
 };
 
-
 export const POWERUPS = {
   EAT: {
     name: "Eat",
     description:
-      "(5 sec) Collide with other players to stun them and steal a coin. Also grants ghost immunity.",
+      "(4 sec) Collide with other players to stun them and steal a coin. Also grants ghost immunity.",
     icon: faUtensils,
   },
   SPEED: {
     name: "Speed",
-    description: "(5 sec) Move twice as fact to collect more coins!",
+    description: "(3 sec) Move twice as fact to collect more coins!",
     icon: faFastForward,
   },
   SHOOT: {
     name: "Shoot",
     description:
-      "(press space) Shoot a projectile in a straight line, stunning and stealing a coin an opponent if its hits.",
+      "(5 sec) Shoot a projectile with spacebar in a straight line, stunning and stealing a coin an opponent if its hits.",
     icon: faBolt,
   },
 };

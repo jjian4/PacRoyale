@@ -28,6 +28,14 @@
         }
       }
     }
+    .spawnRates {
+      input {
+        margin-right: 5px;
+      }
+      span {
+        margin-right: 50px;
+      }
+    }
     .powerupChoices {
       display: flex;
       justify-content: space-around;
