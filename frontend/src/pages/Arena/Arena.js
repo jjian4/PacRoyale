@@ -34,9 +34,6 @@ function Arena() {
     AppContext
   );
 
-  // Otherwise, alerts might stack
-  const [receivedGameOver, setReceivedGameOver] = useState(false);
-
   const [gameState, setGameState] = useState(null);
   // Used for setting arena box size
   const [isMobile, setIsMobile] = useState(false);
@@ -62,8 +59,9 @@ function Arena() {
       console.log(JSON.parse(data));
       setGameState(JSON.parse(data));
     });
-    let recGameOver = false;
 
+    // Only allow one gameOver alert (socket.io sends multiple copies)
+    let recGameOver = false;
     socket.on("gameOver", (gameOver) => {
       if (!recGameOver) {
         recGameOver = true;
@@ -167,9 +165,8 @@ function Arena() {
           </p>
           <div
             key={username}
-            className={`avatar ${value.powerup} ${
-              value.isStunned ? "stunnedPlayer" : ""
-            }`}
+            className={`avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ""
+              }`}
             style={{
               ...AVATARS[value.equippedSkin].style,
               transform: "rotate(" + rotateDeg + "deg)",
@@ -374,9 +371,8 @@ function Arena() {
             <div className={`${isAlmostMobile ? "row" : ""}`}>
               {sortedPlayerScores.map((scoreAndUsername) => (
                 <div
-                  className={`playerInfo ${
-                    isAlmostMobile ? "col-sm-4 col-6" : ""
-                  }`}
+                  className={`playerInfo ${isAlmostMobile ? "col-sm-4 col-6" : ""
+                    }`}
                 >
                   <div className="playerUsernameAvatar">
                     <div
