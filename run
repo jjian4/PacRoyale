@@ -15,11 +15,11 @@ then
     # run frontend server
     cd frontend
     cd build
-    python3 -m http.server 80 &
+    sudo python3 -m http.server 80 &
 
     # run backend server
     cd ../../backend
-    npx node server.js
+    sudo npx node server.js
 else
     # if env variable not set, run dev servers
     # run frontend server
