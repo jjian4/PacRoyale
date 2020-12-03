@@ -1,18 +1,29 @@
 .ModalContent {
-    .modalTitle {
-        font-size: 25px;
-        font-weight: bold;
-        text-align: center;
-    }
-    .closeButton {
-        display: inline-block;
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        cursor: pointer;
-        svg {
-            font-size: 30px;
+    // padding-top: 40px;
+    .modalTop {
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 20px 0 10px 0;
+        border-bottom: 3px solid whitesmoke;
+        background-color: white;
+        
+        .modalTitle {
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
         }
+        .closeButton {
+            display: inline-block;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            svg {
+                font-size: 30px;
+            }
+        }    
     }
 }
 
