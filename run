@@ -8,8 +8,14 @@ set -Eeo pipefail
 # Print commands
 set -x
 
-if [[ -z "$DEPLOY_ENV" ]]; then
-    # run dev servers
+if $DEPLOY_ENV;
+then
+    # run production servers
+
+    # kill existing servers
+    pgrep -f python | xargs kill
+
+    # run frontend server
     cd frontend
     npm run build
     cd build
