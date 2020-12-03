@@ -341,8 +341,7 @@ function startGameInterval(roomName, client) {
         default:
           message = `Game over: ${winner} wins!`;
       }
-      emitGameOver(roomName, message);
-      state[roomName] = null;
+      emitGameOver(state, roomName, message, winner);
       clearInterval(movementIntervalId);
       clearInterval(spawnFoodIntervalId);
       clearInterval(spawnPowerupsIntervalId);
@@ -382,15 +381,33 @@ function emitGameState(room, gameState) {
   );
 }
 
-function emitGameOver(room, message) {
-  io.sockets.in(room).emit("gameOver", message);
-  delete state[room];
+// Sends game over to all players
+function emitGameOver(state, roomName, message, winner) {
+  console.log("gameover");
+  for (const [username, value] of Object.entries(state[roomName].players)) {
+    delete state[roomName].players[username];
+
+    io.to(value.id).emit("gameOver", {
+      message: message,
+      score: value.score,
+      isWinner: winner === username,
+    });
+  }
+
+  delete state[roomName];
 }
 
+// Send game over to one (eliminated) player
 function emitElimination(state, roomName, playerUsername, message) {
   const playerId = state[roomName].players[playerUsername].id;
+  const score = state[roomName].players[playerUsername].score;
   delete state[roomName].players[playerUsername];
-  io.to(playerId).emit("gameOver", message);
+
+  io.to(playerId).emit("gameOver", {
+    message,
+    score,
+    winner: false,
+  });
 }
 
 io.listen(3001);

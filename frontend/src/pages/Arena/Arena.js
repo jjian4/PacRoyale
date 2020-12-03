@@ -30,7 +30,7 @@ music.loop = true;
 const powerupSound = new Audio(powerupMp3);
 
 function Arena() {
-  const { socket, goToMainMenu, isMusicOn, setIsMusicOn } = useContext(
+  const { socket, goToMainMenu, isMusicOn, setIsMusicOn, user } = useContext(
     AppContext
   );
 
@@ -43,7 +43,7 @@ function Arena() {
   // Used for moving leaderboard
   const [isAlmostMobile, setisAlmostMobile] = useState(false);
 
-  // For some reaosn, audio can't play on safari
+  // For some reason, audio can't play on safari
   const isSafari = window.safari !== undefined;
 
   useEffect(() => {
@@ -62,9 +62,16 @@ function Arena() {
       console.log(JSON.parse(data));
       setGameState(JSON.parse(data));
     });
-    socket.on("gameOver", (message) => {
-      if (!receivedGameOver) {
-        setReceivedGameOver(true);
+    let recGameOver = false;
+
+    socket.on("gameOver", (gameOver) => {
+      if (!recGameOver) {
+        recGameOver = true;
+        const { message, score, isWinner } = gameOver;
+        user.incrementCoins(score);
+        if (isWinner) {
+          user.incrementWins();
+        }
         alert(message);
         goToMainMenu();
       }
@@ -160,8 +167,9 @@ function Arena() {
           </p>
           <div
             key={username}
-            className={`avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ""
-              }`}
+            className={`avatar ${value.powerup} ${
+              value.isStunned ? "stunnedPlayer" : ""
+            }`}
             style={{
               ...AVATARS[value.equippedSkin].style,
               transform: "rotate(" + rotateDeg + "deg)",
@@ -270,32 +278,43 @@ function Arena() {
             height: explosion.size + "%",
           }}
         >
-          <div className='explosionFire' style={{
-            top: 0,
-            left: 0,
-            width: "50%",
-            height: "50%",
-          }} />
-          <div className='explosionFire' style={{
-            top: "50%",
-            left: 0,
-            width: "50%",
-            height: "50%",
-          }} />
-          <div className='explosionFire' style={{
-            top: 0,
-            left: "50%",
-            width: "50%",
-            height: "50%",
-          }} />
-          <div className='explosionFire' style={{
-            top: "50%",
-            left: "50%",
-            width: "50%",
-            height: "50%",
-          }} />
+          <div
+            className="explosionFire"
+            style={{
+              top: 0,
+              left: 0,
+              width: "50%",
+              height: "50%",
+            }}
+          />
+          <div
+            className="explosionFire"
+            style={{
+              top: "50%",
+              left: 0,
+              width: "50%",
+              height: "50%",
+            }}
+          />
+          <div
+            className="explosionFire"
+            style={{
+              top: 0,
+              left: "50%",
+              width: "50%",
+              height: "50%",
+            }}
+          />
+          <div
+            className="explosionFire"
+            style={{
+              top: "50%",
+              left: "50%",
+              width: "50%",
+              height: "50%",
+            }}
+          />
         </div>
-
       );
     });
 
@@ -331,27 +350,33 @@ function Arena() {
       >
         {gameState && (
           <>
-            <div className="gameMode" style={{
-              display: isAlmostMobile ? 'flex' : 'block',
-              justifyContent: isAlmostMobile ? 'center' : 'auto'
-            }}>
+            <div
+              className="gameMode"
+              style={{
+                display: isAlmostMobile ? "flex" : "block",
+                justifyContent: isAlmostMobile ? "center" : "auto",
+              }}
+            >
               <div>
-                {gameState.selectedGameMode}{gameState.eliminationTimer != null && isAlmostMobile ? ':' : ''}
+                {gameState.selectedGameMode}
+                {gameState.eliminationTimer != null && isAlmostMobile
+                  ? ":"
+                  : ""}
               </div>
               <div>
                 {gameState.eliminationTimer != null && (
-                  <div className='gameTimer'>{gameState.eliminationTimer}</div>
+                  <div className="gameTimer">{gameState.eliminationTimer}</div>
                 )}
               </div>
             </div>
-
 
             <div className="leaderboardTitle">Leaderboard</div>
             <div className={`${isAlmostMobile ? "row" : ""}`}>
               {sortedPlayerScores.map((scoreAndUsername) => (
                 <div
-                  className={`playerInfo ${isAlmostMobile ? "col-sm-4 col-6" : ""
-                    }`}
+                  className={`playerInfo ${
+                    isAlmostMobile ? "col-sm-4 col-6" : ""
+                  }`}
                 >
                   <div className="playerUsernameAvatar">
                     <div
@@ -365,7 +390,7 @@ function Arena() {
                       <div className="avatarMouth" />
                     </div>
                     {scoreAndUsername[1]}:
-                </div>
+                  </div>
                   <div>{scoreAndUsername[0]}</div>
                 </div>
               ))}

@@ -68,7 +68,15 @@ function JoinGame() {
             }
           >
             <div className="avatar" style={AVATARS[game.equippedSkin].style}>
-              <div className="avatarMouth" />
+              <div
+                className="avatarMouth"
+                style={
+                  game &&
+                  Object.values(ARENA_COLORS).find(
+                    (x) => x.name === game.arenaColor
+                  ).style
+                }
+              />
             </div>
             <div className="gameRowLeft">
               <div className="gameInfo">

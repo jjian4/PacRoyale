@@ -3,7 +3,7 @@ import { AVATARS } from "./constants";
 
 class User {
   constructor(firebaseUser) {
-    // initialise the local user state from the firebase user object
+    // initialize the local user state from the firebase user object
     this.username = firebaseUser.displayName;
     this.uid = firebaseUser.uid;
     this.coins = 1000;
@@ -11,7 +11,7 @@ class User {
     this.gamesPlayed = 0;
     this.purchasedSkins = {};
     this.equippedSkin = "Blue";
-    // initialise owned avatars
+    // initialize owned avatars
     Object.keys(AVATARS).forEach((key) => {
       let avatar = AVATARS[key];
       if (avatar["price"] === 0) this.purchasedSkins[key] = true;
@@ -82,6 +82,26 @@ class User {
       .update({
         coins: this.coins,
         purchasedSkins: this.purchasedSkins,
+      });
+  }
+
+  incrementWins() {
+    this.wins = this.wins + 1;
+    firebase
+      .database()
+      .ref("users/" + this.uid)
+      .update({
+        wins: this.wins,
+      });
+  }
+
+  incrementCoins(coinsWon) {
+    this.coins = this.coins + coinsWon;
+    firebase
+      .database()
+      .ref("users/" + this.uid)
+      .update({
+        coins: this.coins,
       });
   }
 }
