@@ -5,8 +5,17 @@
 # Print commands
 set -x
 
-if $DEPLOY_ENV;
+if [[ -z "$DEPLOY_ENV" ]];
 then
+    # if env variable not set, run dev servers
+    # run frontend server
+    cd frontend
+    yarn start &
+    cd ..
+
+    cd backend
+    npx nodemon server.js
+else
     # run production servers
 
     # kill existing servers
@@ -20,13 +29,4 @@ then
     # run backend server
     cd ../../backend
     sudo npx node server.js
-else
-    # if env variable not set, run dev servers
-    # run frontend server
-    cd frontend
-    yarn start &
-    cd ..
-
-    cd backend
-    npx nodemon server.js
 fi
