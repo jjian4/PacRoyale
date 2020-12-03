@@ -8,7 +8,7 @@ import {
   faGhost,
   faBomb,
 } from "@fortawesome/free-solid-svg-icons";
-import { POWERUPS, ARENA_COLORS, GAME_MODES } from "../../utils/constants";
+import { POWERUPS, ARENA_COLORS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
 import AppContext from "./../../contexts/AppContext";
 import musicMp3 from "../../sounds/arena-music.mp3";
@@ -159,9 +159,8 @@ function Arena() {
           </p>
           <div
             key={username}
-            className={`avatar ${value.powerup} ${
-              value.isStunned ? "stunnedPlayer" : ""
-            }`}
+            className={`avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ""
+              }`}
             style={{
               ...AVATARS[value.equippedSkin].style,
               transform: "rotate(" + rotateDeg + "deg)",
@@ -299,37 +298,51 @@ function Arena() {
         {explosions}
       </div>
       <div
-        className="leaderboard"
+        className="gameInfo"
         style={{ width: isAlmostMobile ? "90%" : "auto" }}
       >
-        <div className="leaderboardTitle">Leaderboard</div>
-        <div className={`${isAlmostMobile ? "row" : ""}`}>
-          {gameState &&
-            sortedPlayerScores.map((scoreAndUsername) => (
-              <div
-                className={`playerInfo ${
-                  isAlmostMobile ? "col-sm-4 col-6" : ""
-                }`}
-              >
-                <div className="playerUsernameAvatar">
-                  <div
-                    className="avatar"
-                    style={
-                      AVATARS[
-                        gameState.players[scoreAndUsername[1]].equippedSkin
-                      ].style
-                    }
-                  >
-                    <div className="avatarMouth" />
-                  </div>
-                  {scoreAndUsername[1]}:
-                </div>
-                <div>{scoreAndUsername[0]}</div>
+        {gameState && (
+          <>
+            <div className="gameMode" style={{
+              display: isAlmostMobile ? 'flex' : 'block',
+              justifyContent: isAlmostMobile ? 'center' : 'auto'
+            }}>
+              <div>
+                {gameState.selectedGameMode}{gameState.eliminationTimer != null && isAlmostMobile ? ':' : ''}
               </div>
-            ))}
-        </div>
-        {gameState && gameState.eliminationTimer != null && (
-          <div>Next Elimination: {gameState.eliminationTimer}</div>
+              <div>
+                {gameState.eliminationTimer != null && (
+                  <div className='gameTimer'>{gameState.eliminationTimer}</div>
+                )}
+              </div>
+            </div>
+
+
+            <div className="leaderboardTitle">Leaderboard</div>
+            <div className={`${isAlmostMobile ? "row" : ""}`}>
+              {sortedPlayerScores.map((scoreAndUsername) => (
+                <div
+                  className={`playerInfo ${isAlmostMobile ? "col-sm-4 col-6" : ""
+                    }`}
+                >
+                  <div className="playerUsernameAvatar">
+                    <div
+                      className="avatar"
+                      style={
+                        AVATARS[
+                          gameState.players[scoreAndUsername[1]].equippedSkin
+                        ].style
+                      }
+                    >
+                      <div className="avatarMouth" />
+                    </div>
+                    {scoreAndUsername[1]}:
+                </div>
+                  <div>{scoreAndUsername[0]}</div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 

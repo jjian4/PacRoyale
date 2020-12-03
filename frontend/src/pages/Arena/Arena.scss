@@ -144,12 +144,23 @@
       z-index: 0;
     }
   }
-  .leaderboard {
+  .gameInfo {
     text-align: center;
     min-width: 250px;
     margin: 20px 10px;
     padding: 10px 5px;
     // border: 1px solid black;
+
+    .gameMode {
+      font-weight: bold;
+      font-size: 30px;
+      padding-bottom: 20px;
+
+      .gameTimer {
+        padding: 0 10px;
+      }
+    }
+
     .leaderboardTitle {
       font-weight: bold;
       font-size: 20px;
