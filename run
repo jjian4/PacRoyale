@@ -22,9 +22,8 @@ else
     pgrep -f python | xargs sudo kill
 
     # run frontend server
-    cd frontend
-    cd build
-    sudo python3 -m http.server 80 &
+    # replaced with lighttpd server run at boot
+    # not configured here
 
     # run backend server
     cd ../../backend
