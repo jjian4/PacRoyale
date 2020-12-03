@@ -7,6 +7,7 @@ import {
   faVolumeUp,
   faGhost,
   faBomb,
+  faSnowflake,
 } from "@fortawesome/free-solid-svg-icons";
 import { POWERUPS, ARENA_COLORS } from "../../utils/constants";
 import { AVATARS } from "./../../utils/constants";
@@ -226,16 +227,17 @@ function Arena() {
     });
     gameState.slows.forEach((slow, idx) => {
       slows.push(
-        <div
+        <FontAwesomeIcon
           className="slow"
           key={"slow" + idx}
+          icon={faSnowflake}
           style={{
             top: slow.pos.y + "%",
             left: slow.pos.x + "%",
             width: slow.size + "%",
             height: slow.size + "%",
           }}
-        ></div>
+        />
       );
     });
     gameState.bombs.forEach((bomb, idx) => {
@@ -267,7 +269,33 @@ function Arena() {
             width: explosion.size + "%",
             height: explosion.size + "%",
           }}
-        ></div>
+        >
+          <div className='explosionFire' style={{
+            top: 0,
+            left: 0,
+            width: "50%",
+            height: "50%",
+          }} />
+          <div className='explosionFire' style={{
+            top: "50%",
+            left: 0,
+            width: "50%",
+            height: "50%",
+          }} />
+          <div className='explosionFire' style={{
+            top: 0,
+            left: "50%",
+            width: "50%",
+            height: "50%",
+          }} />
+          <div className='explosionFire' style={{
+            top: "50%",
+            left: "50%",
+            width: "50%",
+            height: "50%",
+          }} />
+        </div>
+
       );
     });
 
