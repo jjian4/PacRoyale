@@ -9,14 +9,15 @@ set -Eeo pipefail
 set -x
 
 if [[ -z "$DEPLOY_ENV" ]]; then
-    # if env variable not set, run dev servers
-    # run frontend server
+    # run dev servers
     cd frontend
-    yarn start &
-    cd ..
+    npm run build
+    cd build
+    python3 -m http.server 80 &
 
-    cd backend
-    npx nodemon server.js
+    # run backend server
+    cd ../../backend
+    npx node server.js
 else
     # if env variable not set, run dev servers
     # run frontend server
