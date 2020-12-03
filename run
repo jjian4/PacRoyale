@@ -19,7 +19,7 @@ else
     # run production servers
 
     # kill existing servers
-    pgrep -f python | xargs kill
+    pgrep -f python | xargs sudo kill
 
     # run frontend server
     cd frontend
@@ -28,5 +28,5 @@ else
 
     # run backend server
     cd ../../backend
-    sudo npx node server.js
+    sudo npx node server.js &
 fi
