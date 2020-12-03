@@ -1,7 +1,13 @@
 import React from "react";
 import { useState, useEffect, useContext } from "react";
 import AppContext from "./../../contexts/AppContext";
-import { AVATARS } from "../../utils/constants";
+import {
+  AVATARS,
+  ARENA_COLORS,
+  POWERUPS,
+  WEAKNESSES,
+} from "../../utils/constants";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "./JoinGame.scss";
 
 function JoinGame() {
@@ -54,18 +60,62 @@ function JoinGame() {
             className="gameRow"
             key={game.host + idx}
             onClick={() => onClickJoinGame(game.gameCode)}
+            style={
+              game &&
+              Object.values(ARENA_COLORS).find(
+                (x) => x.name === game.arenaColor
+              ).style
+            }
           >
-            {/* TODO: include game code */}
-            <span className="gameRowLeft">
-              {/* TODO: get avatar name from database */}
-              <div className="avatar" style={AVATARS[game.equippedSkin].style}>
-                <div className="avatarMouth" />
+            <div className="avatar" style={AVATARS[game.equippedSkin].style}>
+              <div className="avatarMouth" />
+            </div>
+            <div className="gameRowLeft">
+              <div className="gameInfo">
+                <p>
+                  <b>{game.host}'s Arena</b> ({game.gameCode})
+                </p>
+                <p>{game.numPlayers}/20 players</p>
               </div>
-              <div>
-                <b>{game.host}'s Arena</b> ({game.gameCode})
+              <div className="extraDetails">
+                <div>
+                  <p>
+                    <b>Mode:</b> {game.selectedGameMode}
+                    <b className="spawnRate"> Spawn:</b>{" "}
+                    {game.selectedSpawnRate}
+                  </p>
+                </div>
+                <div>
+                  {game.selectedPowerups.map((powerup) => (
+                    <FontAwesomeIcon
+                      icon={
+                        Object.values(POWERUPS).find((x) => x.name === powerup)
+                          ?.icon
+                      }
+                      className="powerupIcon"
+                    />
+                  ))}
+                  {game.isGhostSelected && (
+                    <FontAwesomeIcon
+                      icon={WEAKNESSES.GHOST.icon}
+                      className="powerupIcon"
+                    />
+                  )}
+                  {game.isBombSelected && (
+                    <FontAwesomeIcon
+                      icon={WEAKNESSES.BOMB.icon}
+                      className="powerupIcon"
+                    />
+                  )}
+                  {game.isSlowSelected && (
+                    <FontAwesomeIcon
+                      icon={WEAKNESSES.SLOW.icon}
+                      className="powerupIcon"
+                    />
+                  )}
+                </div>
               </div>
-            </span>
-            <span>{game.numPlayers}/20 players</span>
+            </div>
           </div>
         ))}
     </div>

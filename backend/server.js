@@ -31,7 +31,7 @@ io.on("connection", (client) => {
   client.on("playerDisconnect", handleDisconnect);
   client.on("disconnect", handleDisconnect);
   client.on("getRooms", emitAllRoomInfo);
-  client.on("getPlayers", emitRoomInfo);
+  client.on("getRoom", emitRoomInfo);
 
   function handleNewGame(
     username,
@@ -143,6 +143,13 @@ io.on("connection", (client) => {
           equippedSkin: room.players[room.host].equippedSkin,
           gameCode,
           numPlayers: Object.keys(room.players).length,
+          arenaColor: room.arenaColor,
+          selectedSpawnRate: room.selectedSpawnRate,
+          selectedGameMode: room.selectedGameMode,
+          selectedPowerups: room.selectedPowerups,
+          isGhostSelected: room.isGhostSelected,
+          isBombSelected: room.isBombSelected,
+          isSlowSelected: room.isSlowSelected,
         });
       }
     }
@@ -159,6 +166,13 @@ io.on("connection", (client) => {
           equippedSkin: room.players[room.host].equippedSkin,
           gameCode,
           numPlayers: Object.keys(room.players).length,
+          arenaColor: room.arenaColor,
+          selectedSpawnRate: room.selectedSpawnRate,
+          selectedGameMode: room.selectedGameMode,
+          selectedPowerups: room.selectedPowerups,
+          isGhostSelected: room.isGhostSelected,
+          isBombSelected: room.isBombSelected,
+          isSlowSelected: room.isSlowSelected,
         });
       }
     }
@@ -174,12 +188,20 @@ io.on("connection", (client) => {
         equippedSkin: value.equippedSkin,
       });
     }
+    const room = state[roomName];
     io.sockets.in(roomName).emit(
-      "players",
+      "room",
       JSON.stringify({
         gameCode: roomName,
         players,
-        host: state[roomName].host,
+        host: room.host,
+        arenaColor: room.arenaColor,
+        selectedSpawnRate: room.selectedSpawnRate,
+        selectedGameMode: room.selectedGameMode,
+        selectedPowerups: room.selectedPowerups,
+        isGhostSelected: room.isGhostSelected,
+        isBombSelected: room.isBombSelected,
+        isSlowSelected: room.isSlowSelected,
       })
     );
   }
@@ -198,12 +220,20 @@ io.on("connection", (client) => {
         equippedSkin: value.equippedSkin,
       });
     }
+    const room = state[roomName];
     client.emit(
-      "players",
+      "room",
       JSON.stringify({
         gameCode: roomName,
         players,
-        host: state[roomName].host,
+        host: room.host,
+        arenaColor: room.arenaColor,
+        selectedSpawnRate: room.selectedSpawnRate,
+        selectedGameMode: room.selectedGameMode,
+        selectedPowerups: room.selectedPowerups,
+        isGhostSelected: room.isGhostSelected,
+        isBombSelected: room.isBombSelected,
+        isSlowSelected: room.isSlowSelected,
       })
     );
   }

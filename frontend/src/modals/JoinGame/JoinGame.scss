@@ -1,43 +1,60 @@
 .JoinGame {
-    padding: 20px 0 10px 0;
+  padding: 20px 0 10px 0;
 
-    .topRow {
+  .topRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .activeGamesHeading {
+      font-size: 25px;
+    }
+    .filterInput {
+      width: 280px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      padding: 5px 10px;
+    }
+  }
+
+  .gameRow {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    padding: 15px 10px;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    &:hover {
+      background-color: whitesmoke !important;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      margin-right: 15px;
+    }
+    .gameRowLeft {
+      display: flex;
+      flex-direction: column;
+      width: 90%;
+      .gameInfo {
+        height: 60%;
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        .activeGamesHeading {
-            font-size: 25px;
-        }
-        .filterInput {
-            width: 280px;
-            border: 1px solid gray;
-            border-radius: 5px;
-            padding: 5px 10px;
-        }
-    }
-
-    .gameRow {
+      }
+      .extraDetails {
+        height: 40%;
         display: flex;
+        font-size: 14px;
         justify-content: space-between;
-        align-items: center;
-        margin: 15px 0;
-        padding: 15px 10px;
-        background-color: white;
-        border: 1px solid gray;
-        border-radius: 5px;
-        font-size: 20px;
-        cursor: pointer;
-        .gameRowLeft {
-            display: flex;
-            align-items: center;
-            .avatar {
-                width: 40px;
-                height: 40px;
-                margin-right: 15px;
-            }    
+        svg {
+          margin-left: 8px;
         }
-        &:hover {
-            background-color: whitesmoke;
+        .spawnRate {
+          margin-left: 5px;
         }
+      }
     }
+  }
 }

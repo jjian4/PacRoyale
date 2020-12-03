@@ -5,17 +5,18 @@
   text-align: center;
   // border: 1px solid pink;
   .title {
-    font-size: 40px;
-    font-weight: bold;
+    font-size: 36px;
   }
   .lobbyInfoRow {
     padding: 10px 10px;
-    font-size: 20px;
+    font-size: 18px;
     display: flex;
     justify-content: space-between;
-
-    .playerCount {
-      font-weight: bold;
+    .spawnRate {
+      margin-left: 5px;
+    }
+    .powerupIcon {
+      margin-left: 8px;
     }
 
     .gameCode {
@@ -26,7 +27,7 @@
     font-size: 20px;
     height: 60vh;
     border: 1px solid lightgray;
-    margin-bottom: 30px;
+    border-radius: 10px;
     // Make the div scrollable
     overflow-y: auto;
     .playerRow {
@@ -38,18 +39,18 @@
       border: 1px solid gray;
       border-radius: 10px;
       line-height: 1;
-      cursor: pointer;
+      background-color: white;
       .avatar {
         width: 30px;
         height: 30px;
         margin-right: 10px;
       }
-      &:hover {
-        background-color: whitesmoke;
-      }
     }
   }
-
+  .playerCount {
+    text-align: end;
+    margin-bottom: 20px;
+  }
   .lobbyBottom {
     font-size: 20px;
     .hostButtons {
