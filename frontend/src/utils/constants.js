@@ -170,7 +170,7 @@ export const ARENA_COLORS = {
   },
   BLUE: {
     name: "blue",
-    style: { backgroundColor: "lightblue" },
+    style: { backgroundColor: "lightcyan" },
   },
 };
 

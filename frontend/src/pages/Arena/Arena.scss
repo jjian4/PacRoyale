@@ -133,15 +133,18 @@
 
     .slow {
       position: absolute;
-      background-color: lightcyan;
-      border-radius: 10px;
+      color: lightblue;
       z-index: 0;
     }
     .explosion {
       position: absolute;
-      background-color: red;
-      border-radius: 10px;
-      z-index: 0;
+      z-index: 10;
+    }
+    .explosionFire {
+      position: absolute;
+      background-image: url(fire.png);
+      background-repeat: space;
+      background-size: contain;
     }
   }
   .gameInfo {
