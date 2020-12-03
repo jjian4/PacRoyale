@@ -26,6 +26,6 @@ else
     # not configured here
 
     # run backend server
-    cd ../../backend
+    cd backend
     sudo npx node server.js &
 fi
