@@ -2,9 +2,6 @@
 #
 # Andrew DeOrio <awdeorio@umich.edu>
 
-# Stop on errors
-set -Eeo pipefail
-
 # Print commands
 set -x
 
