@@ -8,7 +8,7 @@ set -Eeo pipefail
 # Print commands
 set -x
 
-if [ -z "$DEPLOY_ENV"]; then
+if [[ -z "$DEPLOY_ENV" ]]; then
     # if env variable not set, run dev servers
     # run frontend server
     cd frontend
