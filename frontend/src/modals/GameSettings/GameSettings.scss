@@ -32,6 +32,9 @@
       display: flex;
       justify-content: space-around;
       margin: 0 10%;
+      label {
+        padding: 5px 30px;
+      }
       input {
         margin-right: 5px;
       }

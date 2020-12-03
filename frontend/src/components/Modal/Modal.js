@@ -6,6 +6,7 @@ import "./Modal.scss";
 
 const customStyles = {
     content: {
+        paddingTop: '0',
         top: '50%',
         left: '50%',
         right: 'auto',
@@ -33,12 +34,14 @@ function Modal(props) {
             ariaHideApp={false}
         >
             <div className='ModalContent'>
-                <div className='modalTitle'>{props.title}</div>
-                <div
-                    className='closeButton'
-                    onClick={props.onClose}
-                >
-                    <FontAwesomeIcon icon={faWindowClose} />
+                <div className='modalTop'>
+                    <div className='modalTitle'>{props.title}</div>
+                    <div
+                        className='closeButton'
+                        onClick={props.onClose}
+                    >
+                        <FontAwesomeIcon icon={faWindowClose} />
+                    </div>
                 </div>
                 {props.children}
             </div>

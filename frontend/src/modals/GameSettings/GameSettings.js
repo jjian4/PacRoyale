@@ -63,10 +63,9 @@ function GameSettings(props) {
           {Object.keys(ARENA_COLORS).map((arenaColor, index) => (
             <div
               key={index}
-              className={`arenaChoice ${
-                selectedArenaColor === ARENA_COLORS[arenaColor].name &&
+              className={`arenaChoice ${selectedArenaColor === ARENA_COLORS[arenaColor].name &&
                 "selectedArenaChoice"
-              }`}
+                }`}
               style={ARENA_COLORS[arenaColor].style}
               onClick={() =>
                 setSelectedArenaColor(ARENA_COLORS[arenaColor].name)
@@ -78,46 +77,16 @@ function GameSettings(props) {
             </div>
           ))}
         </div>
-        <div className="subtitle">Spawn Rate</div>
-        <div className="spawnRates">
-          <label>
-            <input
-              type="radio"
-              value={"low"}
-              checked={selectedSpawnRate === "low"}
-              onChange={(e) => setSelectedSpawnRate(e.target.value)}
-            />
-            <span htmlFor="low">Low</span>
-          </label>
-          <label>
-            <input
-              type="radio"
-              value={"medium"}
-              checked={selectedSpawnRate === "medium"}
-              onChange={(e) => setSelectedSpawnRate(e.target.value)}
-            />
-            <span htmlFor="medium">Medium</span>
-          </label>
-          <label>
-            <input
-              type="radio"
-              value={"high"}
-              checked={selectedSpawnRate === "high"}
-              onChange={(e) => setSelectedSpawnRate(e.target.value)}
-            />
-            <span htmlFor="high">High</span>
-          </label>
-        </div>
+
         <div className="subtitle">Power-ups</div>
 
         <div className="powerupChoices">
           {Object.keys(POWERUPS).map((powerup, index) => (
             <div key={index}>
               <div
-                className={`powerupChoice ${
-                  selectedPowerups.includes(POWERUPS[powerup].name) &&
+                className={`powerupChoice ${selectedPowerups.includes(POWERUPS[powerup].name) &&
                   "selectedPowerupChoice"
-                }`}
+                  }`}
                 onClick={() => {
                   if (selectedPowerups.includes(POWERUPS[powerup].name)) {
                     setSelectedPowerups(
@@ -149,10 +118,9 @@ function GameSettings(props) {
           {Object.keys(WEAKNESSES).map((weakness, index) => (
             <div key={index}>
               <div
-                className={`powerupChoice ${
-                  selectedWeaknesses.includes(WEAKNESSES[weakness].name) &&
+                className={`powerupChoice ${selectedWeaknesses.includes(WEAKNESSES[weakness].name) &&
                   "selectedPowerupChoice"
-                }`}
+                  }`}
                 onClick={() => {
                   if (selectedWeaknesses.includes(WEAKNESSES[weakness].name)) {
                     setSelectedWeaknesses(
@@ -178,6 +146,37 @@ function GameSettings(props) {
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="subtitle">Spawn Rate</div>
+        <div className="spawnRates">
+          <label>
+            <input
+              type="radio"
+              value={"low"}
+              checked={selectedSpawnRate === "low"}
+              onChange={(e) => setSelectedSpawnRate(e.target.value)}
+            />
+            <span htmlFor="low">Low</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              value={"medium"}
+              checked={selectedSpawnRate === "medium"}
+              onChange={(e) => setSelectedSpawnRate(e.target.value)}
+            />
+            <span htmlFor="medium">Medium</span>
+          </label>
+          <label>
+            <input
+              type="radio"
+              value={"high"}
+              checked={selectedSpawnRate === "high"}
+              onChange={(e) => setSelectedSpawnRate(e.target.value)}
+            />
+            <span htmlFor="high">High</span>
+          </label>
         </div>
 
         <div className="subtitle">Game Mode</div>
