@@ -3,15 +3,27 @@
 # Andrew DeOrio <awdeorio@umich.edu>
 
 # Stop on errors
-set -Eeuo pipefail
+set -Eeo pipefail
 
 # Print commands
 set -x
 
-# run frontend server
-cd frontend
-yarn start &
-cd ..
+if [ -z "$DEPLOY_ENV"]; then
+    # if env variable not set, run dev servers
+    # run frontend server
+    cd frontend
+    yarn start &
+    cd ..
 
-cd backend
-npx nodemon server.js
+    cd backend
+    npx nodemon server.js
+else
+    # if env variable not set, run dev servers
+    # run frontend server
+    cd frontend
+    yarn start &
+    cd ..
+
+    cd backend
+    npx nodemon server.js
+fi
