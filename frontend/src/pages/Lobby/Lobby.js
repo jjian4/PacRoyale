@@ -126,7 +126,6 @@ function Lobby() {
               Cancel Game
             </button>
             {/* TODO: Open Game settings modal */}
-            <button className="button">Edit Game</button>
             <button className="button" onClick={startGame}>
               Start Game
             </button>
