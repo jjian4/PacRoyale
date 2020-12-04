@@ -2,16 +2,30 @@
 #
 # Andrew DeOrio <awdeorio@umich.edu>
 
-# Stop on errors
-set -Eeuo pipefail
-
 # Print commands
 set -x
 
-# run frontend server
-cd frontend
-yarn start &
-cd ..
+if [[ -z "$DEPLOY_ENV" ]];
+then
+    # if env variable not set, run dev servers
+    # run frontend server
+    cd frontend
+    yarn start &
+    cd ..
 
-cd backend
-npx nodemon server.js
+    cd backend
+    npx nodemon server.js
+else
+    # run production servers
+
+    # kill existing servers
+    pgrep -f python | xargs sudo kill
+
+    # run frontend server
+    # replaced with lighttpd server run at boot
+    # not configured here
+
+    # run backend server
+    cd backend
+    sudo npx node server.js &
+fi
