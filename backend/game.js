@@ -10,9 +10,9 @@ const SHOT_SIZE = 1;
 const GHOST_SIZE = 4;
 const BOMB_SIZE = 3;
 
-const SPEED_TIMEOUT = 5000;
-const EAT_TIMEOUT = 3000;
-const SHOOT_TIMEOUT = 4000;
+const SPEED_TIMEOUT = 3000;
+const EAT_TIMEOUT = 4000;
+const SHOOT_TIMEOUT = 5000;
 const STUN_TIMEOUT = 3000;
 
 const PLAYER_VELOCITY = 1.25;
@@ -466,14 +466,14 @@ function updatePlayerVelocity(state, username, keyCode) {
               state.players[username].vel.x < 0
                 ? -SHOT_VELOCITY
                 : state.players[username].vel.x > 0
-                ? SHOT_VELOCITY
-                : 0,
+                  ? SHOT_VELOCITY
+                  : 0,
             y:
               state.players[username].vel.y < 0
                 ? -SHOT_VELOCITY
                 : state.players[username].vel.y > 0
-                ? SHOT_VELOCITY
-                : 0,
+                  ? SHOT_VELOCITY
+                  : 0,
           },
           owner: username,
         };
@@ -522,7 +522,7 @@ function spawnPowerups(state) {
   if (state.powerups) {
     var name =
       state.selectedPowerups[
-        Math.floor(Math.random() * state.selectedPowerups.length)
+      Math.floor(Math.random() * state.selectedPowerups.length)
       ];
     state.powerups[uuid()] = {
       x: Math.floor(Math.random() * (100 - FOOD_SIZE)),

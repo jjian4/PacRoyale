@@ -221,13 +221,13 @@ export const POWERUPS = {
   },
   SPEED: {
     name: "Speed",
-    description: "(3 sec) Move twice as fact to collect more coins!",
+    description: "(3 sec) Move faster to collect more coins!",
     icon: faFastForward,
   },
   SHOOT: {
     name: "Shoot",
     description:
-      "(5 sec) Shoot a projectile with spacebar in a straight line, stunning and stealing a coin an opponent if its hits.",
+      "(5 sec) Press SPACE to shoot a projectile in a straight line, stunning and stealing a coin an opponent if its hits.",
     icon: faBolt,
   },
 };
@@ -236,13 +236,13 @@ export const WEAKNESSES = {
   GHOST: {
     name: "Ghost",
     description:
-      "Ghosts move across to arena, stunning players and causing them to drop 2 coins.",
+      "Ghosts move across to arena, stunning players and causing them to drop a coin.",
     icon: faGhost,
   },
   BOMB: {
     name: "Bomb",
     description:
-      "Bombs spawn and explode in a square shape, stunning playerd and causing players to lose 2 coins.",
+      "Bombs spawn and explode in a square shape, stunning players and causing them to lose a coin.",
     icon: faBomb,
   },
   SLOW: {
