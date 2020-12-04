@@ -11,7 +11,7 @@ import {
 import AppContext from "./../../contexts/AppContext";
 import "./GameSettings.scss";
 
-function GameSettings(props) {
+function GameSettings() {
   const { socket, goToLobby, setIsHost, user } = useContext(AppContext);
 
   const [selectedArenaColor, setSelectedArenaColor] = useState(
@@ -201,7 +201,6 @@ function GameSettings(props) {
         </div>
       </div>
 
-      {/* TODO: Check props to see if host is editing. If editing, change button text to "Return to Lobby" */}
       <button className="button lobbyButton" onClick={handleCreateLobby}>
         Create Lobby
       </button>

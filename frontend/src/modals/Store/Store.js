@@ -29,6 +29,8 @@ function Store() {
     setSkins(updatedSkins);
     setError(false);
     user.buySkin(avatar, price);
+
+    equipItem(avatar);
   };
 
   const equipItem = (avatar) => {

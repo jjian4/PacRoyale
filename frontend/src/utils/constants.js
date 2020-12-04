@@ -56,18 +56,18 @@ export const AVATARS = {
       backgroundColor: "purple",
     },
   },
+  Salmon: {
+    name: "salmon",
+    price: 600,
+    style: {
+      backgroundColor: "salmon",
+    },
+  },
   Gold: {
     name: "gold",
     price: 600,
     style: {
       backgroundColor: "gold",
-    },
-  },
-  Salmon: {
-    name: "salmon",
-    price: 800,
-    style: {
-      backgroundColor: "salmon",
     },
   },
   "Red Sripes": {
