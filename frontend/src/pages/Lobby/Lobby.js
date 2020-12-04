@@ -116,7 +116,6 @@ function Lobby() {
       <div className="lobbyBottom">
         {isHost && (
           <div className="hostButtons">
-            {/* TODO: Cancel game */}
             <button
               className="button"
               onClick={() => {
@@ -125,7 +124,6 @@ function Lobby() {
             >
               Cancel Game
             </button>
-            {/* TODO: Open Game settings modal */}
             <button className="button" onClick={startGame}>
               Start Game
             </button>

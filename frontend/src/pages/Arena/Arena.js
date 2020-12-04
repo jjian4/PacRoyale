@@ -402,11 +402,11 @@ function Arena() {
           onClick={toggleMusic}
           icon={isMusicOn ? faVolumeUp : faVolumeMute}
         />
-        {/* TODO: Send message to socketio to leave game */}
         <FloatingActionButton
           title="Exit"
           onClick={() => {
-            console.log("TODO: Leave game");
+            socket.emit("playerDisconnect");
+            goToMainMenu();
           }}
           icon={faSignOutAlt}
         />
