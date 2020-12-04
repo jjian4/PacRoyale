@@ -152,7 +152,7 @@ function Arena() {
       } else if (value.vel.y < 0) {
         rotateDeg = 270;
       }
-      let marginLeft = -4 * (username.length - 2) + 8;
+      let marginLeft = -4 * (username.length - 2) + 10;
       players.push(
         <div
           className="playerContainer"
@@ -166,9 +166,8 @@ function Arena() {
           </p>
           <div
             key={username}
-            className={`avatar ${value.powerup} ${
-              value.isStunned ? "stunnedPlayer" : ""
-            }`}
+            className={`avatar avatar-${value.powerup} ${value.isStunned ? "stunnedPlayer" : ""
+              }`}
             style={{
               ...AVATARS[value.equippedSkin].style,
               transform: "rotate(" + rotateDeg + "deg)",
@@ -199,7 +198,7 @@ function Arena() {
     gameState.powerups.forEach((powerup, idx) => {
       powerups.push(
         <div
-          className="powerup"
+          className={`powerup powerup-${powerup.name}`}
           key={"powerup" + idx}
           style={{ top: powerup.y + "%", left: powerup.x + "%" }}
         >
@@ -373,9 +372,8 @@ function Arena() {
             <div className={`${isAlmostMobile ? "row" : ""}`}>
               {sortedPlayerScores.map((scoreAndUsername) => (
                 <div
-                  className={`playerInfo ${
-                    isAlmostMobile ? "col-sm-4 col-6" : ""
-                  }`}
+                  className={`playerInfo ${isAlmostMobile ? "col-sm-4 col-6" : ""
+                    }`}
                 >
                   <div className="playerUsernameAvatar">
                     <div

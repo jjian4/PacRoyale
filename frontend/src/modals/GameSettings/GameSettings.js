@@ -18,12 +18,12 @@ function GameSettings(props) {
     ARENA_COLORS.WHITE.name
   );
   const [selectedPowerups, setSelectedPowerups] = useState([
-    // POWERUPS.EAT.name,
-    // POWERUPS.SPEED.name,
-    // POWERUPS.SHOOT.name,
+    POWERUPS.EAT.name,
+    POWERUPS.SPEED.name,
   ]);
   const [selectedWeaknesses, setSelectedWeaknesses] = useState([
-    // WEAKNESSES.GHOST.name,
+    WEAKNESSES.BOMB.name,
+    WEAKNESSES.SLOW.name,
   ]);
 
   const [selectedGameMode, setSelectedGameMode] = useState(
@@ -148,7 +148,7 @@ function GameSettings(props) {
           ))}
         </div>
 
-        <div className="subtitle">Spawn Rate</div>
+        <div className="subtitle">Item Spawn Rate</div>
         <div className="spawnRates">
           <label>
             <input
