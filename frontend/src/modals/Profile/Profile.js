@@ -6,24 +6,37 @@ import "./Profile.scss";
 
 function Profile(props) {
   const { user } = useContext(AppContext);
-
   return (
-    <div className='Profile'>
-      <div className="avatar" style={AVATARS[user.equippedSkin].style} onClick={props.onChangeAvatar}>
+    <div className="Profile">
+      <div
+        className="avatar"
+        style={AVATARS[user.equippedSkin].style}
+        onClick={props.onChangeAvatar}
+      >
         <div className="avatarMouth" />
       </div>
       <br />
-      <button className='button changeAvatarButton' onClick={props.onChangeAvatar}>Change Avatar</button>
+      <button
+        className="button changeAvatarButton"
+        onClick={props.onChangeAvatar}
+      >
+        Change Avatar
+      </button>
 
-      <div className='stats'>
-        <div className='statsTable'>
+      <div className="stats">
+        <div className="statsTable">
           <table>
             <tbody>
               {Object.keys(PLAYER_STATS).map((stat, index) => (
                 <tr key={index}>
-                  <td className='statsLabel'>{PLAYER_STATS[stat]}:</td>
-                  {/* TODO */}
-                  <td>TODO</td>
+                  <td className="statsLabel">{PLAYER_STATS[stat]}:</td>
+                  {stat === "numSkins" ? (
+                    <td>{Object.keys(user.purchasedSkins).length}</td>
+                  ) : stat === "dateJoined" ? (
+                    <td>{Date(user.dateJoined).toString().substr(0, 15)}</td>
+                  ) : (
+                    <td>{user[stat]}</td>
+                  )}
                 </tr>
               ))}
             </tbody>

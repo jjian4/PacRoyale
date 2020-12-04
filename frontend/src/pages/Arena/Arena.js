@@ -67,6 +67,7 @@ function Arena() {
         recGameOver = true;
         const { message, score, isWinner } = gameOver;
         user.incrementCoins(score);
+        user.incrementGamesPlayed();
         if (isWinner) {
           user.incrementWins();
         }
@@ -165,8 +166,9 @@ function Arena() {
           </p>
           <div
             key={username}
-            className={`avatar ${value.powerup} ${value.isStunned ? "stunnedPlayer" : ""
-              }`}
+            className={`avatar ${value.powerup} ${
+              value.isStunned ? "stunnedPlayer" : ""
+            }`}
             style={{
               ...AVATARS[value.equippedSkin].style,
               transform: "rotate(" + rotateDeg + "deg)",
@@ -371,8 +373,9 @@ function Arena() {
             <div className={`${isAlmostMobile ? "row" : ""}`}>
               {sortedPlayerScores.map((scoreAndUsername) => (
                 <div
-                  className={`playerInfo ${isAlmostMobile ? "col-sm-4 col-6" : ""
-                    }`}
+                  className={`playerInfo ${
+                    isAlmostMobile ? "col-sm-4 col-6" : ""
+                  }`}
                 >
                   <div className="playerUsernameAvatar">
                     <div

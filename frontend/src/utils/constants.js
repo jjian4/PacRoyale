@@ -22,8 +22,8 @@ export const PAGES = {
 export const PLAYER_STATS = {
   dateJoined: "Date Joined",
   gamesPlayed: "Games Played",
-  gamesWon: "Games Won",
-  totalCoins: "Total Coins",
+  wins: "Games Won",
+  coins: "Total Coins",
   numSkins: "Number of skins",
 };
 

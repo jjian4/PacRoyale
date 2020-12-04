@@ -11,6 +11,7 @@ class User {
     this.gamesPlayed = 0;
     this.purchasedSkins = {};
     this.equippedSkin = "Blue";
+    this.dateJoined = Date.now();
     // initialize owned avatars
     Object.keys(AVATARS).forEach((key) => {
       let avatar = AVATARS[key];
@@ -31,7 +32,7 @@ class User {
         wins: this.wins,
         gamesPlayed: this.gamesPlayed,
         equippedSkin: this.equippedSkin,
-        dateJoined: Date.now(),
+        dateJoined: this.dateJoined,
       });
   }
 
@@ -102,6 +103,16 @@ class User {
       .ref("users/" + this.uid)
       .update({
         coins: this.coins,
+      });
+  }
+
+  incrementGamesPlayed() {
+    this.gamesPlayed = this.gamesPlayed + 1;
+    firebase
+      .database()
+      .ref("users/" + this.uid)
+      .update({
+        gamesPlayed: this.gamesPlayed,
       });
   }
 }
