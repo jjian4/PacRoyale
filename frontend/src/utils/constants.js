@@ -63,17 +63,24 @@ export const AVATARS = {
       backgroundColor: "gold",
     },
   },
+  Salmon: {
+    name: "salmon",
+    price: 800,
+    style: {
+      backgroundColor: "salmon",
+    },
+  },
   "Red Sripes": {
     name: "red-stripes",
-    price: 1200,
+    price: 800,
     style: {
       background:
-        "repeating-linear-gradient(90deg, red, red, 20%, lightpink 20%, lightpink 40%)",
+        "repeating-linear-gradient(90deg, red, red, 20%, pink 20%, pink 40%)",
     },
   },
   "Navy Sripes": {
     name: "navy-stripes",
-    price: 1200,
+    price: 800,
     style: {
       background:
         "repeating-linear-gradient(45deg, darkslateblue, darkslateblue, 20%, navy 20%, navy 40%)",
@@ -81,15 +88,15 @@ export const AVATARS = {
   },
   "Gray Sripes": {
     name: "gray-stripes",
-    price: 1200,
+    price: 800,
     style: {
       background:
-        "repeating-linear-gradient(0deg, lightgray, lightgray, 20%, gray 20%, gray 40%)",
+        "repeating-linear-gradient(135deg, lightgray, lightgray, 20%, gray 20%, gray 40%)",
     },
   },
   Target: {
     name: "target",
-    price: 2000,
+    price: 1000,
     style: {
       background:
         "repeating-radial-gradient(circle, red, red 15%, whitesmoke 15%, whitesmoke 30%)",
@@ -97,7 +104,7 @@ export const AVATARS = {
   },
   "Target 2": {
     name: "target2",
-    price: 2000,
+    price: 1000,
     style: {
       background:
         "repeating-radial-gradient(circle, blue, red 20%, yellow 20%, yellow 30%)",
@@ -111,23 +118,54 @@ export const AVATARS = {
         "linear-gradient(90deg, black 0, black 33%, #fdda24 33%, #fdda24 66%, #ef3340 66%, #ef3340 100%)",
     },
   },
+  Ukraine: {
+    name: "ukraine",
+    price: 1200,
+    style: {
+      background:
+        "linear-gradient(90deg, #005bbc 0, #005bbc 50%, #ffd600 50%, #ffd600 100%)",
+    },
+  },
+  Germany: {
+    name: "germany",
+    price: 1200,
+    style: {
+      background:
+        "linear-gradient(90deg, black 0, black 33%, #DD0000 33%, #DD0000 66%, #FFCE00 66%, #FFCE00 100%)",
+    },
+  },
+  Columbia: {
+    name: "columbia",
+    price: 1200,
+    style: {
+      background:
+        "linear-gradient(90deg, #FCD116 0, #FCD116 33%, #003893 33%, #003893 66%, #CE1126 66%, #CE1126 100%)",
+    },
+  },
   "Red Eye": {
     name: "red-eye",
-    price: 5000,
+    price: 1400,
     style: {
       background: "radial-gradient(red 30%, black 3px)",
     },
   },
   "Pink Eye": {
     name: "pink-eye",
-    price: 5000,
+    price: 1400,
     style: {
       background: "radial-gradient(pink 30%, black 3px)",
     },
   },
+  "White Eye": {
+    name: "white-eye",
+    price: 1400,
+    style: {
+      background: "radial-gradient(white 30%, black 3px)",
+    },
+  },
   Black: {
     name: "black",
-    price: 11000,
+    price: 3000,
     style: {
       backgroundColor: "black",
     },

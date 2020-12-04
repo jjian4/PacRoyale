@@ -75,7 +75,7 @@ function Store() {
                 </div>
                 {/* Skin is currently selected */}
                 {avatar in purchasedSkins && avatar === equippedSkin && (
-                  <div>(Selected)</div>
+                  <div className='itemSelectedText'>(Selected)</div>
                 )}
                 {/* Skin is owned but not selected */}
                 {avatar in purchasedSkins && !(avatar === equippedSkin) && (
