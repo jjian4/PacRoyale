@@ -46,7 +46,7 @@
     }
     .stunnedPlayer {
       animation: spin 0.4s infinite linear;
-      opacity: 25%;
+      opacity: 0.25;
     }
 
     @keyframes spin {

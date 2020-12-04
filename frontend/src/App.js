@@ -16,7 +16,9 @@ import "./App.scss";
 
 import io from "socket.io-client";
 
-const socket = io("http://localhost:3001", {
+const backend_url = window.location.hostname + ":3001";
+console.log(backend_url)
+const socket = io(backend_url, {
   transports: ["websocket", "polling", "flashsocket"],
 });
 

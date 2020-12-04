@@ -6,3 +6,4 @@ node_modules/*
 package-lock.json
 *.lock
 .vscode/settings.json
+aws-mac-493.pem
