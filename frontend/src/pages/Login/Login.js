@@ -35,8 +35,8 @@ function Login() {
         // on success, clear any existing errors and send user to main menu
         setErrorMessage("");
         // if the user is logged in, retrieve his info
-        let newUser = new User(firebase.auth().currentUser);
-        newUser.getFirebaseData(() => setUser(newUser));
+        let existingUser = new User(firebase.auth().currentUser);
+        existingUser.getFirebaseData(() => setUser(existingUser));
         goToMainMenu();
       })
       .catch(function (error) {
@@ -74,9 +74,10 @@ function Login() {
           .then(function () {
             let newUser = new User(firebaseUser);
             newUser.addUserToFirebaseStore();
-            setUser(newUser);
           })
           .then(function () {
+            let existingUser = new User(firebase.auth().currentUser);
+            existingUser.getFirebaseData(() => setUser(existingUser));
             goToMainMenu();
           })
           .catch(function (error) {
